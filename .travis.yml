@@ -1,2 +1,3 @@
+install: bundle install --without development --deployment
 rvm:
   - 2.0
