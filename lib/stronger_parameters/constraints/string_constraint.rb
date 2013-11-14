@@ -1,0 +1,23 @@
+require 'stronger_parameters/constraints'
+
+module StrongerParameters
+  class StringConstraint < Constraint
+    attr_reader :maximum_length
+
+    def initialize(options = {})
+      @maximum_length = options[:maximum_length] || options[:max_length]
+    end
+
+    def value(v)
+      if v.is_a?(String)
+        if maximum_length && v.bytesize > maximum_length
+          raise InvalidParameter.new(v, "can not be longer than #{maximum_length} bytes")
+        end
+
+        return v
+      end
+
+      raise InvalidParameter.new(v, 'must be a string')
+    end
+  end
+end
