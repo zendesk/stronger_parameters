@@ -1,21 +1,6 @@
+require 'stronger_parameters/errors'
+
 module StrongerParameters
-  class InvalidParameter < StandardError
-    attr_accessor :key, :value
-
-    def initialize(value, message)
-      @value = value
-      super(message)
-    end
-
-    def to_s
-      if key.present?
-        "found invalid value for #{key}. Value #{super}"
-      else
-        "found invalid value. Value #{super}"
-      end
-    end
-  end
-
   class Constraint
     def value(v)
       raise InvalidParameter.new(v, "#{self.class.name} should never be used directly")

@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'minitest'
   spec.add_development_dependency 'guard'
   spec.add_development_dependency 'guard-minitest'
+  spec.add_development_dependency 'minitest-rails'
 
   spec.add_dependency 'strong_parameters', '~> 0.2'
 end

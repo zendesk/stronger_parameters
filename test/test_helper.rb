@@ -1,7 +1,36 @@
 ENV["RAILS_ENV"] = "test"
 
+require 'test/unit'
+require 'rails'
+require 'action_controller'
+require 'rails/test_help'
+
+class FakeApplication < Rails::Application; end
+
+Rails.application = FakeApplication
+Rails.configuration.action_controller = ActiveSupport::OrderedOptions.new
+
+module ActionController
+  SharedTestRoutes = ActionDispatch::Routing::RouteSet.new
+  SharedTestRoutes.draw do
+    match ':controller(/:action)'
+  end
+
+  class Base
+    include ActionController::Testing
+    include SharedTestRoutes.url_helpers
+  end
+
+  class ActionController::TestCase
+    setup do
+      @routes = SharedTestRoutes
+    end
+  end
+end
+
 require 'stronger_parameters'
 require 'byebug'
+require 'minitest/rails'
 require 'minitest/autorun'
 
 class MiniTest::Spec

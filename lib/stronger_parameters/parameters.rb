@@ -1,5 +1,6 @@
 require 'action_controller/parameters'
 require 'stronger_parameters/constraints'
+require 'stronger_parameters/errors'
 
 module StrongerParameters
   module Parameters
@@ -96,6 +97,19 @@ module StrongerParameters
     end
 
   end
+
+  module ControllerSupport
+    extend ActiveSupport::Concern
+
+    Parameters = ActionController::Parameters
+
+    included do
+      rescue_from(StrongerParameters::InvalidParameter) do |e|
+        render :text => "Invalid parameter: #{e.key} #{e.message}", :status => :bad_request
+      end
+    end
+  end
 end
 
 ActionController::Parameters.send :include, StrongerParameters::Parameters
+ActionController::Base.send :include, StrongerParameters::ControllerSupport
