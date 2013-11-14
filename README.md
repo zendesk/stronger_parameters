@@ -83,34 +83,6 @@ This will allow parameters like this:
 }
 ```
 
-Strange numbered arrays in ActiveModel nested attributes look something like this:
-
-```json
-{
-  "book": {
-    "title": "Some Book",
-    "chapters_attributes": {
-      "1": {"title": "First Chapter"},
-      "2": {"title": "Second Chapter"}
-    }
-  }
-}
-```
-
-and can be described like this:
-
-```ruby
-params.require(:book).permit(
-  :title => Parameters.string,
-  :chapters_attributes => Parameters.map(
-    Parameters.integer => Parameters.map(
-      :title => Parameters.string
-    )
-  )
-)
-
-```
-
 ## Combining Requirements
 
 If you want to permit a parameter to be one of multiple types, you can use the `|` operator:
