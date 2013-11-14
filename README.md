@@ -23,12 +23,12 @@ params.permit(
 
 This will allow an array of id parameters that all are IDs.
 
-## Nested parameters
+## Nested Parameters
 
 ```ruby
 params.permit(
   :name    => Parameters.string,
-  :emails  => Parameters.array(Parameters.email),
+  :emails  => Parameters.array(Parameters.string),
   :friends => Parameters.array(
     Parameters.map(
       :name   => Parameters.string,
@@ -89,7 +89,7 @@ If you want to permit a parameter to be one of multiple types, you can use the `
 
 ```ruby
 params.require(:ticket).permit(
-  :requester => Parameters.id | Parameters.email
+  :status => Parameters.id | Parameters.enum('open', 'closed')
 )
 ```
 
@@ -98,14 +98,14 @@ This will allow these parameter sets:
 ```json
 {
   "ticket": {
-    "requester": 123
+    "status": 123
   }
 }
 ```
 ```json
 {
   "ticket": {
-    "requester": "mick@zendesk.com"
+    "status": "open"
   }
 }
 ```
@@ -114,11 +114,11 @@ You can use the `&` operator to apply further restrictions on the type:
 
 ```ruby
 params.require(:user).permit(
-  :email => Parameters.email & Parameters.max_length(128)
+  :age => Parameters.integer & Parameters.gte(0)
 )
 ```
 
-This requires the parameter to be an email and to be no longer than 128 bytes.
+This requires the parameter to be an integer greater than or equal to 0.
 
 ### Combining Requirements in Arrays
 
@@ -126,7 +126,7 @@ You can also use the `|` and `&` operators in arrays:
 
 ```ruby
 params.require(:group).permit(
-  :users => Parameters.array(Parameters.id | Parameters.email)
+  :users => Parameters.array(Parameters.id | Parameters.string)
 )
 ```
 
