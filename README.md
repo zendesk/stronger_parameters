@@ -7,7 +7,7 @@ You can specify simple types like this:
 
 ```ruby
 params.permit(
-  :id => Parameters.id,
+  :id   => Parameters.id,
   :name => Parameters.string
 )
 ```
@@ -27,11 +27,11 @@ This will allow an array of id parameters that all are IDs.
 
 ```ruby
 params.permit(
-  :name => Parameters.string,
-  :emails => Parameters.array(Parameters.email),
+  :name    => Parameters.string,
+  :emails  => Parameters.array(Parameters.email),
   :friends => Parameters.array(
     Parameters.map(
-      :name => Parameters.string,
+      :name   => Parameters.string,
       :family => Parameters.map(
         :name => Parameters.string
       )
