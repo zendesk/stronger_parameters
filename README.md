@@ -6,14 +6,19 @@ This is an extension of `strong_parameters` with added type checking.
 You can specify simple types like this:
 
 ```ruby
-params.permit(:id => Parameters.id, :name => Parameters.string)
+params.permit(
+  :id => Parameters.id,
+  :name => Parameters.string
+)
 ```
 
 ## Arrays
 You can specify arrays like this:
 
 ```ruby
-params.permit(:id => Parameters.array(Parameters.id))
+params.permit(
+  :id => Parameters.array(Parameters.id)
+)
 ```
 
 This will allow an array of id parameters that all are IDs.
@@ -111,7 +116,9 @@ params.require(:book).permit(
 If you want to permit a parameter to be one of multiple types, you can use the `|` operator:
 
 ```ruby
-params.require(:ticket).permit(:requester => Parameters.id | Parameters.email)
+params.require(:ticket).permit(
+  :requester => Parameters.id | Parameters.email
+)
 ```
 
 This will allow these parameter sets:
@@ -134,7 +141,9 @@ This will allow these parameter sets:
 You can use the `&` operator to apply further restrictions on the type:
 
 ```ruby
-params.require(:user).permit(:email => Parameters.email & Parameters.max_length(128))
+params.require(:user).permit(
+  :email => Parameters.email & Parameters.max_length(128)
+)
 ```
 
 This requires the parameter to be an email and to be no longer than 128 bytes.
@@ -144,7 +153,9 @@ This requires the parameter to be an email and to be no longer than 128 bytes.
 You can also use the `|` and `&` operators in arrays:
 
 ```ruby
-params.require(:group).permit(:users => Parameters.array(Parameters.id | Parameters.email))
+params.require(:group).permit(
+  :users => Parameters.array(Parameters.id | Parameters.email)
+)
 ```
 
 This will permit these parameters:
