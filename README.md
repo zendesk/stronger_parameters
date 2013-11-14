@@ -6,14 +6,14 @@ This is an extension of `strong_parameters` with added type checking.
 You can specify simple types like this:
 
 ```ruby
-params.permit(:id => Params.id, :name => Params.string)
+params.permit(:id => Parameters.id, :name => Parameters.string)
 ```
 
 ## Arrays
 You can specify arrays like this:
 
 ```ruby
-params.permit(:id => Params.array(Params.id))
+params.permit(:id => Parameters.array(Parameters.id))
 ```
 
 This will allow an array of id parameters that all are IDs.
@@ -22,15 +22,15 @@ This will allow an array of id parameters that all are IDs.
 
 ```ruby
 params.permit(
-  :name => Params.string,
-  :emails => Params.array(Params.email),
-  :friends => Params.array(
-    Params.map(
-      :name => Params.string,
-      :family => Params.map(
-        :name => Params.string
+  :name => Parameters.string,
+  :emails => Parameters.array(Parameters.email),
+  :friends => Parameters.array(
+    Parameters.map(
+      :name => Parameters.string,
+      :family => Parameters.map(
+        :name => Parameters.string
       )
-      :hobbies => Params.array(Params.string)
+      :hobbies => Parameters.array(Parameters.string)
     )
   )
 )
@@ -53,12 +53,12 @@ This will allow parameters like this:
 
 ```ruby
 params.require(:author).permit(
-  :name => Params.string,
-  :books_attributes => Params.array(
-    Params.map(
-      :title => Params.string,
-      :id => Params.id,
-      :_destroy => Params.boolean
+  :name => Parameters.string,
+  :books_attributes => Parameters.array(
+    Parameters.map(
+      :title => Parameters.string,
+      :id => Parameters.id,
+      :_destroy => Parameters.boolean
     )
   )
 )
@@ -96,10 +96,10 @@ and can be described like this:
 
 ```ruby
 params.require(:book).permit(
-  :title => Params.string,
-  :chapters_attributes => Params.map(
-    Params.integer => Params.map(
-      :title => Params.string
+  :title => Parameters.string,
+  :chapters_attributes => Parameters.map(
+    Parameters.integer => Parameters.map(
+      :title => Parameters.string
     )
   )
 )
@@ -111,7 +111,7 @@ params.require(:book).permit(
 If you want to permit a parameter to be one of multiple types, you can use the `|` operator:
 
 ```ruby
-params.require(:ticket).permit(:requester => Params.id | Params.email)
+params.require(:ticket).permit(:requester => Parameters.id | Parameters.email)
 ```
 
 This will allow these parameter sets:
@@ -134,7 +134,7 @@ This will allow these parameter sets:
 You can use the `&` operator to apply further restrictions on the type:
 
 ```ruby
-params.require(:user).permit(:email => Params.email & Params.max_length(128))
+params.require(:user).permit(:email => Parameters.email & Parameters.max_length(128))
 ```
 
 This requires the parameter to be an email and to be no longer than 128 bytes.
@@ -144,7 +144,7 @@ This requires the parameter to be an email and to be no longer than 128 bytes.
 You can also use the `|` and `&` operators in arrays:
 
 ```ruby
-params.require(:group).permit(:users => Params.array(Params.id | Params.email))
+params.require(:group).permit(:users => Parameters.array(Parameters.id | Parameters.email))
 ```
 
 This will permit these parameters:
@@ -158,17 +158,17 @@ This will permit these parameters:
 
 ## Types
 
-| syntax                     | definition                                                  |
-|----------------------------|-------------------------------------------------------------|
-| Params.string              | value.is_a?(String)                                         |
-| Params.integer             | value.is_a?(Fixnum)                                         |
-| Params.enum('asc', 'desc') | ['asc', 'desc'].include?(value)                             |
-| Params.lt(10)              | value < 10                                                  |
-| Params.lte(10)             | value <= 10                                                 |
-| Params.gt(0)               | value > 0                                                   |
-| Params.gte(0)              | value >= 0                                                  |
-| Params.integer32           | Params.integer & Params.lte(2 ** 31) & Params.gte(-2 ** 31) |
-| Params.integer64           | Params.integer & Params.lte(2 ** 63) & Params.gte(-2 ** 63) |
-| Params.id                  | Params.integer32 & Params.positive                          |
-| Params.bigid               | Params.integer64 & Params.positive                          |
-| Params.boolean             | Params.enum(true, false, 'true', 'false', 1, 0)             |
+| Syntax                         | Definition                                                              |
+|--------------------------------|-------------------------------------------------------------------------|
+| Parameters.string              | value.is_a?(String)                                                     |
+| Parameters.integer             | value.is_a?(Fixnum)                                                     |
+| Parameters.enum('asc', 'desc') | ['asc', 'desc'].include?(value)                                         |
+| Parameters.lt(10)              | value < 10                                                              |
+| Parameters.lte(10)             | value <= 10                                                             |
+| Parameters.gt(0)               | value > 0                                                               |
+| Parameters.gte(0)              | value >= 0                                                              |
+| Parameters.integer32           | Parameters.integer & Parameters.lte(2 ** 31) & Parameters.gte(-2 ** 31) |
+| Parameters.integer64           | Parameters.integer & Parameters.lte(2 ** 63) & Parameters.gte(-2 ** 63) |
+| Parameters.id                  | Parameters.integer32 & Parameters.positive                              |
+| Parameters.bigid               | Parameters.integer64 & Parameters.positive                              |
+| Parameters.boolean             | Parameters.enum(true, false, 'true', 'false', 1, 0)                     |
