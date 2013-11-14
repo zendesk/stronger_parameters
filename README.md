@@ -158,7 +158,7 @@ This will permit these parameters:
 
 ## Types
 
-| Syntax                         | Definition                                                              |
+| Syntax                         | (Simplified) Definition                                                 |
 |--------------------------------|-------------------------------------------------------------------------|
 | Parameters.string              | value.is_a?(String)                                                     |
 | Parameters.integer             | value.is_a?(Fixnum)                                                     |
@@ -169,6 +169,6 @@ This will permit these parameters:
 | Parameters.gte(0)              | value >= 0                                                              |
 | Parameters.integer32           | Parameters.integer & Parameters.lte(2 ** 31) & Parameters.gte(-2 ** 31) |
 | Parameters.integer64           | Parameters.integer & Parameters.lte(2 ** 63) & Parameters.gte(-2 ** 63) |
-| Parameters.id                  | Parameters.integer32 & Parameters.positive                              |
-| Parameters.bigid               | Parameters.integer64 & Parameters.positive                              |
+| Parameters.id                  | Parameters.integer & Parameters.lte(2 ** 31) & Parameters.gte(0)        |
+| Parameters.bigid               | Parameters.integer & Parameters.lte(2 ** 63) & Parameters.gte(0)        |
 | Parameters.boolean             | Parameters.enum(true, false, 'true', 'false', 1, 0)                     |
