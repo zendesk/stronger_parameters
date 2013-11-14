@@ -28,10 +28,6 @@ module ActionController
   end
 end
 
-begin
-  require 'byebug'
-rescue LoadError => e
-end
 require 'stronger_parameters'
 require 'minitest/rails'
 require 'minitest/autorun'
