@@ -9,16 +9,27 @@ class FakeApplication < Rails::Application; end
 
 Rails.application = FakeApplication
 Rails.configuration.action_controller = ActiveSupport::OrderedOptions.new
+Rails.configuration.secret_key_base = 'secret_key_base'
+
+require 'action_pack'
+require 'strong_parameters' if ActionPack::VERSION::MAJOR == 3
 
 module ActionController
   SharedTestRoutes = ActionDispatch::Routing::RouteSet.new
   SharedTestRoutes.draw do
-    match ':controller(/:action)'
+    get ':controller(/:action)'
+    post ':controller(/:action)'
+    put ':controller(/:action)'
+    delete ':controller(/:action)'
   end
 
   class Base
     include ActionController::Testing
     include SharedTestRoutes.url_helpers
+
+    rescue_from(ActionController::ParameterMissing) do |e|
+      render :text => "Required parameter missing: #{e.param}", :status => :bad_request
+    end
   end
 
   class ActionController::TestCase

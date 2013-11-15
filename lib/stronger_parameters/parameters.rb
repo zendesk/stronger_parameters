@@ -1,4 +1,11 @@
-require 'action_controller/parameters'
+require 'action_pack'
+
+if ActionPack::VERSION::MAJOR == 3
+  require 'action_controller/parameters'
+else
+  require 'action_controller/metal/strong_parameters'
+end
+
 require 'stronger_parameters/constraints'
 require 'stronger_parameters/errors'
 
