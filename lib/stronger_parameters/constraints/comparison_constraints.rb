@@ -1,13 +1,19 @@
 require 'stronger_parameters/constraints'
 
 module StrongerParameters
-  class LessThanConstraint < Constraint
+  class ComparisonConstraints < Constraint
     attr_reader :limit
 
     def initialize(limit)
       @limit = limit
     end
 
+    def ==(other)
+      super && limit == other.limit
+    end
+  end
+
+  class LessThanConstraint < ComparisonConstraints
     def value(v)
       return v if v < limit
 
@@ -15,13 +21,7 @@ module StrongerParameters
     end
   end
 
-  class LessThanOrEqualConstraint < Constraint
-    attr_reader :limit
-
-    def initialize(limit)
-      @limit = limit
-    end
-
+  class LessThanOrEqualConstraint < ComparisonConstraints
     def value(v)
       return v if v <= limit
 
@@ -29,13 +29,7 @@ module StrongerParameters
     end
   end
 
-  class GreaterThanConstraint < Constraint
-    attr_reader :limit
-
-    def initialize(limit)
-      @limit = limit
-    end
-
+  class GreaterThanConstraint < ComparisonConstraints
     def value(v)
       return v if v > limit
 
@@ -43,13 +37,7 @@ module StrongerParameters
     end
   end
 
-  class GreaterThanOrEqualConstraint < Constraint
-    attr_reader :limit
-
-    def initialize(limit)
-      @limit = limit
-    end
-
+  class GreaterThanOrEqualConstraint < ComparisonConstraints
     def value(v)
       return v if v >= limit
 

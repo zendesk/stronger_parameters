@@ -15,5 +15,14 @@ module StrongerParameters
 
       raise InvalidParameter.new(v, "must be a hash")
     end
+
+    def merge(other)
+      other_constraints = other.is_a?(HashConstraint) ? other.constraints : other
+      self.class.new(constraints.merge(other_constraints))
+    end
+
+    def ==(other)
+      super && constraints == other.constraints
+    end
   end
 end

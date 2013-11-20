@@ -17,5 +17,9 @@ module StrongerParameters
 
       raise InvalidParameter.new(v, "must be an array")
     end
+
+    def ==(other)
+      super && item_constraint == other.item_constraint
+    end
   end
 end

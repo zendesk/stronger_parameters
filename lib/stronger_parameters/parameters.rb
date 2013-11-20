@@ -15,15 +15,20 @@ module StrongerParameters
 
     included do
       alias_method_chain :hash_filter, :stronger_parameters
+      cattr_accessor :action_on_invalid_parameters, :instance_accessor => false
     end
 
     module ClassMethods
+      def anything
+        Constraint.new
+      end
+
       def string(options = {})
         StringConstraint.new(options)
       end
 
       def integer
-        FixnumConstraint.new
+        @integer ||= FixnumConstraint.new
       end
 
       def lt(limit)
@@ -91,14 +96,23 @@ module StrongerParameters
       hash_filter_without_stronger_parameters(params, other_filter)
 
       slice(*stronger_filter.keys).each do |key, value|
-        next if value.nil?
+        if value.nil?
+          params[key] = nil
+          next
+        end
 
         constraint = stronger_filter[key]
         begin
           params[key] = constraint.value(value)
         rescue InvalidParameter => e
           e.key = key
-          raise
+
+          name = "invalid_parameter.action_controller"
+          ActiveSupport::Notifications.publish(name, :key => key, :value => value, :message => e.message)
+
+          params[key] = value
+
+          raise unless self.class.action_on_invalid_parameters == :log
         end
       end
     end

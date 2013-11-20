@@ -3,7 +3,7 @@ require 'stronger_parameters/errors'
 module StrongerParameters
   class Constraint
     def value(v)
-      raise InvalidParameter.new(v, "#{self.class.name} should never be used directly")
+      v
     end
 
     def |(other)
@@ -12,6 +12,10 @@ module StrongerParameters
 
     def &(other)
       AndConstraint.new(self, other)
+    end
+
+    def ==(other)
+      self.class == other.class
     end
   end
 
@@ -40,6 +44,10 @@ module StrongerParameters
       constraints << other
       self
     end
+
+    def ==(other)
+      super && constraints == other.constraints
+    end
   end
 
   class AndConstraint < Constraint
@@ -59,6 +67,10 @@ module StrongerParameters
     def &(other)
       constraints << other
       self
+    end
+
+    def ==(other)
+      super && constraints == other.constraints
     end
   end
 end
