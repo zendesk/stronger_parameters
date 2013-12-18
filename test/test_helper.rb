@@ -43,6 +43,8 @@ require 'stronger_parameters'
 require 'minitest/rails'
 require 'minitest/autorun'
 
+ActionController::Parameters.action_on_invalid_parameters = :raise
+
 class MiniTest::Spec
   def params(hash)
     ActionController::Parameters.new(hash)

@@ -112,7 +112,7 @@ module StrongerParameters
 
           params[key] = value
 
-          raise unless self.class.action_on_invalid_parameters == :log
+          raise if self.class.action_on_invalid_parameters == :raise
         end
       end
     end
