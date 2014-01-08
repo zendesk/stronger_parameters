@@ -5,7 +5,7 @@ module StrongerParameters
     def value(v)
       if v.is_a?(Fixnum)
         return v
-      elsif v.is_a?(String) && v =~ /^-?\d+$/
+      elsif v.is_a?(String) && v =~ /\A-?\d+\Z/
         return v.to_i
       end
 
