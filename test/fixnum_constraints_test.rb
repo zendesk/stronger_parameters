@@ -5,6 +5,7 @@ describe 'integer parameter constraints' do
 
   permits 123
   permits '123', :as => 123
+  permits '-123', :as => -123
 
   rejects 'abc'
   rejects Date.today
