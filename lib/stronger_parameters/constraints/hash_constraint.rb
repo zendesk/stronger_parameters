@@ -5,11 +5,12 @@ module StrongerParameters
     attr_reader :constraints
 
     def initialize(constraints)
-      @constraints = constraints.with_indifferent_access
+      @constraints = constraints.with_indifferent_access unless constraints.nil?
     end
 
     def value(v)
       if v.is_a?(Hash)
+        return ActionController::Parameters.new(v).permit! if constraints.nil?
         return ActionController::Parameters.new(v).permit(constraints)
       end
 

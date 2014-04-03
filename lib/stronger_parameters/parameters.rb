@@ -79,6 +79,10 @@ module StrongerParameters
       def map(constraints)
         HashConstraint.new(constraints)
       end
+
+      def hash(constraints = nil)
+        HashConstraint.new(constraints)
+      end
     end
 
     def hash_filter_with_stronger_parameters(params, filter)

@@ -1,6 +1,6 @@
 require_relative 'test_helper'
 
-describe 'array parameter constraints' do
+describe 'map parameter constraints' do
   subject do
     ActionController::Parameters.map(
       :id => ActionController::Parameters.integer,
