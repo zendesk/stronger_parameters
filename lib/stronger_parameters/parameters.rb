@@ -76,7 +76,7 @@ module StrongerParameters
         ArrayConstraint.new(item_constraint)
       end
 
-      def map(constraints)
+      def map(constraints = nil)
         HashConstraint.new(constraints)
       end
     end

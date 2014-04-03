@@ -1,6 +1,6 @@
 require_relative 'test_helper'
 
-describe 'array parameter constraints' do
+describe 'map parameter constraints' do
   subject do
     ActionController::Parameters.map(
       :id => ActionController::Parameters.integer,
@@ -25,4 +25,23 @@ describe 'array parameter constraints' do
   rejects(:id => 'Mick', :name => 'Mick')
   rejects(123)
   rejects('abc')
+end
+
+describe 'open-ended map parameter constraints' do
+
+  subject do
+    ActionController::Parameters.map
+  end
+
+  def self.permits(value, options = {})
+    options[:as] ||= value
+    options[:as] = options[:as].with_indifferent_access
+
+    super(value, options)
+  end
+
+  permits(:id => 1, :name => 'Mick')
+  permits({:id => 1, :name => 'Mick'})
+  rejects("a string")
+  rejects(123)
 end
