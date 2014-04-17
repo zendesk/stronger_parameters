@@ -1,4 +1,5 @@
 # stronger_parameters
+[![Build Status](https://travis-ci.org/zendesk/stronger_parameters.svg?branch=master)](https://travis-ci.org/zendesk/stronger_parameters)
 
 This is an extension of `strong_parameters` with added type checking.
 
