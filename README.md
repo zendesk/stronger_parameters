@@ -162,4 +162,5 @@ This will permit these parameters:
 | Parameters.uid                 | Parameters.integer & Parameters.lt(2 ** 32) & Parameters.gte(0)         |
 | Parameters.ubigid              | Parameters.integer & Parameters.lt(2 ** 64) & Parameters.gte(0)         |
 | Parameters.boolean             | Parameters.enum(true, false, 'true', 'false', 1, 0)                     |
-| Parameters.nil                 | value.nil?                                                              |
+| Parameters.nil                 | value is nil                                                            |
+| Parameters.nil_string          | value is nil, '', 'undefined'                                           |
