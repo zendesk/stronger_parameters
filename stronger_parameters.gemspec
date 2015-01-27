@@ -1,7 +1,4 @@
-# coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'stronger_parameters/version'
+require './lib/stronger_parameters/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'stronger_parameters'
@@ -12,9 +9,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/zendesk/stronger_parameters'
   spec.license       = 'Apache License Version 2.0'
 
-  spec.files         = Dir.glob('lib/**/*') + Dir.glob('test/**/*') + %w(README.md)
-  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
-  spec.require_path  = 'lib'
+  spec.files         = Dir.glob('lib/**/*') + %w(README.md)
 
   spec.add_development_dependency 'bundler', '~> 1.3'
   spec.add_development_dependency 'rake'
@@ -22,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'guard'
   spec.add_development_dependency 'guard-minitest'
   spec.add_development_dependency 'minitest-rails'
-  spec.add_development_dependency 'appraisal'
+  spec.add_development_dependency 'wwtd'
 
-  spec.add_dependency 'actionpack', '> 2'
+  spec.add_runtime_dependency 'actionpack', '> 3'
 end
