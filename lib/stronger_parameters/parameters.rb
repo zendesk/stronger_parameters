@@ -48,19 +48,19 @@ module StrongerParameters
       end
 
       def integer32
-        integer & lte(2 ** 31) & gte(-2 ** 31)
+        integer & lt(2 ** 32) & gt(-2 ** 32)
       end
 
       def integer64
-        integer & lte(2 ** 63) & gte(-2 ** 63)
+        integer & lt(2 ** 64) & gt(-2 ** 64)
       end
 
       def id
-        integer & lte(2 ** 31) & gte(0)
+        integer & lt(2 ** 32) & gte(0)
       end
 
       def bigid
-        integer & lte(2 ** 63) & gte(0)
+        integer & lt(2 ** 64) & gte(0)
       end
 
       def enumeration(*allowed)
