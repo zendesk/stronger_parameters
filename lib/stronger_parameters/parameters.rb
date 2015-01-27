@@ -28,7 +28,7 @@ module StrongerParameters
       end
 
       def integer
-        @integer ||= FixnumConstraint.new
+        @integer ||= IntegerConstraint.new
       end
 
       def lt(limit)

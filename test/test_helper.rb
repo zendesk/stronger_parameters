@@ -1,6 +1,6 @@
 ENV["RAILS_ENV"] = "test"
 
-require 'test/unit'
+require 'minitest/autorun'
 require 'rails'
 require 'action_controller'
 require 'rails/test_help'
