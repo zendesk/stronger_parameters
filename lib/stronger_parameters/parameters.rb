@@ -56,11 +56,11 @@ module StrongerParameters
       end
 
       def id
-        integer & lte(2 ** 31) & gte(0)
+        integer & gte(0)
       end
 
-      def bigid
-        integer & lte(2 ** 63) & gte(0)
+      def smallid
+        integer & lt(2 ** 32) & gte(0)
       end
 
       def enumeration(*allowed)
