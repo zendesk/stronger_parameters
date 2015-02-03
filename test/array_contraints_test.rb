@@ -9,4 +9,6 @@ describe 'array parameter constraints' do
   rejects 123
   rejects [123, 456]
   rejects ['abc', 123]
+  rejects nil
+  rejects [nil]
 end

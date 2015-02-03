@@ -96,10 +96,6 @@ module StrongerParameters
       hash_filter_without_stronger_parameters(params, other_filter)
 
       slice(*stronger_filter.keys).each do |key, value|
-        if value.nil?
-          params[key] = nil
-          next
-        end
 
         constraint = stronger_filter[key]
         begin

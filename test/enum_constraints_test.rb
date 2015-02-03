@@ -9,4 +9,5 @@ describe 'enum parameter constraints' do
   rejects 'abcd'
   rejects '123'
   rejects 1234
+  rejects nil
 end

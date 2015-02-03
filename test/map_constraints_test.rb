@@ -25,6 +25,7 @@ describe 'map parameter constraints' do
   rejects(:id => 'Mick', :name => 'Mick')
   rejects(123)
   rejects('abc')
+  rejects nil
 end
 
 describe 'open-ended map parameter constraints' do
@@ -44,4 +45,5 @@ describe 'open-ended map parameter constraints' do
   permits({:id => 1, :name => 'Mick'})
   rejects("a string")
   rejects(123)
+  rejects nil
 end
