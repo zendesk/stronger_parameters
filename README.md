@@ -24,7 +24,7 @@ params.permit(
 
 This will allow an array of id parameters that all are IDs.
 
-> Please notice that prior Rails 4.1 empty arrays will be considered to be invalid, because Rails will convert empty array to nil. In Rails 4.1+ you can set `config.action_dispatch.perform_deep_munge = false` to avoid this behaviour and accept empty arrays as valid valud.
+Please notice that prior Rails 4.1 empty arrays will be considered to be invalid, because Rails will convert empty array to nil. In Rails 4.1+ you can set `config.action_dispatch.perform_deep_munge = false` to avoid this behaviour and accept empty arrays as valid value.
 
 ## Nested Parameters
 
