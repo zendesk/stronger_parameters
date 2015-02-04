@@ -2,15 +2,18 @@ ENV["RAILS_ENV"] = "test"
 
 require 'bundler/setup'
 require 'minitest/autorun'
+require 'minitest/rg'
 require 'rails'
 require 'action_controller'
-require 'rails/test_help'
+require 'rails/generators'
 
 class FakeApplication < Rails::Application; end
 
 Rails.application = FakeApplication
 Rails.configuration.action_controller = ActiveSupport::OrderedOptions.new
 Rails.configuration.secret_key_base = 'secret_key_base'
+
+ActiveSupport.test_order = :random if ActiveSupport.respond_to?(:test_order=)
 
 require 'action_pack'
 require 'strong_parameters' if ActionPack::VERSION::MAJOR == 3

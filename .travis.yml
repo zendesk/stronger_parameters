@@ -2,7 +2,14 @@ rvm:
   - 1.9
   - 2.0
   - 2.1
+  - 2.2
 gemfile:
-  - gemfiles/rails_3.2.gemfile
-  - gemfiles/rails_4.0.gemfile
+  - gemfiles/rails3.2.gemfile
+  - gemfiles/rails4.0.gemfile
+  - gemfiles/rails4.1.gemfile
+  - gemfiles/rails4.2.gemfile
+matrix:
+  exclude:
+    - rvm: 2.2
+      gemfile: gemfiles/rails3.2.gemfile
 script: bundle exec rake test
