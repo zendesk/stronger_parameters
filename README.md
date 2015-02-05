@@ -151,9 +151,11 @@ This will permit these parameters:
 | Parameters.lte(10)             | value <= 10                                                             |
 | Parameters.gt(0)               | value > 0                                                               |
 | Parameters.gte(0)              | value >= 0                                                              |
-| Parameters.integer32           | Parameters.integer & Parameters.lte(2 ** 31) & Parameters.gte(-2 ** 31) |
-| Parameters.integer64           | Parameters.integer & Parameters.lte(2 ** 63) & Parameters.gte(-2 ** 63) |
-| Parameters.id                  | Parameters.integer & Parameters.lte(2 ** 31) & Parameters.gte(0)        |
-| Parameters.bigid               | Parameters.integer & Parameters.lte(2 ** 63) & Parameters.gte(0)        |
+| Parameters.integer32           | Parameters.integer & Parameters.lt(2 ** 31) & Parameters.gte(-2 ** 31)  |
+| Parameters.integer64           | Parameters.integer & Parameters.lt(2 ** 63) & Parameters.gte(-2 ** 63)  |
+| Parameters.id                  | Parameters.integer & Parameters.lt(2 ** 31) & Parameters.gte(0)         |
+| Parameters.bigid               | Parameters.integer & Parameters.lt(2 ** 63) & Parameters.gte(0)         |
+| Parameters.uid                 | Parameters.integer & Parameters.lt(2 ** 32) & Parameters.gte(0)         |
+| Parameters.ubigid              | Parameters.integer & Parameters.lt(2 ** 64) & Parameters.gte(0)         |
 | Parameters.boolean             | Parameters.enum(true, false, 'true', 'false', 1, 0)                     |
 | Parameters.nil                 | value.nil?                                                              |
