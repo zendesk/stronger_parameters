@@ -13,10 +13,11 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler', '~> 1.3'
   spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'minitest', '~> 4.7.5'
+  spec.add_development_dependency 'minitest'
   spec.add_development_dependency 'guard'
   spec.add_development_dependency 'guard-minitest'
   spec.add_development_dependency 'minitest-rails'
+  spec.add_development_dependency 'minitest-rg'
   spec.add_development_dependency 'wwtd'
 
   spec.add_runtime_dependency 'actionpack', '> 3'
