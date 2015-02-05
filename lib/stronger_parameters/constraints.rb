@@ -77,6 +77,7 @@ end
 
 require 'stronger_parameters/constraints/string_constraint'
 require 'stronger_parameters/constraints/integer_constraint'
+require 'stronger_parameters/constraints/nil_constraint'
 require 'stronger_parameters/constraints/boolean_constraint'
 require 'stronger_parameters/constraints/array_constraint'
 require 'stronger_parameters/constraints/hash_constraint'
