@@ -23,6 +23,10 @@ module StrongerParameters
         Constraint.new
       end
 
+      def nil
+        NilConstraint.new
+      end
+
       def string(options = {})
         StringConstraint.new(options)
       end

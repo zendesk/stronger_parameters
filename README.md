@@ -156,3 +156,4 @@ This will permit these parameters:
 | Parameters.id                  | Parameters.integer & Parameters.lte(2 ** 31) & Parameters.gte(0)        |
 | Parameters.bigid               | Parameters.integer & Parameters.lte(2 ** 63) & Parameters.gte(0)        |
 | Parameters.boolean             | Parameters.enum(true, false, 'true', 'false', 1, 0)                     |
+| Parameters.nil                 | value.nil?                                                              |
