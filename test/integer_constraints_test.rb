@@ -11,4 +11,5 @@ describe 'integer parameter constraints' do
   rejects 'abc'
   rejects Date.today
   rejects Time.now
+  rejects nil
 end

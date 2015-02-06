@@ -14,4 +14,5 @@ describe 'boolean parameter constraints' do
   permits '0',     :as => false
 
   rejects 'foo'
+  rejects nil
 end

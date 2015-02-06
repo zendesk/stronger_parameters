@@ -9,6 +9,7 @@ describe 'operator parameter constraints' do
 
     rejects Date.today
     rejects Time.now
+    rejects nil
   end
 
   describe 'AND types' do
@@ -18,5 +19,6 @@ describe 'operator parameter constraints' do
 
     rejects 123
     rejects 'abc'
+    rejects nil
   end
 end

@@ -24,6 +24,10 @@ params.permit(
 
 This will allow an array of id parameters that all are IDs.
 
+### Empty array -> nil
+Rails converts empty arrays to nil unless `config.action_dispatch.perform_deep_munge = false` is set
+(available in Rails 4.1+). Either use this or `Parameters.array | Parameters.nil` to deal with this.
+
 ## Nested Parameters
 
 ```ruby
