@@ -14,7 +14,7 @@ module StrongerParameters
         return false
       end
 
-      raise InvalidParameter.new(v, "must be either true or false")
+      InvalidParameter.new(v, "must be either true or false")
     end
   end
 end

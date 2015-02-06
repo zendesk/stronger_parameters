@@ -17,7 +17,7 @@ module StrongerParameters
     def value(v)
       return v if v < limit
 
-      raise InvalidParameter.new(v, "must be less than #{limit}")
+      InvalidParameter.new(v, "must be less than #{limit}")
     end
   end
 
@@ -25,7 +25,7 @@ module StrongerParameters
     def value(v)
       return v if v <= limit
 
-      raise InvalidParameter.new(v, "must be less than or equal to #{limit}")
+      InvalidParameter.new(v, "must be less than or equal to #{limit}")
     end
   end
 
@@ -33,7 +33,7 @@ module StrongerParameters
     def value(v)
       return v if v > limit
 
-      raise InvalidParameter.new(v, "must be greater than #{limit}")
+      InvalidParameter.new(v, "must be greater than #{limit}")
     end
   end
 
@@ -41,7 +41,7 @@ module StrongerParameters
     def value(v)
       return v if v >= limit
 
-      raise InvalidParameter.new(v, "must be greater than or equal to #{limit}")
+      InvalidParameter.new(v, "must be greater than or equal to #{limit}")
     end
   end
 end

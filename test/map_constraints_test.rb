@@ -21,15 +21,14 @@ describe 'map parameter constraints' do
   permits({:id => '1'}, :as => {:id => 1})
   permits(:name => 'Mick')
 
-  rejects(:id => 1, :name => 123)
-  rejects(:id => 'Mick', :name => 'Mick')
+  rejects({:id => 1, :name => 123}, :key => :name)
+  rejects({:id => 'Mick', :name => 'Mick'}, :key => :id)
   rejects(123)
   rejects('abc')
   rejects nil
 end
 
 describe 'open-ended map parameter constraints' do
-
   subject do
     ActionController::Parameters.map
   end

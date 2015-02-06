@@ -108,19 +108,19 @@ module StrongerParameters
       hash_filter_without_stronger_parameters(params, other_filter)
 
       slice(*stronger_filter.keys).each do |key, value|
-
         constraint = stronger_filter[key]
-        begin
-          params[key] = constraint.value(value)
-        rescue InvalidParameter => e
-          e.key = key
+        result = params[key] = constraint.value(value)
+        if result.is_a?(InvalidParameter)
+          result.key = key
 
           name = "invalid_parameter.action_controller"
-          ActiveSupport::Notifications.publish(name, :key => key, :value => value, :message => e.message)
+          ActiveSupport::Notifications.publish(name, :key => key, :value => value, :message => result.message)
 
           params[key] = value
 
-          raise if self.class.action_on_invalid_parameters == :raise
+          raise result if self.class.action_on_invalid_parameters == :raise
+        else
+          result
         end
       end
     end

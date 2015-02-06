@@ -30,14 +30,15 @@ module StrongerParameters
       exception = nil
 
       constraints.each do |c|
-        begin
-          return c.value(v)
-        rescue InvalidParameter => e
-          exception ||= e
+        result = c.value(v)
+        if result.is_a?(InvalidParameter)
+          exception ||= result
+        else
+          return result
         end
       end
 
-      raise exception
+      exception
     end
 
     def |(other)
@@ -60,6 +61,7 @@ module StrongerParameters
     def value(v)
       constraints.each do |c|
         v = c.value(v)
+        return v if v.is_a?(InvalidParameter)
       end
       v
     end
