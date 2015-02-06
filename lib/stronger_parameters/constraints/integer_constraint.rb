@@ -9,7 +9,7 @@ module StrongerParameters
         return v.to_i
       end
 
-      InvalidParameter.new(v, 'must be an integer')
+      InvalidValue.new(v, 'must be an integer')
     end
   end
 end

@@ -31,7 +31,7 @@ module StrongerParameters
 
       constraints.each do |c|
         result = c.value(v)
-        if result.is_a?(InvalidParameter)
+        if result.is_a?(InvalidValue)
           exception ||= result
         else
           return result
@@ -61,7 +61,7 @@ module StrongerParameters
     def value(v)
       constraints.each do |c|
         v = c.value(v)
-        return v if v.is_a?(InvalidParameter)
+        return v if v.is_a?(InvalidValue)
       end
       v
     end

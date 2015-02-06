@@ -11,13 +11,13 @@ module StrongerParameters
     def value(v)
       if v.is_a?(String)
         if maximum_length && v.bytesize > maximum_length
-          return InvalidParameter.new(v, "can not be longer than #{maximum_length} bytes")
+          return InvalidValue.new(v, "can not be longer than #{maximum_length} bytes")
         end
 
         return v
       end
 
-      InvalidParameter.new(v, 'must be a string')
+      InvalidValue.new(v, 'must be a string')
     end
 
     def ==(other)

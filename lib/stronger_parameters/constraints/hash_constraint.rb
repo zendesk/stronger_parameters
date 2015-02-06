@@ -14,7 +14,7 @@ module StrongerParameters
         return ActionController::Parameters.new(v).permit(constraints)
       end
 
-      InvalidParameter.new(v, "must be a hash")
+      InvalidValue.new(v, "must be a hash")
     end
 
     def merge(other)

@@ -12,12 +12,12 @@ module StrongerParameters
       if v.is_a?(Array)
         return v.map do |item|
           result = item_constraint.value(item)
-          return result if result.is_a?(InvalidParameter)
+          return result if result.is_a?(InvalidValue)
           result
         end
       end
 
-      InvalidParameter.new(v, "must be an array")
+      InvalidValue.new(v, "must be an array")
     end
 
     def ==(other)

@@ -11,7 +11,7 @@ module StrongerParameters
     def value(v)
       return v if allowed.include?(v)
 
-      InvalidParameter.new(v, "must be one of these: #{allowed.to_sentence}")
+      InvalidValue.new(v, "must be one of these: #{allowed.to_sentence}")
     end
 
     def ==(other)
