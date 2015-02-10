@@ -109,18 +109,21 @@ module StrongerParameters
 
       slice(*stronger_filter.keys).each do |key, value|
         constraint = stronger_filter[key]
-        result = params[key] = constraint.value(value)
+        result = constraint.value(value)
         if result.is_a?(InvalidValue)
-          error = StrongerParameters::InvalidParameter.new(result, key)
-
           name = "invalid_parameter.action_controller"
           ActiveSupport::Notifications.publish(name, :key => key, :value => value, :message => result.message)
 
-          params[key] = value
+          case self.class.action_on_invalid_parameters
+          when :raise
+            raise StrongerParameters::InvalidParameter.new(result, key)
+          when Proc
+            self.class.action_on_invalid_parameters.call(result, key)
+          end
 
-          raise error if self.class.action_on_invalid_parameters == :raise
+          params[key] = value
         else
-          result
+          params[key] = result
         end
       end
     end

@@ -3,6 +3,7 @@ ENV["RAILS_ENV"] = "test"
 require 'bundler/setup'
 require 'minitest/autorun'
 require 'minitest/rg'
+require 'minitest/around'
 require 'rails'
 require 'action_controller'
 require 'rails/generators'

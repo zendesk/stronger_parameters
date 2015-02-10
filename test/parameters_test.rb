@@ -72,4 +72,39 @@ describe StrongerParameters::Parameters do
     rejects 2**63
     rejects -2**63 - 1
   end
+
+  describe ".action_on_invalid_parameters" do
+    around do |test|
+      begin
+        old = ActionController::Parameters.action_on_invalid_parameters
+        test.call
+      ensure
+        ActionController::Parameters.action_on_invalid_parameters = old
+      end
+    end
+
+    it "calls a block on mismatch" do
+      calls = []
+      ActionController::Parameters.action_on_invalid_parameters = lambda { |*args| calls << args }
+      result = params(:value => "a").permit(:value => ActionController::Parameters.integer32)
+      calls.size.must_equal 1
+      calls[0].size.must_equal 2
+      calls[0][0].value.must_equal "a"
+      calls[0][0].message.must_equal "must be an integer"
+      calls[0][1].must_equal "value"
+      result.must_equal "value" => "a"
+    end
+
+    it "does nothing on nil" do
+      ActionController::Parameters.action_on_invalid_parameters = nil
+      result = params(:value => "a").permit(:value => ActionController::Parameters.integer32)
+      result.must_equal "value" => "a"
+    end
+
+    it "raises on raise" do
+      assert_raises StrongerParameters::InvalidParameter do
+        params(:value => "a").permit(:value => ActionController::Parameters.integer32)
+      end
+    end
+  end
 end

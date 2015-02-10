@@ -17,6 +17,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'guard'
   spec.add_development_dependency 'guard-minitest'
   spec.add_development_dependency 'minitest-rails'
+  spec.add_development_dependency 'minitest-around'
   spec.add_development_dependency 'minitest-rg'
   spec.add_development_dependency 'wwtd'
 
