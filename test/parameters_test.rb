@@ -107,4 +107,34 @@ describe StrongerParameters::Parameters do
       end
     end
   end
+
+  describe "mixing non constraints" do
+    it "passes normal" do
+      params(:foo => "b", :value => "a").permit(:value).must_equal "value" => "a"
+    end
+
+    it "passes nested contraints in non-constraint" do
+      params(:value => {:key => 123}).permit(:value => {:key => ActionController::Parameters.integer32}).must_equal "value" => {"key" => 123}
+    end
+
+    it "fails nested contraints in non-constraint" do
+      assert_raises StrongerParameters::InvalidParameter do
+        params(:value => {:key => "xxx"}).permit(:value => {:key => ActionController::Parameters.integer32})
+      end
+    end
+
+    it "passes nested contraints in non-constraint array" do
+      params(:value => [{:key => 123}]).permit(:value => [{:key => ActionController::Parameters.integer32}]).must_equal "value" => [{"key" => 123}]
+    end
+
+    it "fails nested contraints in non-constraint array" do
+      assert_raises StrongerParameters::InvalidParameter do
+        params(:value => [{:key => "xxx"}]).permit(:value => [{:key => ActionController::Parameters.integer32}])
+      end
+    end
+
+    it "passes with nil for non-constraints" do
+      params(:value => nil).permit(:value => [{:key => ActionController::Parameters.integer32}]).must_equal({})
+    end
+  end
 end
