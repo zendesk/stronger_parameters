@@ -31,6 +31,10 @@ module StrongerParameters
         StringConstraint.new(options)
       end
 
+      def regexp(regex)
+        RegexpConstraint.new(regex)
+      end
+
       def integer
         @integer ||= IntegerConstraint.new
       end

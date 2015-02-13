@@ -151,6 +151,7 @@ This will permit these parameters:
 | Parameters.string              | value.is_a?(String)                                                     |
 | Parameters.integer             | value.is_a?(Fixnum) or '-1'                                             |
 | Parameters.float               | value.is_a?(Float)  or '-1.2'                                           |
+| Parameters.regexp(/foo/)       | value =~ regexp                                                         |
 | Parameters.enum('asc', 'desc') | ['asc', 'desc'].include?(value)                                         |
 | Parameters.lt(10)              | value < 10                                                              |
 | Parameters.lte(10)             | value <= 10                                                             |
