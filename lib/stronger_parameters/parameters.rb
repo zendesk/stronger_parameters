@@ -84,6 +84,10 @@ module StrongerParameters
         BooleanConstraint.new
       end
 
+      def float
+        FloatConstraint.new
+      end
+
       def array(item_constraint)
         ArrayConstraint.new(item_constraint)
       end
@@ -127,7 +131,6 @@ module StrongerParameters
         end
       end
     end
-
   end
 
   module ControllerSupport
