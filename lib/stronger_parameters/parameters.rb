@@ -99,6 +99,10 @@ module StrongerParameters
       def map(constraints = nil)
         HashConstraint.new(constraints)
       end
+
+      def nil_string
+        NilStringConstraint.new
+      end
     end
 
     def hash_filter_with_stronger_parameters(params, filter)
