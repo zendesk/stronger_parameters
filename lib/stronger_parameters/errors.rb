@@ -1,19 +1,20 @@
 module StrongerParameters
-  class InvalidParameter < StandardError
-    attr_accessor :key, :value, :message
+  class InvalidValue
+    attr_accessor :value, :message
 
     def initialize(value, message)
       @value = value
       @message = message
-      super(message)
     end
+  end
 
-    def to_s
-      if key.present?
-        "found invalid value for #{key}. Value #{super}"
-      else
-        "found invalid value. Value #{super}"
-      end
+  class InvalidParameter < StandardError
+    attr_accessor :key, :value
+
+    def initialize(invalid_value, key)
+      @value = invalid_value.value
+      @key = key
+      super(invalid_value.message)
     end
   end
 end

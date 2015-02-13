@@ -5,7 +5,7 @@ module StrongerParameters
     def value(v)
       return v if v.nil?
 
-      raise InvalidParameter.new(v, 'must be an nil')
+      InvalidValue.new(v, 'must be an nil')
     end
   end
 end
