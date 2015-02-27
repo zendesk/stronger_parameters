@@ -74,6 +74,15 @@ describe StrongerParameters::Parameters do
   end
 
   describe ".action_on_invalid_parameters" do
+    def capture_log
+      io = StringIO.new
+      old, Rails.logger = Rails.logger, Logger.new(io)
+      yield
+      io.string
+    ensure
+      Rails.logger = old
+    end
+
     around do |test|
       begin
         old = ActionController::Parameters.action_on_invalid_parameters
@@ -95,14 +104,31 @@ describe StrongerParameters::Parameters do
       result.must_equal "value" => "a"
     end
 
-    it "does nothing on nil" do
-      ActionController::Parameters.action_on_invalid_parameters = nil
-      result = params(:value => "a").permit(:value => ActionController::Parameters.integer32)
-      result.must_equal "value" => "a"
+    it "logs on log" do
+      ActionController::Parameters.action_on_invalid_parameters = :log
+      log = capture_log do
+        result = params(:value => "a").permit(:value => ActionController::Parameters.integer32)
+        result.must_equal "value" => "a"
+      end
+      log.must_include "WARN -- : value must be an integer, but was: \"a\""
     end
 
-    it "raises on raise" do
+    it "raises on default" do
       assert_raises StrongerParameters::InvalidParameter do
+        params(:value => "a").permit(:value => ActionController::Parameters.integer32)
+      end
+    end
+
+    it "raises on :raise" do
+      ActionController::Parameters.action_on_invalid_parameters = :raise
+      assert_raises StrongerParameters::InvalidParameter do
+        params(:value => "a").permit(:value => ActionController::Parameters.integer32)
+      end
+    end
+
+    it "fails on unknown" do
+      ActionController::Parameters.action_on_invalid_parameters = :sdfssfd
+      assert_raises ArgumentError do
         params(:value => "a").permit(:value => ActionController::Parameters.integer32)
       end
     end

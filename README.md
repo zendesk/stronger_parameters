@@ -144,6 +144,15 @@ This will permit these parameters:
 }
 ```
 
+## Production rollout
+
+Just want to log violations in production:
+
+```Ruby
+# config/environments/production.rb
+ActionController::Parameters.action_on_invalid_parameters = :log
+```
+
 ## Types
 
 | Syntax                         | (Simplified) Definition                                                 |
