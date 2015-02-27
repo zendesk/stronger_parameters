@@ -110,7 +110,7 @@ describe StrongerParameters::Parameters do
         result = params(:value => "a").permit(:value => ActionController::Parameters.integer32)
         result.must_equal "value" => "a"
       end
-      log.must_include "WARN -- : value must be an integer, but was: \"a\""
+      log.must_include "value must be an integer, but was: \"a\""
     end
 
     it "raises on default" do
