@@ -1,15 +1,15 @@
 # stronger_parameters
 [![Build Status](https://travis-ci.org/zendesk/stronger_parameters.svg?branch=master)](https://travis-ci.org/zendesk/stronger_parameters)
 
-This is an extension of `strong_parameters` with added type checking.
+This is an extension of `strong_parameters` with added type checking and conversion.
 
 ## Simple types
 You can specify simple types like this:
 
 ```ruby
 params.permit(
-  :id   => Parameters.id,
-  :name => Parameters.string
+  id: Parameters.id,
+  name: Parameters.string
 )
 ```
 
@@ -18,11 +18,11 @@ You can specify arrays like this:
 
 ```ruby
 params.permit(
-  :id => Parameters.array(Parameters.id)
+  id: Parameters.array(Parameters.id)
 )
 ```
 
-This will allow an array of id parameters that all are IDs.
+This will allow an array of id parameters that all are IDs (integer less than 2**31, greater than 0) and convert to Fixnum (`'2' --> 2`).
 
 ### Empty array -> nil
 Rails converts empty arrays to nil unless `config.action_dispatch.perform_deep_munge = false` is set
@@ -32,15 +32,15 @@ Rails converts empty arrays to nil unless `config.action_dispatch.perform_deep_m
 
 ```ruby
 params.permit(
-  :name    => Parameters.string,
-  :emails  => Parameters.array(Parameters.string),
-  :friends => Parameters.array(
+  name: Parameters.string,
+  emails: Parameters.array(Parameters.string),
+  friends: Parameters.array(
     Parameters.map(
-      :name   => Parameters.string,
-      :family => Parameters.map(
-        :name => Parameters.string
+      name: Parameters.string,
+      family: Parameters.map(
+        name: Parameters.string
       )
-      :hobbies => Parameters.array(Parameters.string)
+      hobbies: Parameters.array(Parameters.string)
     )
   )
 )
@@ -63,12 +63,12 @@ This will allow parameters like this:
 
 ```ruby
 params.require(:author).permit(
-  :name => Parameters.string,
-  :books_attributes => Parameters.array(
+  name: Parameters.string,
+  books_attributes: Parameters.array(
     Parameters.map(
-      :title => Parameters.string,
-      :id => Parameters.id,
-      :_destroy => Parameters.boolean
+      title: Parameters.string,
+      id: Parameters.id,
+      _destroy: Parameters.boolean
     )
   )
 )
@@ -94,7 +94,7 @@ If you want to permit a parameter to be one of multiple types, you can use the `
 
 ```ruby
 params.require(:ticket).permit(
-  :status => Parameters.id | Parameters.enum('open', 'closed')
+  status: Parameters.id | Parameters.enum('open', 'closed')
 )
 ```
 
@@ -119,7 +119,7 @@ You can use the `&` operator to apply further restrictions on the type:
 
 ```ruby
 params.require(:user).permit(
-  :age => Parameters.integer & Parameters.gte(0)
+  age: Parameters.integer & Parameters.gte(0)
 )
 ```
 
@@ -131,7 +131,7 @@ You can also use the `|` and `&` operators in arrays:
 
 ```ruby
 params.require(:group).permit(
-  :users => Parameters.array(Parameters.id | Parameters.string)
+  users: Parameters.array(Parameters.id | Parameters.string)
 )
 ```
 
