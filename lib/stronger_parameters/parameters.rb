@@ -126,11 +126,16 @@ module StrongerParameters
           name = "invalid_parameter.action_controller"
           ActiveSupport::Notifications.publish(name, :key => key, :value => value, :message => result.message)
 
-          case self.class.action_on_invalid_parameters
-          when :raise
+          action = self.class.action_on_invalid_parameters
+          case action
+          when :raise, nil
             raise StrongerParameters::InvalidParameter.new(result, key)
           when Proc
-            self.class.action_on_invalid_parameters.call(result, key)
+            action.call(result, key)
+          when :log
+            Rails.logger.warn("#{key} #{result.message}, but was: #{value.inspect}")
+          else
+            raise ArgumentError, "Unsupported value in action_on_invalid_parameters: #{action}"
           end
 
           params[key] = value
