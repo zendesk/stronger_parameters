@@ -5,7 +5,7 @@
  - added new `Parameters.regexp`
  - added new `Parameters.null_string`
  - added new unsigned `Parameters.ubigid` and `Parameters.uid`
- - WARNING: no longer accepts `nil` for all parameters, use ` | Parameters.nil`, for transition period you can use this to log all calls that would result in `StrongerParameters::InvalidParameter`
+ - WARNING: no longer accepts `nil` for all parameters, use ` | Parameters.nil`, for transition period you can use this to log all calls that would result in `StrongerParameters::InvalidParameter`, alternatively keep nils and use `ActionController::Parameters.allow_nil_for_everything = true`
  - `action_on_invalid_parameters` will now raise by default
  - `action_on_invalid_parameters` is now set on `ActionController::Parameters`
 

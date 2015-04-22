@@ -16,6 +16,7 @@ module StrongerParameters
     included do
       alias_method_chain :hash_filter, :stronger_parameters
       cattr_accessor :action_on_invalid_parameters, :instance_accessor => false
+      cattr_accessor :allow_nil_for_everything, :instance_accessor => false
     end
 
     module ClassMethods
@@ -120,6 +121,11 @@ module StrongerParameters
       hash_filter_without_stronger_parameters(params, other_filter)
 
       slice(*stronger_filter.keys).each do |key, value|
+        if value.nil? && self.class.allow_nil_for_everything
+          params[key] = nil
+          next
+        end
+
         constraint = stronger_filter[key]
         result = constraint.value(value)
         if result.is_a?(InvalidValue)
