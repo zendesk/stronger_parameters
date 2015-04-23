@@ -28,6 +28,11 @@ This will allow an array of id parameters that all are IDs (integer less than 2*
 Rails converts empty arrays to nil unless `config.action_dispatch.perform_deep_munge = false` is set
 (available in Rails 4.1+). Either use this or `Parameters.array | Parameters.nil` to deal with this.
 
+### Allowing nils
+
+It can be convenient to allow nil to be passed as all kinds of attributes since ActiveRecord converts it to false/0 behind the scenes.
+`ActionController::Parameters.allow_nil_for_everything = true`
+
 ## Nested Parameters
 
 ```ruby

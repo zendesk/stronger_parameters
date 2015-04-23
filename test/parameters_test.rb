@@ -159,8 +159,29 @@ describe StrongerParameters::Parameters do
       end
     end
 
-    it "passes with nil for non-constraints" do
-      params(:value => nil).permit(:value => [{:key => ActionController::Parameters.integer32}]).must_equal({})
+    describe "nils" do
+      def pass_nil_as_constrain
+        params(:value => nil).permit(:value => ActionController::Parameters.integer32)
+      end
+
+      it "passes with nil for non-constraints" do
+        params(:value => nil).permit(:value => [{:key => ActionController::Parameters.integer32}])
+      end
+
+      it "does not pass with nil for constraints" do
+        assert_raises StrongerParameters::InvalidParameter do
+          pass_nil_as_constrain
+        end
+      end
+
+      it "passes with nil for constraints when allow_nil_for_everything is on" do
+        begin
+          old, ActionController::Parameters.allow_nil_for_everything = ActionController::Parameters.allow_nil_for_everything, true
+          pass_nil_as_constrain.must_equal("value" => nil)
+        ensure
+          ActionController::Parameters.allow_nil_for_everything = old
+        end
+      end
     end
   end
 end
