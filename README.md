@@ -165,7 +165,7 @@ ActionController::Parameters.action_on_invalid_parameters = :log
 | Parameters.string              | value.is_a?(String)                                                     |
 | Parameters.integer             | value.is_a?(Fixnum) or '-1'                                             |
 | Parameters.float               | value.is_a?(Float) or '-1.2'                                            |
-| Parameters.datetime            | value.is_a?(DateTime) or '2014-05-13'                                   |
+| Parameters.datetime            | value.is_a?(DateTime) or '2014-05-13' or '2015-03-31T14:34:56Z'         |
 | Parameters.regexp(/foo/)       | value =~ regexp                                                         |
 | Parameters.enum('asc', 'desc') | ['asc', 'desc'].include?(value)                                         |
 | Parameters.lt(10)              | value < 10                                                              |
