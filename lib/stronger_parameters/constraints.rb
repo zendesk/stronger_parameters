@@ -79,6 +79,7 @@ end
 
 require 'stronger_parameters/constraints/string_constraint'
 require 'stronger_parameters/constraints/float_constraint'
+require 'stronger_parameters/constraints/date_time_constraint'
 require 'stronger_parameters/constraints/regexp_constraint'
 require 'stronger_parameters/constraints/integer_constraint'
 require 'stronger_parameters/constraints/nil_constraint'

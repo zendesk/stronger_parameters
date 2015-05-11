@@ -104,6 +104,10 @@ module StrongerParameters
       def nil_string
         NilStringConstraint.new
       end
+
+      def datetime
+        DateTimeConstraint.new
+      end
     end
 
     def hash_filter_with_stronger_parameters(params, filter)
