@@ -1,4 +1,4 @@
-# v2.0.0 (unreleased)
+# v2.0.0
  - no longer raises `StrongerParameters::InvalidParameter` inside of constraints: make your custom constraints return `StrongerParameters::InvalidValue` instead
  - added new `Parameters.nil`
  - added new `Parameters.float`
