@@ -12,6 +12,8 @@ module StrongerParameters
       if v.is_a?(String)
         if maximum_length && v.bytesize > maximum_length
           return InvalidValue.new(v, "can not be longer than #{maximum_length} bytes")
+        elsif !v.valid_encoding?
+          return InvalidValue.new(v, 'must have valid encoding')
         end
 
         return v
