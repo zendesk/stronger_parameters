@@ -6,6 +6,9 @@ describe 'date parameter constraints' do
   permits "2015-03-31", as: DateTime.parse("2015-03-31")
   permits "2015-03-31T14:34:56Z", as: DateTime.parse("2015-03-31T14:34:56Z")
 
+  rejects []
+  rejects 123
+  rejects nil
   rejects "2015-03-32"  # Invalid day
   rejects "2015-00-15"  # Invalid month
 end
