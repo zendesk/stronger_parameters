@@ -109,6 +109,10 @@ module StrongerParameters
       def datetime
         DateTimeConstraint.new
       end
+
+      def file
+        FileConstraint.new
+      end
     end
 
     def hash_filter_with_stronger_parameters(params, filter)
