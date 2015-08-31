@@ -139,21 +139,21 @@ describe StrongerParameters::Parameters do
       params(:foo => "b", :value => "a").permit(:value).must_equal "value" => "a"
     end
 
-    it "passes nested contraints in non-constraint" do
+    it "passes nested constraints in non-constraint" do
       params(:value => {:key => 123}).permit(:value => {:key => ActionController::Parameters.integer32}).must_equal "value" => {"key" => 123}
     end
 
-    it "fails nested contraints in non-constraint" do
+    it "fails nested constraints in non-constraint" do
       assert_raises StrongerParameters::InvalidParameter do
         params(:value => {:key => "xxx"}).permit(:value => {:key => ActionController::Parameters.integer32})
       end
     end
 
-    it "passes nested contraints in non-constraint array" do
+    it "passes nested constraints in non-constraint array" do
       params(:value => [{:key => 123}]).permit(:value => [{:key => ActionController::Parameters.integer32}]).must_equal "value" => [{"key" => 123}]
     end
 
-    it "fails nested contraints in non-constraint array" do
+    it "fails nested constraints in non-constraint array" do
       assert_raises StrongerParameters::InvalidParameter do
         params(:value => [{:key => "xxx"}]).permit(:value => [{:key => ActionController::Parameters.integer32}])
       end
