@@ -3,6 +3,7 @@ require 'action_pack'
 if ActionPack::VERSION::MAJOR == 3
   require 'action_controller/parameters'
 else
+  require 'action_controller/base'
   require 'action_controller/metal/strong_parameters'
 end
 
