@@ -160,24 +160,25 @@ ActionController::Parameters.action_on_invalid_parameters = :log
 
 ## Types
 
-| Syntax                         | (Simplified) Definition                                                 |
-|--------------------------------|-------------------------------------------------------------------------|
-| Parameters.string              | value.is_a?(String)                                                     |
-| Parameters.integer             | value.is_a?(Fixnum) or '-1'                                             |
-| Parameters.float               | value.is_a?(Float) or '-1.2'                                            |
-| Parameters.datetime            | value.is_a?(DateTime) or '2014-05-13' or '2015-03-31T14:34:56Z'         |
-| Parameters.regexp(/foo/)       | value =~ regexp                                                         |
-| Parameters.enum('asc', 'desc') | ['asc', 'desc'].include?(value)                                         |
-| Parameters.lt(10)              | value < 10                                                              |
-| Parameters.lte(10)             | value <= 10                                                             |
-| Parameters.gt(0)               | value > 0                                                               |
-| Parameters.gte(0)              | value >= 0                                                              |
-| Parameters.integer32           | Parameters.integer & Parameters.lt(2 ** 31) & Parameters.gte(-2 ** 31)  |
-| Parameters.integer64           | Parameters.integer & Parameters.lt(2 ** 63) & Parameters.gte(-2 ** 63)  |
-| Parameters.id                  | Parameters.integer & Parameters.lt(2 ** 31) & Parameters.gte(0)         |
-| Parameters.bigid               | Parameters.integer & Parameters.lt(2 ** 63) & Parameters.gte(0)         |
-| Parameters.uid                 | Parameters.integer & Parameters.lt(2 ** 32) & Parameters.gte(0)         |
-| Parameters.ubigid              | Parameters.integer & Parameters.lt(2 ** 64) & Parameters.gte(0)         |
-| Parameters.boolean             | Parameters.enum(true, false, 'true', 'false', 1, 0)                     |
-| Parameters.nil                 | value is nil                                                            |
-| Parameters.nil_string          | value is nil, '', 'undefined'                                           |
+| Syntax                         | (Simplified) Definition                                                                    |
+|--------------------------------|--------------------------------------------------------------------------------------------|
+| Parameters.string              | value.is_a?(String)                                                                        |
+| Parameters.integer             | value.is_a?(Fixnum) or '-1'                                                                |
+| Parameters.float               | value.is_a?(Float) or '-1.2'                                                               |
+| Parameters.datetime            | value.is_a?(DateTime) or '2014-05-13' or '2015-03-31T14:34:56Z'                            |
+| Parameters.regexp(/foo/)       | value =~ regexp                                                                            |
+| Parameters.enum('asc', 'desc') | ['asc', 'desc'].include?(value)                                                            |
+| Parameters.lt(10)              | value < 10                                                                                 |
+| Parameters.lte(10)             | value <= 10                                                                                |
+| Parameters.gt(0)               | value > 0                                                                                  |
+| Parameters.gte(0)              | value >= 0                                                                                 |
+| Parameters.integer32           | Parameters.integer & Parameters.lt(2 ** 31) & Parameters.gte(-2 ** 31)                     |
+| Parameters.integer64           | Parameters.integer & Parameters.lt(2 ** 63) & Parameters.gte(-2 ** 63)                     |
+| Parameters.id                  | Parameters.integer & Parameters.lt(2 ** 31) & Parameters.gte(0)                            |
+| Parameters.bigid               | Parameters.integer & Parameters.lt(2 ** 63) & Parameters.gte(0)                            |
+| Parameters.uid                 | Parameters.integer & Parameters.lt(2 ** 32) & Parameters.gte(0)                            |
+| Parameters.ubigid              | Parameters.integer & Parameters.lt(2 ** 64) & Parameters.gte(0)                            |
+| Parameters.boolean             | Parameters.enum(true, false, 'true', 'false', 1, 0)                                        |
+| Parameters.nil                 | value is nil                                                                               |
+| Parameters.nil_string          | value is nil, '', 'undefined'                                                              |
+| Parameters.file                | File, StringIO, Rack::Test::UploadedFile, ActionDispatch::Http::UploadedFile or subclasses |
