@@ -114,8 +114,8 @@ module StrongerParameters
         FileConstraint.new
       end
 
-      def decimal(precision = 2)
-        DecimalConstraint.new(precision)
+      def decimal(precision = 8, scale =2)
+        DecimalConstraint.new(precision, scale)
       end
     end
 
