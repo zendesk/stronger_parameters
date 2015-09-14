@@ -113,6 +113,10 @@ module StrongerParameters
       def file
         FileConstraint.new
       end
+
+      def decimal(precision = 2)
+        DecimalConstraint.new(precision)
+      end
     end
 
     def hash_filter_with_stronger_parameters(params, filter)
