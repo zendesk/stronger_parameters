@@ -12,11 +12,18 @@ describe 'decimal parameter constraints' do
     permits '12.34', as: 12.34
     permits '-12.34', as: -12.34
     permits 12.34
-    permits -12.23
+    permits -12.34
 
-    rejects 1
-    rejects '1'
-    rejects '-1'
+    permits 1
+    permits -1
+    permits '1', as: 1
+    permits '-1', as: -1
+
+    permits '1.2', as: 1.2
+    permits '-1.2', as: -1.2
+    permits 1.2
+    permits -1.2
+
     rejects 'abc'
     rejects '1.2.3'
     rejects '.3'
@@ -24,7 +31,7 @@ describe 'decimal parameter constraints' do
     rejects true
 
     rejects '1.234', as: 1.234
-    rejects '1.2', as: 1.2
+    rejects '-1.234', as: -1.234
     rejects 1.234
     rejects -1.234
 
