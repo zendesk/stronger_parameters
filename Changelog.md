@@ -1,3 +1,12 @@
+# v2.3.0
+ - decimal constraint
+
+# v2.2.0
+ - file type constraint
+
+# v2.1.0
+ - encoding fixes
+
 # v2.0.0
  - no longer raises `StrongerParameters::InvalidParameter` inside of constraints: make your custom constraints return `StrongerParameters::InvalidValue` instead
  - added new `Parameters.nil`
