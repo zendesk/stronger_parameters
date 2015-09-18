@@ -2,28 +2,19 @@ require 'stronger_parameters/constraints'
 
 module StrongerParameters
   class DecimalConstraint < Constraint
-    attr_reader :precision, :scale
-
     def initialize(precision, scale)
       @precision = precision
       @scale = scale
+      @regex = /\A-?\d{1,#{precision - scale}}#{"(\\.\\d{1,#{scale}})?" if scale > 0}\Z/
     end
 
     def value(v)
-      if (v.is_a?(Fixnum) || v.is_a?(Bignum)) && (v.abs.to_s.size <= (precision - scale))
-        return v.to_d
-      elsif v.is_a?(Float) && (v.abs.to_s.size - 1) <= precision
-        return value(v.to_s)
-      elsif v.is_a?(String)
-        if scale > 0 && v =~ /\A-?(\d{1,#{precision - scale}}\.\d{1,#{scale}}|\d{1,#{precision - scale}})\Z/
-          return v.to_d
-        elsif v =~ /\A-?\d{1,#{precision - scale}}\Z/
-          return v.to_d
-        end
-
+      match = v.to_s
+      if match =~ @regex
+        BigDecimal(match)
+      else
+        StrongerParameters::InvalidValue.new(v, "must be a decimal with precision #{@precision} and scale #{@scale}")
       end
-
-      StrongerParameters::InvalidValue.new(v, 'must be a decimal')
     end
   end
 end
