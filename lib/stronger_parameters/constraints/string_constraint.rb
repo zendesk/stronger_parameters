@@ -15,6 +15,8 @@ module StrongerParameters
           return InvalidValue.new(v, "can not be longer than #{maximum_length} bytes")
         elsif minimum_length && v.bytesize < minimum_length
           return InvalidValue.new(v, "can not be shorter than #{minimum_length} bytes")
+        elsif !v.valid_encoding?
+          return InvalidValue.new(v, 'must have valid encoding')
         end
 
         return v

@@ -3,6 +3,7 @@ require 'action_pack'
 if ActionPack::VERSION::MAJOR == 3
   require 'action_controller/parameters'
 else
+  require 'action_controller/base'
   require 'action_controller/metal/strong_parameters'
 end
 
@@ -103,6 +104,18 @@ module StrongerParameters
 
       def nil_string
         NilStringConstraint.new
+      end
+
+      def datetime
+        DateTimeConstraint.new
+      end
+
+      def file
+        FileConstraint.new
+      end
+
+      def decimal(precision = 8, scale =2)
+        DecimalConstraint.new(precision, scale)
       end
     end
 
