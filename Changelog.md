@@ -1,3 +1,6 @@
+# v2.4.0
+ - support string minimum_size
+
 # v2.3.0
  - decimal constraint
 
