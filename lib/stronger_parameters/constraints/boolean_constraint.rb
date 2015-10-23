@@ -2,7 +2,7 @@ require 'stronger_parameters/constraints'
 
 module StrongerParameters
   class BooleanConstraint < Constraint
-    TRUE_VALUES  = [true, 'true', '1', 1].freeze
+    TRUE_VALUES  = [true, 'true', '1', 1, 'on'].freeze
     FALSE_VALUES = [false, 'false', '0', 0].freeze
 
     def value(v)
