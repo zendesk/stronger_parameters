@@ -1,7 +1,5 @@
-source "https://rubygems.org"
-
 gem "rails", "~> 3.2.21"
 gem "strong_parameters"
 gem "test-unit-minitest"
 
-gemspec :path=>"../"
+eval_gemfile 'gemfiles/common.rb'
