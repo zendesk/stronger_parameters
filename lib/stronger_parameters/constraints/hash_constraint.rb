@@ -9,9 +9,13 @@ module StrongerParameters
     end
 
     def value(v)
-      if v.is_a?(Hash)
+      case
+      when v.is_a?(Hash)
         return ActionController::Parameters.new(v).permit! if constraints.nil?
         return ActionController::Parameters.new(v).permit(constraints)
+      when ActionPack::VERSION::MAJOR >= 5 && v.is_a?(ActionController::Parameters)
+        return v.permit! if constraints.nil?
+        return v.permit(constraints)
       end
 
       InvalidValue.new(v, "must be a hash")
