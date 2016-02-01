@@ -6,7 +6,6 @@ rvm:
   - 2.1.8
   - 2.2.3
   - 2.3.0
-before_install: gem install bundler
 gemfile:
   - gemfiles/rails3.2.gemfile
   - gemfiles/rails4.1.gemfile
