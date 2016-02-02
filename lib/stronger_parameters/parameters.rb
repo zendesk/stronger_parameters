@@ -15,7 +15,8 @@ module StrongerParameters
     extend ActiveSupport::Concern
 
     included do
-      alias_method_chain :hash_filter, :stronger_parameters
+      alias_method :hash_filter_without_stronger_parameters, :hash_filter
+      alias_method :hash_filter, :hash_filter_with_stronger_parameters
       cattr_accessor :action_on_invalid_parameters, :instance_accessor => false
       cattr_accessor :allow_nil_for_everything, :instance_accessor => false
     end
@@ -172,7 +173,7 @@ module StrongerParameters
 
     included do
       rescue_from(StrongerParameters::InvalidParameter) do |e|
-        render :text => "Invalid parameter: #{e.key} #{e.message}", :status => :bad_request
+        render (ActiveSupport::VERSION::MAJOR < 5 ? :text : :plain) => "Invalid parameter: #{e.key} #{e.message}", :status => :bad_request
       end
     end
   end

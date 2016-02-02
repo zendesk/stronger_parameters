@@ -33,7 +33,7 @@ module ActionController
     include SharedTestRoutes.url_helpers
 
     rescue_from(ActionController::ParameterMissing) do |e|
-      render :text => "Required parameter missing: #{e.param}", :status => :bad_request
+      render (ActiveSupport::VERSION::MAJOR < 5 ? :text : :plain) => "Required parameter missing: #{e.param}", :status => :bad_request
     end
   end
 
@@ -63,6 +63,7 @@ class MiniTest::Spec
 
     it "permits #{value.inspect} as #{type_casted.inspect}" do
       permitted = params(:value => value).permit(:value => subject)
+      permitted = permitted.to_h if Rails::VERSION::MAJOR >= 5
       permitted[:value].must_equal type_casted
     end
   end

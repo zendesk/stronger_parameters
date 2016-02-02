@@ -2,19 +2,22 @@ language: ruby
 sudo: false
 cache: bundler
 rvm:
-  - 1.9.3
   - 2.0.0
   - 2.1.8
   - 2.2.3
   - 2.3.0
-before_install: gem install bundler
 gemfile:
   - gemfiles/rails3.2.gemfile
-  - gemfiles/rails4.0.gemfile
   - gemfiles/rails4.1.gemfile
   - gemfiles/rails4.2.gemfile
+  - gemfiles/rails5.0.gemfile
 branches:
   only: master
 script: bundle exec rake test
 matrix:
   fast_finish: true
+  exclude:
+    - rvm: 2.0.0
+      gemfile: gemfiles/rails5.0.gemfile
+    - rvm: 2.1.8
+      gemfile: gemfiles/rails5.0.gemfile
