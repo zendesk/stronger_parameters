@@ -1,4 +1,4 @@
 gem "rails", "~> 5.0.0.beta1"
-gem "minitest-rails", github: "pschambacher/minitest-rails", ref: "b3586d0"
+gem "minitest-rails", github: "pschambacher/minitest-rails", ref: "14488a8" # https://github.com/blowmage/minitest-rails/pull/192
 
 eval_gemfile 'gemfiles/common.rb'
