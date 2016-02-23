@@ -182,4 +182,5 @@ ActionController::Parameters.action_on_invalid_parameters = :log
 | Parameters.nil                 | value is nil                                                                               |
 | Parameters.nil_string          | value is nil, '', 'undefined'                                                              |
 | Parameters.file                | File, StringIO, Rack::Test::UploadedFile, ActionDispatch::Http::UploadedFile or subclasses |
-| Parameters.decimal(8,2)        | value is a String, Integer or Float with a precision of 8 and scale of 2                   |
+| Parameters.decimal(8,2)        | value is a String, Integer or Float with a precision of 9 and scale of 2                   |
+| Parameters.hex                  | value is a String that matches the hexadecimal format |

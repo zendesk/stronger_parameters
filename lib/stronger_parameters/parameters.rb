@@ -118,6 +118,10 @@ module StrongerParameters
       def decimal(precision = 8, scale =2)
         DecimalConstraint.new(precision, scale)
       end
+
+      def hex
+        HexConstraint.new
+      end
     end
 
     def hash_filter_with_stronger_parameters(params, filter)
