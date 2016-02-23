@@ -1,3 +1,11 @@
+# v2.6.0
+ - add hex constraint
+
+# v2.5.0
+ - rails 5.0 support
+ - fix type, null_string => nil_string
+ - allow the value "on" to be considered boolean
+
 # v2.4.0
  - support string minimum_size
 
