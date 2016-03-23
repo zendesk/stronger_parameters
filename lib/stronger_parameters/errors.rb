@@ -14,7 +14,7 @@ module StrongerParameters
     def initialize(invalid_value, key)
       @value = invalid_value.value
       @key = key
-      super(invalid_value.message)
+      super("#{key} => #{invalid_value.message}")
     end
   end
 end

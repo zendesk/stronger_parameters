@@ -24,7 +24,7 @@ describe BooksController do
       post :create, :params => { :book => { :id => 'Mjallo!' } }
     end
     assert_response :bad_request
-    response.body.must_equal 'Invalid parameter: id must be an integer'
+    response.body.must_equal 'Invalid parameter: id id => must be an integer'
   end
 
   it 'permits valid params' do
