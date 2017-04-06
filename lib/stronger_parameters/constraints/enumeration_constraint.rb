@@ -1,4 +1,4 @@
-require 'stronger_parameters/constraints'
+require 'stronger_parameters/constraint'
 
 module StrongerParameters
   class EnumerationConstraint < Constraint

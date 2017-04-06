@@ -1,9 +1,9 @@
-require 'stronger_parameters/constraints'
+require 'stronger_parameters/constraint'
 
 module StrongerParameters
   class IntegerConstraint < Constraint
     def value(v)
-      if v.is_a?(Fixnum) || v.is_a?(Bignum)
+      if v.is_a?(Integer)
         return v
       elsif v.is_a?(String) && v =~ /\A-?\d+\Z/
         return v.to_i
