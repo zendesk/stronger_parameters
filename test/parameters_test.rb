@@ -8,7 +8,7 @@ describe StrongerParameters::Parameters do
     permits 1
     permits 2**63 - 1
 
-    rejects -1
+    rejects(-1)
     rejects 'a'
     rejects 2**63
   end
@@ -20,7 +20,7 @@ describe StrongerParameters::Parameters do
     permits 1
     permits 2**31 - 1
 
-    rejects -1
+    rejects(-1)
     rejects 'a'
     rejects 2**31
   end
@@ -32,7 +32,7 @@ describe StrongerParameters::Parameters do
     permits 1
     permits 2**64 - 1
 
-    rejects -1
+    rejects(-1)
     rejects 'a'
     rejects 2**64
   end
@@ -44,7 +44,7 @@ describe StrongerParameters::Parameters do
     permits 1
     permits 2**32 - 1
 
-    rejects -1
+    rejects(-1)
     rejects 'a'
     rejects 2**32
   end
@@ -54,11 +54,11 @@ describe StrongerParameters::Parameters do
 
     permits '1', as: 1
     permits 2**31 - 1
-    permits -2**31
+    permits(-2**31)
 
     rejects 'a'
     rejects 2**31
-    rejects -2**31 - 1
+    rejects(-2**31 - 1)
   end
 
   describe ".integer64" do
@@ -66,11 +66,11 @@ describe StrongerParameters::Parameters do
 
     permits '1', as: 1
     permits 2**63 - 1
-    permits -2**63
+    permits(-2**63)
 
     rejects 'a'
     rejects 2**63
-    rejects -2**63 - 1
+    rejects(-2**63 - 1)
   end
 
   describe ".action_on_invalid_parameters" do

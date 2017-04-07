@@ -6,7 +6,7 @@ describe 'float parameter constraints' do
   permits "1.2", as: 1.2
   permits "-1.2", as: -1.2
   permits 1.2
-  permits -1.2
+  permits(-1.2)
 
   rejects 1
   rejects '1'
