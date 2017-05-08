@@ -20,5 +20,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'wwtd'
   spec.add_development_dependency 'bump'
 
-  spec.add_runtime_dependency 'actionpack', '>= 3.2', '< 5.1'
+  spec.add_runtime_dependency 'actionpack', '>= 3.2', '< 5.2'
 end
