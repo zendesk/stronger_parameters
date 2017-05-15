@@ -177,7 +177,7 @@ module StrongerParameters
 
     included do
       rescue_from(StrongerParameters::InvalidParameter) do |e|
-        render (ActiveSupport::VERSION::MAJOR < 5 ? :text : :plain) => "Invalid parameter: #{e.key} #{e.message}", :status => :bad_request
+        render (ActiveSupport::VERSION::MAJOR < 5 ? :text : :plain) => e.message, :status => :bad_request
       end
     end
   end
