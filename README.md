@@ -158,6 +158,48 @@ Just want to log violations in production:
 ActionController::Parameters.action_on_invalid_parameters = :log
 ```
 
+## ControllerSupport::ParameterWhitelist
+
+When included into a controller, this module forces the developer
+to explicitly whitelist which parameters are passed to any methods.
+
+Examples:
+
+```ruby
+class TestController < ApplicationController
+  include StrongerParameters::ControllerSupport::ParameterWhitelist
+
+  allow_parameters :show, forum_id: Parameter.integer
+  allow_parameters :create, topic: { forum: { :id: Parameter.integer } }
+  allow_parameters :index, {} # no parameters allowed
+  allow_parameters :update, :anything # all parameters allowed, should only be used when migrating old controllers/actions
+end
+```
+
+The `action_on_invalid_parameters :log` directive may be used to log and warn, but note that it
+is set to raise in tests unless you change `action_on_unpermitted_parameters` (from [Strong Parameters](https://github.com/rails/strong_parameters))
+to `false` or `:log`.
+
+### Production rollout
+
+Just want to log violations in production:
+
+```ruby
+class MyController < ApplicationController
+  log_stronger_parameter_violations! unless Rails.env.test? # Still want tests to raise
+
+  allow_parameters :update, :anything # should be made stricter once figuring out the correct list of parameters
+end
+```
+
+Api response includes header with violations:
+
+```Ruby
+# config/application.rb
+config.stronger_parameters_violation_header = 'X-StrongerParameters-API-Warn'
+```
+
+
 ## Types
 
 | Syntax                         | (Simplified) Definition                                                                    |

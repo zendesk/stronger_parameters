@@ -74,15 +74,6 @@ describe StrongerParameters::Parameters do
   end
 
   describe ".action_on_invalid_parameters" do
-    def capture_log
-      io = StringIO.new
-      old, Rails.logger = Rails.logger, Logger.new(io)
-      yield
-      io.string
-    ensure
-      Rails.logger = old
-    end
-
     around do |test|
       begin
         old = ActionController::Parameters.action_on_invalid_parameters

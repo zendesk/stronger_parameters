@@ -58,6 +58,15 @@ class MiniTest::Spec
     err.key.must_equal key.to_s
   end
 
+  def capture_log
+    io = StringIO.new
+    old, Rails.logger = Rails.logger, Logger.new(io)
+    yield
+    io.string
+  ensure
+    Rails.logger = old
+  end
+
   def self.permits(value, options = {})
     type_casted = options.fetch(:as, value)
 
