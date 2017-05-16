@@ -158,45 +158,65 @@ Just want to log violations in production:
 ActionController::Parameters.action_on_invalid_parameters = :log
 ```
 
-## ControllerSupport::ParameterWhitelist
+## ControllerSupport::PermittedParameters
 
 When included into a controller, this module forces the developer
-to explicitly whitelist which parameters are passed to any methods.
+to explicitly whitelist which parameters are permitted for every action.
 
 Examples:
 
 ```ruby
 class TestController < ApplicationController
-  include StrongerParameters::ControllerSupport::ParameterWhitelist
+  include StrongerParameters::ControllerSupport::PermittedParameters
 
-  allow_parameters :show, forum_id: Parameter.integer
-  allow_parameters :create, topic: { forum: { :id: Parameter.integer } }
-  allow_parameters :index, {} # no parameters allowed
-  allow_parameters :update, :anything # all parameters allowed, should only be used when migrating old controllers/actions
-end
+  permitted_parameters :all, locale: Parameters.string # permit :locale in all actions for this controller
+
+  permitted_parameters :show, forum_id: Parameters.integer
+  def show
+  end
+
+  permitted_parameters :create, topic: { forum: { :id: Parameters.integer } }
+  def create
+  end
+
+  permitted_parameters :index, {} # no parameters permitted
+  def index
+  end
+
+  permitted_parameters :update, :anything # all parameters permitted, should only be used when migrating old controllers/actions
+  def update
+  end
 ```
 
-The `action_on_invalid_parameters :log` directive may be used to log and warn, but note that it
-is set to raise in tests unless you change `action_on_unpermitted_parameters` (from [Strong Parameters](https://github.com/rails/strong_parameters))
-to `false` or `:log`.
 
-### Production rollout
+### Log only mode
 
-Just want to log violations in production:
+Just want to log violations in production, let all params pass through:
 
 ```ruby
 class MyController < ApplicationController
-  log_stronger_parameter_violations! unless Rails.env.test? # Still want tests to raise
+  log_unpermitted_parameters! unless Rails.env.test? # Still want tests to raise
 
-  allow_parameters :update, :anything # should be made stricter once figuring out the correct list of parameters
+  permitted_parameters :update, user: { name: Parameters.string }
+  def update
+  end
 end
 ```
+
+### Notifying users about unpermitted
 
 Api response includes header with violations:
 
 ```Ruby
 # config/application.rb
 config.stronger_parameters_violation_header = 'X-StrongerParameters-API-Warn'
+```
+
+```shell
+curl -I 'http://localhost/api/users/1.json' -X POST -d '{ "user": { "id": 1 } }'
+=> HTTP/1.1 200 OK
+=> ...
+=> X-StrongerParameters-API-Warn: Removed restricted keys ["user.id"] from parameters according to permitted list
 ```
 
 

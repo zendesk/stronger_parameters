@@ -2,13 +2,13 @@ require 'stronger_parameters/constraints'
 
 module StrongerParameters
   module ControllerSupport
-    module ParameterWhitelist
+    module PermittedParameters
       def self.included(klass)
         klass.extend ClassMethods
-        klass.before_action :whitelist_parameters
+        klass.before_action :permit_parameters
       end
 
-      class AllowedParameters < HashWithIndifferentAccess
+      class PermittedParametersHash < HashWithIndifferentAccess
         def initialize(other = nil)
           super()
           merge!(other) unless other.nil?
@@ -62,7 +62,7 @@ module StrongerParameters
         end
       end
 
-      DEFAULT_ALLOWED = AllowedParameters.new(
+      DEFAULT_PERMITTED = PermittedParametersHash.new(
         controller: ActionController::Parameters.anything,
         action: ActionController::Parameters.anything,
         format: ActionController::Parameters.anything,
@@ -72,56 +72,56 @@ module StrongerParameters
       module ClassMethods
         def self.extended(base)
           base.class_eval do
-            class_attribute :log_stronger_parameter_violations, instance_accessor: false
+            class_attribute :log_unpermitted_parameters, instance_accessor: false
           end
         end
 
-        def log_stronger_parameter_violations!
-          self.log_stronger_parameter_violations = true
+        def log_unpermitted_parameters!
+          self.log_unpermitted_parameters = true
         end
 
-        def allow_parameters(action, allowed)
-          if allowed_parameters[action] == :anything && allowed != :anything
+        def permitted_parameters(action, permitted)
+          if permitted_parameters_list[action] == :anything && permitted != :anything
             raise ArgumentError, "#{self}/#{action} can not add to :anything"
           end
 
-          allowed_parameters.deep_merge!(action => allowed)
+          permitted_parameters_list.deep_merge!(action => permitted)
         end
 
-        def allowed_parameters
-          @allowed_parameters ||= if superclass.respond_to?(:allowed_parameters)
-            superclass.allowed_parameters.deep_dup
+        def permitted_parameters_list
+          @permitted_parameters_list ||= if superclass.respond_to?(:permitted_parameters_list)
+            superclass.permitted_parameters_list.deep_dup
           else
-            all = DEFAULT_ALLOWED.dup
+            all = DEFAULT_PERMITTED.dup
             all[:test_route] = ActionController::Parameters.string if Rails.env.test?
             { all: all }.with_indifferent_access
           end
         end
 
-        def allowed_parameters_for(action)
-          unless for_action = allowed_parameters[action]
+        def permitted_parameters_for(action)
+          unless for_action = permitted_parameters_list[action]
             location = instance_method(action).source_location
-            raise KeyError, "Action #{action} for #{self} does not have any allowed parameters (#{location.join(":")})"
+            raise KeyError, "Action #{action} for #{self} does not have any permitted parameters (#{location.join(":")})"
           end
           return :anything if for_action == :anything
-          allowed_parameters[:all].merge(for_action)
+          permitted_parameters_list[:all].merge(for_action)
         end
       end
 
       private
 
-      def whitelist_parameters
+      def permit_parameters
         action = params[:action].to_sym
-        allowed = self.class.allowed_parameters_for(action)
+        permitted = self.class.permitted_parameters_for(action)
 
-        if allowed == :anything
+        if permitted == :anything
           Rails.logger.warn("#{params[:controller]}/#{params[:action]} does not filter parameters")
           return
         end
 
-        permitted_params = without_invalid_parameter_exceptions { params.permit(allowed) }
+        permitted_params = without_invalid_parameter_exceptions { params.permit(permitted) }
         restricted_keys = flat_keys(params) - flat_keys(permitted_params)
-        filter_params = !self.class.log_stronger_parameter_violations
+        filter_params = !self.class.log_unpermitted_parameters
 
         show_restricted_keys(restricted_keys, filter_params)
 
@@ -139,7 +139,7 @@ module StrongerParameters
         return if restricted_keys.empty?
 
         log_prefix = (filter_params ? 'Removed' : 'Found')
-        message = "#{log_prefix} restricted keys #{restricted_keys.inspect} from parameters according to whitelist"
+        message = "#{log_prefix} restricted keys #{restricted_keys.inspect} from parameters according to permitted list"
 
         header = Rails.configuration.try(:stronger_parameters_violation_header) # might be undefined
         response.headers[header] = message if response && header
@@ -148,7 +148,7 @@ module StrongerParameters
       end
 
       def without_invalid_parameter_exceptions
-        if self.class.log_stronger_parameter_violations
+        if self.class.log_unpermitted_parameters
           begin
             old = ActionController::Parameters.action_on_invalid_parameters
             ActionController::Parameters.action_on_invalid_parameters = :log

@@ -1,35 +1,35 @@
 require_relative '../test_helper'
-require 'stronger_parameters/controller_support/parameter_whitelist'
+require 'stronger_parameters/controller_support/permitted_parameters'
 
-describe StrongerParameters::ControllerSupport::ParameterWhitelist do
+describe StrongerParameters::ControllerSupport::PermittedParameters do
   class WhitelistControllerTester < ActionController::Base
-    include StrongerParameters::ControllerSupport::ParameterWhitelist
+    include StrongerParameters::ControllerSupport::PermittedParameters
 
     def arrrr; end
   end
 
   Parameters = ActionController::Parameters
 
-  def whitelist_without_raising
+  def permit_without_raising
     old = Parameters.action_on_invalid_parameters
     Parameters.action_on_invalid_parameters = :log
     capture_log do
-      @controller.send(:whitelist_parameters)
+      @controller.send(:permit_parameters)
     end
   ensure
     Parameters.action_on_invalid_parameters = old
   end
 
   before do
-    WhitelistControllerTester.allowed_parameters.clear
-    WhitelistControllerTester.allowed_parameters[:all] = StrongerParameters::ControllerSupport::ParameterWhitelist::DEFAULT_ALLOWED.dup
+    WhitelistControllerTester.permitted_parameters_list.clear
+    WhitelistControllerTester.permitted_parameters_list[:all] = StrongerParameters::ControllerSupport::PermittedParameters::DEFAULT_PERMITTED.dup
     @oldu = Parameters.action_on_unpermitted_parameters
     Parameters.action_on_unpermitted_parameters = :log # same as dev/production
   end
 
   after do
-    WhitelistControllerTester.log_stronger_parameter_violations = false
-    WhitelistControllerTester.instance_variable_set(:@allowed_parameters, nil)
+    WhitelistControllerTester.log_unpermitted_parameters = false
+    WhitelistControllerTester.instance_variable_set(:@permitted_parameters, nil)
     Parameters.action_on_unpermitted_parameters = @oldu
   end
 
@@ -38,55 +38,55 @@ describe StrongerParameters::ControllerSupport::ParameterWhitelist do
     end
 
     before do
-      WhitelistControllerTester.allow_parameters :create, first: Parameters.string
-      WhitelistControllerTester.log_stronger_parameter_violations!
-      ChildController.allow_parameters :create, last: Parameters.string
+      WhitelistControllerTester.permitted_parameters :create, first: Parameters.string
+      WhitelistControllerTester.log_unpermitted_parameters!
+      ChildController.permitted_parameters :create, last: Parameters.string
     end
 
     it 'inherits from parent to child' do
-      assert_instance_of StrongerParameters::StringConstraint, WhitelistControllerTester.allowed_parameters_for(:create)[:first]
-      assert_instance_of StrongerParameters::StringConstraint, ChildController.allowed_parameters_for(:create)[:first]
-      assert_equal true, ChildController.log_stronger_parameter_violations
+      assert_instance_of StrongerParameters::StringConstraint, WhitelistControllerTester.permitted_parameters_for(:create)[:first]
+      assert_instance_of StrongerParameters::StringConstraint, ChildController.permitted_parameters_for(:create)[:first]
+      assert_equal true, ChildController.log_unpermitted_parameters
     end
 
     it 'does not inherit from child to parent' do
-      assert_nil WhitelistControllerTester.allowed_parameters_for(:create)[:last]
-      assert_instance_of StrongerParameters::StringConstraint, ChildController.allowed_parameters_for(:create)[:last]
+      assert_nil WhitelistControllerTester.permitted_parameters_for(:create)[:last]
+      assert_instance_of StrongerParameters::StringConstraint, ChildController.permitted_parameters_for(:create)[:last]
     end
   end
 
-  describe 'parameter whitelisting' do
+  describe 'permitted parameters' do
     before do
-      WhitelistControllerTester.allow_parameters :all, user_id: Parameters.integer
-      WhitelistControllerTester.allow_parameters :foo, ticket_id: Parameters.integer
-      WhitelistControllerTester.allow_parameters :bar, group_id: Parameters.integer
+      WhitelistControllerTester.permitted_parameters :all, user_id: Parameters.integer
+      WhitelistControllerTester.permitted_parameters :foo, ticket_id: Parameters.integer
+      WhitelistControllerTester.permitted_parameters :bar, group_id: Parameters.integer
     end
 
     it 'allows general whitelisting' do
-      assert_equal Parameters.integer, WhitelistControllerTester.allowed_parameters_for(:foo)[:user_id]
-      assert_equal Parameters.integer, WhitelistControllerTester.allowed_parameters_for(:bar)[:user_id]
+      assert_equal Parameters.integer, WhitelistControllerTester.permitted_parameters_for(:foo)[:user_id]
+      assert_equal Parameters.integer, WhitelistControllerTester.permitted_parameters_for(:bar)[:user_id]
     end
 
     it 'allows specific whitelisting' do
-      assert_equal Parameters.integer, WhitelistControllerTester.allowed_parameters_for(:foo)[:ticket_id]
-      assert_nil WhitelistControllerTester.allowed_parameters_for(:foo)[:group_id]
+      assert_equal Parameters.integer, WhitelistControllerTester.permitted_parameters_for(:foo)[:ticket_id]
+      assert_nil WhitelistControllerTester.permitted_parameters_for(:foo)[:group_id]
 
-      assert_equal Parameters.integer, WhitelistControllerTester.allowed_parameters_for(:bar)[:group_id]
-      assert_nil WhitelistControllerTester.allowed_parameters_for(:bar)[:ticket_id]
+      assert_equal Parameters.integer, WhitelistControllerTester.permitted_parameters_for(:bar)[:group_id]
+      assert_nil WhitelistControllerTester.permitted_parameters_for(:bar)[:ticket_id]
     end
   end
 
   describe 'sugar' do
     it 'turns Array into Parameters.array' do
-      WhitelistControllerTester.allow_parameters :foo, ticket: [Parameters.integer]
-      constraint = WhitelistControllerTester.allowed_parameters_for(:foo)[:ticket].constraints.first
+      WhitelistControllerTester.permitted_parameters :foo, ticket: [Parameters.integer]
+      constraint = WhitelistControllerTester.permitted_parameters_for(:foo)[:ticket].constraints.first
       assert_instance_of StrongerParameters::ArrayConstraint, constraint
       assert_equal Parameters.integer, constraint.item_constraint
     end
 
     it 'turns Hash into Parameters.map' do
-      WhitelistControllerTester.allow_parameters :foo, ticket: { id: Parameters.integer }
-      constraint = WhitelistControllerTester.allowed_parameters_for(:foo)[:ticket]
+      WhitelistControllerTester.permitted_parameters :foo, ticket: { id: Parameters.integer }
+      constraint = WhitelistControllerTester.permitted_parameters_for(:foo)[:ticket]
       assert_instance_of StrongerParameters::HashConstraint, constraint
       assert_equal({ 'id' => Parameters.integer }, constraint.constraints)
     end
@@ -94,7 +94,7 @@ describe StrongerParameters::ControllerSupport::ParameterWhitelist do
 
   describe 'with prevent_nil_values_in_params' do
     before do
-      WhitelistControllerTester.allow_parameters :show, something: {
+      WhitelistControllerTester.permitted_parameters :show, something: {
         test: {
           all: Parameters.anything,
           day: Parameters.anything
@@ -110,7 +110,7 @@ describe StrongerParameters::ControllerSupport::ParameterWhitelist do
           @controller.request.send(:deep_munge, params)
         end
       @controller.response = ActionController::TestResponse.new
-      whitelist_without_raising
+      permit_without_raising
     end
 
     describe 'with child empty hash' do
@@ -148,8 +148,8 @@ describe StrongerParameters::ControllerSupport::ParameterWhitelist do
 
   describe 'parameter filtering' do
     before do
-      WhitelistControllerTester.allow_parameters :show, something: Parameters.anything
-      WhitelistControllerTester.allow_parameters :create, :anything
+      WhitelistControllerTester.permitted_parameters :show, something: Parameters.anything, user: { name: Parameters.string }
+      WhitelistControllerTester.permitted_parameters :create, :anything
       @controller = WhitelistControllerTester.new
       @controller.request = ActionController::TestRequest.new({})
       @controller.response = ActionController::TestResponse.new
@@ -158,9 +158,10 @@ describe StrongerParameters::ControllerSupport::ParameterWhitelist do
         action: 'show',
         controller: 'test',
         format: 'png',
-        authenticity_token: 'auth'
+        authenticity_token: 'auth',
+        user: { name: 3 }
       }
-      whitelist_without_raising
+      permit_without_raising
     end
 
     it 'does not filter special cases' do
@@ -174,9 +175,9 @@ describe StrongerParameters::ControllerSupport::ParameterWhitelist do
       before { @controller.response.headers['X-StrongerParameters-API-Warn'] = nil }
 
       it 'filters false values and send warn' do
-        @controller.params[:invalid] = false
+        @controller.params[:user][:name] = 1
         Rails.configuration.stronger_parameters_violation_header = 'X-StrongerParameters-API-Warn'
-        whitelist_without_raising
+        permit_without_raising
 
         assert !@controller.params.key?(:invalid)
         refute @controller.response.headers['X-StrongerParameters-API-Warn'].nil?
@@ -185,7 +186,7 @@ describe StrongerParameters::ControllerSupport::ParameterWhitelist do
       it 'filters nil values and send warn' do
         @controller.params[:invalid] = nil
         Rails.configuration.stronger_parameters_violation_header = 'X-StrongerParameters-API-Warn'
-        whitelist_without_raising
+        permit_without_raising
 
         assert !@controller.params.key?(:invalid)
         refute @controller.response.headers['X-StrongerParameters-API-Warn'].nil?
@@ -194,7 +195,7 @@ describe StrongerParameters::ControllerSupport::ParameterWhitelist do
       it 'filters values and does not send header if not configured' do
         @controller.params[:invalid] = false
         Rails.configuration.stronger_parameters_violation_header = nil
-        whitelist_without_raising
+        permit_without_raising
 
         assert     !@controller.params.key?(:invalid)
         assert_nil @controller.response.headers['X-StrongerParameters-API-Warn']
@@ -203,13 +204,13 @@ describe StrongerParameters::ControllerSupport::ParameterWhitelist do
 
     it 'filters specific actions' do
       @controller.params.merge!(action: 'show', everything: 'bleh', something: 'hello')
-      whitelist_without_raising
+      permit_without_raising
 
       refute @controller.params.key?(:everything)
       assert @controller.params.key?(:something)
 
       @controller.params.merge!(action: 'create', everything: 'bleh', something: 'hello')
-      whitelist_without_raising
+      permit_without_raising
 
       assert @controller.params.key?(:everything)
       assert @controller.params.key?(:something)
@@ -217,7 +218,7 @@ describe StrongerParameters::ControllerSupport::ParameterWhitelist do
 
     it 'alsos filter request.params' do
       @controller.params.merge!(action: 'show', everything: 'bleh', something: 'hello')
-      whitelist_without_raising
+      permit_without_raising
 
       refute @controller.params.key?(:everything)
       assert @controller.params.key?(:something)
@@ -229,21 +230,21 @@ describe StrongerParameters::ControllerSupport::ParameterWhitelist do
     it 'raises if not declared' do
       assert_raises(KeyError) do
         @controller.params.merge!(action: 'arrrr', everything: 'bleh', something: 'hello')
-        whitelist_without_raising
+        permit_without_raising
       end
     end
 
     it 'raises if trying to add to :anything' do
       assert_raises(ArgumentError) do
-        WhitelistControllerTester.allow_parameters :create, bar: Parameters.boolean
-        whitelist_without_raising
+        WhitelistControllerTester.permitted_parameters :create, bar: Parameters.boolean
+        permit_without_raising
       end
     end
   end
 
   describe 'stronger_parameter violations' do
     before do
-      WhitelistControllerTester.allow_parameters :show, foo: Parameters.integer
+      WhitelistControllerTester.permitted_parameters :show, foo: Parameters.integer
       @controller = WhitelistControllerTester.new
       @controller.request = ActionController::TestRequest.new({})
       @controller.response = ActionController::TestResponse.new
@@ -254,15 +255,15 @@ describe StrongerParameters::ControllerSupport::ParameterWhitelist do
       }
     end
 
-    it 'does not allow the violation' do
+    it 'does not permit the violation' do
       assert_raises(StrongerParameters::InvalidParameter) do
-        @controller.send(:whitelist_parameters)
+        @controller.send(:permit_parameters)
       end
     end
 
-    it 'can allow the violations' do
+    it 'can permit the violations' do
       begin
-        WhitelistControllerTester.log_stronger_parameter_violations!
+        WhitelistControllerTester.log_unpermitted_parameters!
         @controller.params = {
           action: 'show',
           controller: 'test',
@@ -270,11 +271,11 @@ describe StrongerParameters::ControllerSupport::ParameterWhitelist do
           invalid: 'foo'
         }.with_indifferent_access
 
-        whitelist_without_raising
+        permit_without_raising
 
         assert @controller.params.key?(:invalid)
       ensure
-        WhitelistControllerTester.log_stronger_parameter_violations = false
+        WhitelistControllerTester.log_unpermitted_parameters = false
       end
     end
   end
