@@ -1,11 +1,6 @@
 require_relative '../test_helper'
 require 'stronger_parameters/controller_support/permitted_parameters'
 
-if Rails::VERSION::MAJOR >= 5 && Rails::VERSION::MINOR > 0
-  puts "\nWARNING: PermittedParameters not compatible with Rails 5.1 or later\n\n"
-  exit
-end
-
 describe StrongerParameters::ControllerSupport::PermittedParameters do
   class WhitelistControllerTester < ActionController::Base
     include StrongerParameters::ControllerSupport::PermittedParameters
@@ -54,6 +49,10 @@ describe StrongerParameters::ControllerSupport::PermittedParameters do
   end
 
   before do
+    if Rails::VERSION::MAJOR >= 5 && Rails::VERSION::MINOR > 0
+      skip('PermittedParameters not compatible with Rails 5.1 or later')
+    end
+
     permit_parameters = WhitelistControllerTester.send(:permit_parameters)
     permit_parameters.clear
     permit_parameters[:all] = StrongerParameters::ControllerSupport::PermittedParameters::DEFAULT_PERMITTED.dup
