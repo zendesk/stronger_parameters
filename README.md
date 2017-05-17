@@ -158,6 +158,68 @@ Just want to log violations in production:
 ActionController::Parameters.action_on_invalid_parameters = :log
 ```
 
+## Controller support (Rails 3/4 compatible, untested on Rails 5)
+
+Include `PermittedParameters` into a controller to force the developer
+to explicitly permit params for every action.
+
+Examples:
+
+```ruby
+class TestController < ApplicationController
+  include StrongerParameters::ControllerSupport::PermittedParameters
+
+  permitted_parameters :all, locale: Parameters.string # permit :locale in all actions for this controller
+
+  permitted_parameters :show, id: Parameters.integer
+  def show
+  end
+
+  permitted_parameters :create, topic: { forum: { id: Parameters.integer } }
+  def create
+  end
+
+  permitted_parameters :index, {} # no parameters permitted
+  def index
+  end
+
+  permitted_parameters :update, :anything # all parameters permitted, use when migrating old controllers/actions
+  def update
+  end
+```
+
+
+### Log only mode
+
+Just want to log violations in production, let all params pass through:
+
+```ruby
+class MyController < ApplicationController
+  log_unpermitted_parameters! if Rails.env.production? # Still want other environments to raise
+
+  permitted_parameters :update, user: { name: Parameters.string }
+  def update
+  end
+end
+```
+
+### Notifying users about unpermitted params
+
+Add headers to all requests that have unpermitted params:
+
+```Ruby
+# config/application.rb
+config.stronger_parameters_violation_header = 'X-StrongerParameters-API-Warn'
+```
+
+```shell
+curl -I 'http://localhost/api/users/1.json' -X POST -d '{ "user": { "id": 1 } }'
+=> HTTP/1.1 200 OK
+=> ...
+=> X-StrongerParameters-API-Warn: Removed restricted keys ["user.id"] from parameters
+```
+
+
 ## Types
 
 | Syntax                         | (Simplified) Definition                                                                    |
