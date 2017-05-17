@@ -8,15 +8,13 @@ module StrongerParameters
         klass.before_action :permit_parameters
       end
 
-      class PermittedParametersHash < HashWithIndifferentAccess
+      class PermittedParametersHash < Hash
         def initialize(other = nil)
           super()
           merge!(other) unless other.nil?
         end
 
         def merge!(other)
-          return self if other.nil?
-
           other.each do |key, value|
             value = sugar(value)
 
@@ -35,22 +33,12 @@ module StrongerParameters
           dup.merge!(other)
         end
 
-        def dup
-          super.tap do |duplicate|
-            duplicate.each do |k, v|
-              duplicate[k] = if v == true
-                true
-              else
-                v.dup
-              end
-            end
-          end
-        end
+        private
 
         def sugar(value)
           case value
           when Array
-            ActionController::Parameters.array(*value.map { |v| sugar(v) }) | ActionController::Parameters.nil
+            ActionController::Parameters.array(*value.map { |v| sugar(v) })
           when Hash
             constraints = value.each_with_object({}) do |(key, v), memo|
               memo[key] = sugar(v)
@@ -101,7 +89,7 @@ module StrongerParameters
           @permit_parameters ||= if superclass.respond_to?(:permit_parameters, true)
             superclass.send(:permit_parameters).deep_dup
           else
-            { all: DEFAULT_PERMITTED.dup }.with_indifferent_access
+            { all: DEFAULT_PERMITTED.dup }
           end
         end
       end

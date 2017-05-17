@@ -81,7 +81,7 @@ describe StrongerParameters::ControllerSupport::PermittedParameters do
   describe 'sugar' do
     it 'turns Array into Parameters.array' do
       WhitelistControllerTester.permitted_parameters :foo, ticket: [Parameters.integer]
-      constraint = WhitelistControllerTester.permitted_parameters_for(:foo)[:ticket].constraints.first
+      constraint = WhitelistControllerTester.permitted_parameters_for(:foo)[:ticket]
       assert_instance_of StrongerParameters::ArrayConstraint, constraint
       assert_equal Parameters.integer, constraint.item_constraint
     end
