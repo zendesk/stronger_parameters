@@ -158,7 +158,7 @@ Just want to log violations in production:
 ActionController::Parameters.action_on_invalid_parameters = :log
 ```
 
-## Controller support
+## Controller support (Rails 3/4 compatible, untested on Rails 5)
 
 Include `PermittedParameters` into a controller to force the developer
 to explicitly permit params for every action.

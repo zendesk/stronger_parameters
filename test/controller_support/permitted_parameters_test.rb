@@ -1,6 +1,11 @@
 require_relative '../test_helper'
 require 'stronger_parameters/controller_support/permitted_parameters'
 
+if Rails::VERSION::MAJOR >= 5 && Rails::VERSION::MINOR > 0
+  puts "\nWARNING: PermittedParameters not compatible with Rails 5.1 or later\n\n"
+  exit
+end
+
 describe StrongerParameters::ControllerSupport::PermittedParameters do
   class WhitelistControllerTester < ActionController::Base
     include StrongerParameters::ControllerSupport::PermittedParameters
@@ -18,6 +23,34 @@ describe StrongerParameters::ControllerSupport::PermittedParameters do
     end
   ensure
     Parameters.action_on_invalid_parameters = old
+  end
+
+  def initialize_test_request(env = {})
+    if Rails::VERSION::MAJOR >= 5
+      ActionController::TestRequest.create.tap do |request|
+        request.content_type = env['CONTENT_TYPE'] if env['CONTENT_TYPE']
+      end
+    else
+      ActionController::TestRequest.new(env)
+    end
+  end
+
+  def initialize_test_response
+    if Rails::VERSION::MAJOR >= 5
+      ActionDispatch::TestResponse.create
+    else
+      ActionController::TestResponse.new
+    end
+  end
+
+  def normalize_params(params)
+    if Rails::VERSION::MAJOR >= 5
+      ActionDispatch::Request::Utils.normalize_encode_params(params)
+    elsif Rails::VERSION::MAJOR == 4
+      ActionDispatch::Request::Utils.deep_munge(params)
+    else
+      @controller.request.send(:deep_munge, params)
+    end
   end
 
   before do
@@ -103,15 +136,10 @@ describe StrongerParameters::ControllerSupport::PermittedParameters do
         }
       }
       @controller = WhitelistControllerTester.new
-      @controller.request = ActionController::TestRequest.new('CONTENT_TYPE' => 'application/json')
+      @controller.request = initialize_test_request('CONTENT_TYPE' => 'application/json')
       params = { action: 'show', controller: 'test' }.merge(subject)
-      @controller.params =
-        if Rails::VERSION::MAJOR <= 4
-          ActionDispatch::Request::Utils.deep_munge(params)
-        else
-          @controller.request.send(:deep_munge, params)
-        end
-      @controller.response = ActionController::TestResponse.new
+      @controller.params = normalize_params(params)
+      @controller.response = initialize_test_request
       permit_without_raising
     end
 
@@ -153,8 +181,8 @@ describe StrongerParameters::ControllerSupport::PermittedParameters do
       WhitelistControllerTester.permitted_parameters :show, something: Parameters.anything, user: { name: Parameters.string }
       WhitelistControllerTester.permitted_parameters :create, :anything
       @controller = WhitelistControllerTester.new
-      @controller.request = ActionController::TestRequest.new({})
-      @controller.response = ActionController::TestResponse.new
+      @controller.request = initialize_test_request
+      @controller.response = initialize_test_response
       @controller.params = {
         id: '4',
         action: 'show',
@@ -247,8 +275,8 @@ describe StrongerParameters::ControllerSupport::PermittedParameters do
     before do
       WhitelistControllerTester.permitted_parameters :show, foo: Parameters.integer
       @controller = WhitelistControllerTester.new
-      @controller.request = ActionController::TestRequest.new({})
-      @controller.response = ActionController::TestResponse.new
+      @controller.request = initialize_test_request
+      @controller.response = initialize_test_response
       @controller.params = {
         action: 'show',
         controller: 'test',

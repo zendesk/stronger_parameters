@@ -5,7 +5,11 @@ module StrongerParameters
     module PermittedParameters
       def self.included(klass)
         klass.extend ClassMethods
-        klass.before_action :permit_parameters
+        if klass.respond_to?(:before_action)
+          klass.before_action :permit_parameters
+        else
+          klass.before_filter :permit_parameters
+        end
       end
 
       class PermittedParametersHash < Hash
@@ -127,7 +131,7 @@ module StrongerParameters
         log_prefix = (log_unpermitted ? 'Found' : 'Removed')
         message = "#{log_prefix} restricted keys #{unpermitted_keys.inspect} from parameters according to permitted list"
 
-        header = Rails.configuration.try(:stronger_parameters_violation_header) # might be undefined
+        header = Rails.configuration.stronger_parameters_violation_header if Rails.configuration.respond_to?(:stronger_parameters_violation_header)
         response.headers[header] = message if response && header
 
         Rails.logger.info("  #{message}")
