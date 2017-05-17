@@ -158,8 +158,7 @@ describe StrongerParameters::ControllerSupport::PermittedParameters do
         action: 'show',
         controller: 'test',
         format: 'png',
-        authenticity_token: 'auth',
-        user: { name: 3 }
+        authenticity_token: 'auth'
       }
       permit_without_raising
     end
@@ -175,7 +174,7 @@ describe StrongerParameters::ControllerSupport::PermittedParameters do
       before { @controller.response.headers['X-StrongerParameters-API-Warn'] = nil }
 
       it 'filters false values and send warn' do
-        @controller.params[:user][:name] = 1
+        @controller.params[:invalid] = false
         Rails.configuration.stronger_parameters_violation_header = 'X-StrongerParameters-API-Warn'
         permit_without_raising
 
