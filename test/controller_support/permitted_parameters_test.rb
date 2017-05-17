@@ -21,15 +21,17 @@ describe StrongerParameters::ControllerSupport::PermittedParameters do
   end
 
   before do
-    WhitelistControllerTester.permitted_parameters_list.clear
-    WhitelistControllerTester.permitted_parameters_list[:all] = StrongerParameters::ControllerSupport::PermittedParameters::DEFAULT_PERMITTED.dup
+    permit_parameters = WhitelistControllerTester.send(:permit_parameters)
+    permit_parameters.clear
+    permit_parameters[:all] = StrongerParameters::ControllerSupport::PermittedParameters::DEFAULT_PERMITTED.dup
+    WhitelistControllerTester.instance_variable_set(:@permit_parameters, permit_parameters)
     @oldu = Parameters.action_on_unpermitted_parameters
     Parameters.action_on_unpermitted_parameters = :log # same as dev/production
   end
 
   after do
     WhitelistControllerTester.log_unpermitted_parameters = false
-    WhitelistControllerTester.instance_variable_set(:@permitted_parameters, nil)
+    WhitelistControllerTester.instance_variable_set(:@permit_parameters, nil)
     Parameters.action_on_unpermitted_parameters = @oldu
   end
 

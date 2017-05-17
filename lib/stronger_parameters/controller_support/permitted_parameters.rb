@@ -71,9 +71,7 @@ module StrongerParameters
 
       module ClassMethods
         def self.extended(base)
-          base.class_eval do
-            class_attribute :log_unpermitted_parameters, instance_accessor: false
-          end
+          base.send :class_attribute, :log_unpermitted_parameters, instance_accessor: false
         end
 
         def log_unpermitted_parameters!
@@ -81,30 +79,30 @@ module StrongerParameters
         end
 
         def permitted_parameters(action, permitted)
-          if permitted_parameters_list[action] == :anything && permitted != :anything
+          if permit_parameters[action] == :anything && permitted != :anything
             raise ArgumentError, "#{self}/#{action} can not add to :anything"
           end
 
-          permitted_parameters_list.deep_merge!(action => permitted)
-        end
-
-        def permitted_parameters_list
-          @permitted_parameters_list ||= if superclass.respond_to?(:permitted_parameters_list)
-            superclass.permitted_parameters_list.deep_dup
-          else
-            all = DEFAULT_PERMITTED.dup
-            all[:test_route] = ActionController::Parameters.string if Rails.env.test?
-            { all: all }.with_indifferent_access
-          end
+          permit_parameters.deep_merge!(action => permitted)
         end
 
         def permitted_parameters_for(action)
-          unless for_action = permitted_parameters_list[action]
+          unless for_action = permit_parameters[action]
             location = instance_method(action).source_location
             raise KeyError, "Action #{action} for #{self} does not have any permitted parameters (#{location.join(":")})"
           end
           return :anything if for_action == :anything
-          permitted_parameters_list[:all].merge(for_action)
+          permit_parameters[:all].merge(for_action)
+        end
+
+        private
+
+        def permit_parameters
+          @permit_parameters ||= if superclass.respond_to?(:permit_parameters, true)
+            superclass.send(:permit_parameters).deep_dup
+          else
+            { all: DEFAULT_PERMITTED.dup }.with_indifferent_access
+          end
         end
       end
 
@@ -120,12 +118,12 @@ module StrongerParameters
         end
 
         permitted_params = without_invalid_parameter_exceptions { params.permit(permitted) }
-        restricted_keys = flat_keys(params) - flat_keys(permitted_params)
-        filter_params = !self.class.log_unpermitted_parameters
+        unpermitted_keys = flat_keys(params) - flat_keys(permitted_params)
+        log_unpermitted = self.class.log_unpermitted_parameters
 
-        show_restricted_keys(restricted_keys, filter_params)
+        show_unpermitted_keys(unpermitted_keys, log_unpermitted)
 
-        return unless filter_params
+        return if log_unpermitted
 
         params.replace(permitted_params)
         params.permit!
@@ -135,11 +133,11 @@ module StrongerParameters
         Rails.logger.info("  Filtered Parameters: #{logged_params.inspect}")
       end
 
-      def show_restricted_keys(restricted_keys, filter_params)
-        return if restricted_keys.empty?
+      def show_unpermitted_keys(unpermitted_keys, log_unpermitted)
+        return if unpermitted_keys.empty?
 
-        log_prefix = (filter_params ? 'Removed' : 'Found')
-        message = "#{log_prefix} restricted keys #{restricted_keys.inspect} from parameters according to permitted list"
+        log_prefix = (log_unpermitted ? 'Found' : 'Removed')
+        message = "#{log_prefix} restricted keys #{unpermitted_keys.inspect} from parameters according to permitted list"
 
         header = Rails.configuration.try(:stronger_parameters_violation_header) # might be undefined
         response.headers[header] = message if response && header

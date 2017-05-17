@@ -158,10 +158,10 @@ Just want to log violations in production:
 ActionController::Parameters.action_on_invalid_parameters = :log
 ```
 
-## ControllerSupport::PermittedParameters
+## Controller support
 
-When included into a controller, this module forces the developer
-to explicitly whitelist which parameters are permitted for every action.
+Include `PermittedParameters` into a controller to force the developer
+to explicitly permit params for every action.
 
 Examples:
 
@@ -171,11 +171,11 @@ class TestController < ApplicationController
 
   permitted_parameters :all, locale: Parameters.string # permit :locale in all actions for this controller
 
-  permitted_parameters :show, forum_id: Parameters.integer
+  permitted_parameters :show, id: Parameters.integer
   def show
   end
 
-  permitted_parameters :create, topic: { forum: { :id: Parameters.integer } }
+  permitted_parameters :create, topic: { forum: { id: Parameters.integer } }
   def create
   end
 
@@ -183,7 +183,7 @@ class TestController < ApplicationController
   def index
   end
 
-  permitted_parameters :update, :anything # all parameters permitted, should only be used when migrating old controllers/actions
+  permitted_parameters :update, :anything # all parameters permitted, use when migrating old controllers/actions
   def update
   end
 ```
@@ -195,7 +195,7 @@ Just want to log violations in production, let all params pass through:
 
 ```ruby
 class MyController < ApplicationController
-  log_unpermitted_parameters! unless Rails.env.test? # Still want tests to raise
+  log_unpermitted_parameters! if Rails.env.production? # Still want other environments to raise
 
   permitted_parameters :update, user: { name: Parameters.string }
   def update
@@ -203,9 +203,9 @@ class MyController < ApplicationController
 end
 ```
 
-### Notifying users about unpermitted
+### Notifying users about unpermitted params
 
-Api response includes header with violations:
+Add headers to all requests that have unpermitted params:
 
 ```Ruby
 # config/application.rb
@@ -216,7 +216,7 @@ config.stronger_parameters_violation_header = 'X-StrongerParameters-API-Warn'
 curl -I 'http://localhost/api/users/1.json' -X POST -d '{ "user": { "id": 1 } }'
 => HTTP/1.1 200 OK
 => ...
-=> X-StrongerParameters-API-Warn: Removed restricted keys ["user.id"] from parameters according to permitted list
+=> X-StrongerParameters-API-Warn: Removed restricted keys ["user.id"] from parameters
 ```
 
 
