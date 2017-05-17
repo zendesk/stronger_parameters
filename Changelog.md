@@ -1,3 +1,9 @@
+# v2.8.0
+- Controller support (PermittedParameters)
+
+# v2.7.0
+- Add key to error message
+
 # v2.6.0
  - add hex constraint
 
