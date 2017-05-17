@@ -5,61 +5,30 @@ module StrongerParameters
     module PermittedParameters
       def self.included(klass)
         klass.extend ClassMethods
-        if klass.respond_to?(:before_action)
-          klass.before_action :permit_parameters
+        method = (klass.respond_to?(:before_action) ? :before_action : :before_filter)
+        klass.public_send method, :permit_parameters
+      end
+
+      def self.sugar(value)
+        case value
+        when Array
+          ActionController::Parameters.array(*value.map { |v| sugar(v) })
+        when Hash
+          constraints = value.each_with_object({}) do |(key, v), memo|
+            memo[key] = sugar(v)
+          end
+          ActionController::Parameters.map(constraints)
         else
-          klass.before_filter :permit_parameters
+          value
         end
       end
 
-      class PermittedParametersHash < Hash
-        def initialize(other = nil)
-          super()
-          merge!(other) unless other.nil?
-        end
-
-        def merge!(other)
-          other.each do |key, value|
-            value = sugar(value)
-
-            if value.is_a?(StrongerParameters::Constraint)
-              self[key] = value
-            else
-              self[key] ||= self.class.new
-              self[key].merge!(value)
-            end
-          end
-
-          self
-        end
-
-        def merge(other)
-          dup.merge!(other)
-        end
-
-        private
-
-        def sugar(value)
-          case value
-          when Array
-            ActionController::Parameters.array(*value.map { |v| sugar(v) })
-          when Hash
-            constraints = value.each_with_object({}) do |(key, v), memo|
-              memo[key] = sugar(v)
-            end
-            ActionController::Parameters.map(constraints)
-          else
-            value
-          end
-        end
-      end
-
-      DEFAULT_PERMITTED = PermittedParametersHash.new(
+      DEFAULT_PERMITTED = {
         controller: ActionController::Parameters.anything,
         action: ActionController::Parameters.anything,
         format: ActionController::Parameters.anything,
         authenticity_token: ActionController::Parameters.string
-      )
+      }
 
       module ClassMethods
         def self.extended(base)
@@ -71,11 +40,14 @@ module StrongerParameters
         end
 
         def permitted_parameters(action, permitted)
-          if permit_parameters[action] == :anything && permitted != :anything
-            raise ArgumentError, "#{self}/#{action} can not add to :anything"
+          if permit_parameters[action] == :anything
+            raise ArgumentError, "#{self}/#{action} can not add to :anything" if permitted != :anything
+          elsif permitted == :anything
+            permit_parameters[action] = permitted
+          else
+            action_permitted = (permit_parameters[action] ||= {})
+            action_permitted.deep_merge!(permitted)
           end
-
-          permit_parameters.deep_merge!(action => permitted)
         end
 
         def permitted_parameters_for(action)
@@ -84,7 +56,10 @@ module StrongerParameters
             raise KeyError, "Action #{action} for #{self} does not have any permitted parameters (#{location.join(":")})"
           end
           return :anything if for_action == :anything
-          permit_parameters[:all].merge(for_action)
+
+          # TODO: we should be able to call sugar on the result of deep_merge, but it breaks tests
+          permit_parameters[:all].deep_merge(for_action).
+            each_with_object({}) { |(k, v), a| a[k] = PermittedParameters.sugar(v) }
         end
 
         private
@@ -93,7 +68,7 @@ module StrongerParameters
           @permit_parameters ||= if superclass.respond_to?(:permit_parameters, true)
             superclass.send(:permit_parameters).deep_dup
           else
-            { all: DEFAULT_PERMITTED.dup }
+            {all: DEFAULT_PERMITTED.deep_dup}
           end
         end
       end
@@ -109,6 +84,7 @@ module StrongerParameters
           return
         end
 
+        # TODO: invalid values should also be logged, but atm only invalid keys are
         permitted_params = without_invalid_parameter_exceptions { params.permit(permitted) }
         unpermitted_keys = flat_keys(params) - flat_keys(permitted_params)
         log_unpermitted = self.class.log_unpermitted_parameters

@@ -1,5 +1,7 @@
-require_relative '../test_helper'
+require_relative '../../test_helper'
 require 'stronger_parameters/controller_support/permitted_parameters'
+
+SingleCov.covered! unless Rails::VERSION::MAJOR >= 5 && Rails::VERSION::MINOR > 0
 
 describe StrongerParameters::ControllerSupport::PermittedParameters do
   class WhitelistControllerTester < ActionController::Base
@@ -13,9 +15,7 @@ describe StrongerParameters::ControllerSupport::PermittedParameters do
   def permit_without_raising
     old = Parameters.action_on_invalid_parameters
     Parameters.action_on_invalid_parameters = :log
-    capture_log do
-      @controller.send(:permit_parameters)
-    end
+    @controller.send(:permit_parameters)
   ensure
     Parameters.action_on_invalid_parameters = old
   end
@@ -52,18 +52,13 @@ describe StrongerParameters::ControllerSupport::PermittedParameters do
     if Rails::VERSION::MAJOR >= 5 && Rails::VERSION::MINOR > 0
       skip('PermittedParameters not compatible with Rails 5.1 or later')
     end
-
-    permit_parameters = WhitelistControllerTester.send(:permit_parameters)
-    permit_parameters.clear
-    permit_parameters[:all] = StrongerParameters::ControllerSupport::PermittedParameters::DEFAULT_PERMITTED.dup
-    WhitelistControllerTester.instance_variable_set(:@permit_parameters, permit_parameters)
+    WhitelistControllerTester.instance_variable_set(:@permit_parameters, nil)
     @oldu = Parameters.action_on_unpermitted_parameters
     Parameters.action_on_unpermitted_parameters = :log # same as dev/production
   end
 
   after do
     WhitelistControllerTester.log_unpermitted_parameters = false
-    WhitelistControllerTester.instance_variable_set(:@permit_parameters, nil)
     Parameters.action_on_unpermitted_parameters = @oldu
   end
 
@@ -94,19 +89,27 @@ describe StrongerParameters::ControllerSupport::PermittedParameters do
       WhitelistControllerTester.permitted_parameters :all, user_id: Parameters.integer
       WhitelistControllerTester.permitted_parameters :foo, ticket_id: Parameters.integer
       WhitelistControllerTester.permitted_parameters :bar, group_id: Parameters.integer
+      WhitelistControllerTester.permitted_parameters :bar, nested: {a: Parameters.integer}
+      WhitelistControllerTester.permitted_parameters :bar, nested: {b: Parameters.integer}
     end
 
     it 'allows general whitelisting' do
-      assert_equal Parameters.integer, WhitelistControllerTester.permitted_parameters_for(:foo)[:user_id]
-      assert_equal Parameters.integer, WhitelistControllerTester.permitted_parameters_for(:bar)[:user_id]
+      WhitelistControllerTester.permitted_parameters_for(:foo)[:user_id].must_equal Parameters.integer
+      WhitelistControllerTester.permitted_parameters_for(:bar)[:user_id].must_equal Parameters.integer
     end
 
-    it 'allows specific whitelisting' do
-      assert_equal Parameters.integer, WhitelistControllerTester.permitted_parameters_for(:foo)[:ticket_id]
-      assert_nil WhitelistControllerTester.permitted_parameters_for(:foo)[:group_id]
+    it 'allows nested whitelisting' do
+      WhitelistControllerTester.permitted_parameters_for(:foo)[:ticket_id].must_equal Parameters.integer
+      WhitelistControllerTester.permitted_parameters_for(:foo)[:group_id].must_be_nil
 
-      assert_equal Parameters.integer, WhitelistControllerTester.permitted_parameters_for(:bar)[:group_id]
-      assert_nil WhitelistControllerTester.permitted_parameters_for(:bar)[:ticket_id]
+      WhitelistControllerTester.permitted_parameters_for(:bar)[:group_id].must_equal Parameters.integer
+      WhitelistControllerTester.permitted_parameters_for(:bar)[:ticket_id].must_be_nil
+    end
+
+    it 'allows merging' do
+      WhitelistControllerTester.permitted_parameters_for(:bar)[:nested].constraints.must_equal(
+        "a" => Parameters.integer, "b" => Parameters.integer
+      )
     end
   end
 
@@ -189,10 +192,10 @@ describe StrongerParameters::ControllerSupport::PermittedParameters do
         format: 'png',
         authenticity_token: 'auth'
       }
-      permit_without_raising
     end
 
     it 'does not filter special cases' do
+      permit_without_raising
       assert @controller.params.key?(:action)
       assert @controller.params.key?(:controller)
       assert @controller.params.key?(:format)

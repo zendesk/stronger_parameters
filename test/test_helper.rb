@@ -1,6 +1,10 @@
 ENV["RAILS_ENV"] = "test"
 
 require 'bundler/setup'
+
+require 'single_cov'
+SingleCov.setup :minitest
+
 require 'minitest/autorun'
 require 'minitest/rg'
 require 'minitest/around'
@@ -13,6 +17,7 @@ class FakeApplication < Rails::Application; end
 Rails.application = FakeApplication
 Rails.configuration.action_controller = ActiveSupport::OrderedOptions.new
 Rails.configuration.secret_key_base = 'secret_key_base'
+Rails.logger = Logger.new("/dev/null")
 
 ActiveSupport.test_order = :random if ActiveSupport.respond_to?(:test_order=)
 
