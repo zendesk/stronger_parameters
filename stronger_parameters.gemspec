@@ -22,4 +22,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'single_cov'
 
   spec.add_runtime_dependency 'actionpack', '>= 3.2', '< 5.2'
+
+  spec.required_ruby_version = '>= 2.0.0'
 end
