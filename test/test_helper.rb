@@ -23,32 +23,6 @@ ActiveSupport.test_order = :random if ActiveSupport.respond_to?(:test_order=)
 
 require 'action_pack'
 require 'strong_parameters' if ActionPack::VERSION::MAJOR == 3
-
-module ActionController
-  SharedTestRoutes = ActionDispatch::Routing::RouteSet.new
-  SharedTestRoutes.draw do
-    get ':controller(/:action)'
-    post ':controller(/:action)'
-    put ':controller(/:action)'
-    delete ':controller(/:action)'
-  end
-
-  class Base
-    include ActionController::Testing
-    include SharedTestRoutes.url_helpers
-
-    rescue_from(ActionController::ParameterMissing) do |e|
-      render (ActiveSupport::VERSION::MAJOR < 5 ? :text : :plain) => "Required parameter missing: #{e.param}", :status => :bad_request
-    end
-  end
-
-  class ActionController::TestCase
-    setup do
-      @routes = SharedTestRoutes
-    end
-  end
-end
-
 require 'stronger_parameters'
 require 'minitest/rails'
 require 'minitest/autorun'
