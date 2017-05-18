@@ -12,7 +12,11 @@ end
 puts(Benchmark.realtime do
   build_stack(100) do
     10000.times do
-      (StrongerParameters::IntegerConstraint.new | StrongerParameters::BooleanConstraint.new | StrongerParameters::StringConstraint.new).value("xxx")
+      (
+        StrongerParameters::IntegerConstraint.new |
+        StrongerParameters::BooleanConstraint.new |
+        StrongerParameters::StringConstraint.new
+      ).value("xxx")
     end
   end
 end)

@@ -1,4 +1,6 @@
-require_relative 'test_helper'
+require_relative '../../test_helper'
+
+SingleCov.covered! uncovered: 1
 
 describe 'string parameter constraints' do
   subject { ActionController::Parameters.string }

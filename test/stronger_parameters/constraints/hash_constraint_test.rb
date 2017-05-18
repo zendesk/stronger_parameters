@@ -1,4 +1,6 @@
-require_relative 'test_helper'
+require_relative '../../test_helper'
+
+SingleCov.covered! uncovered: 5
 
 describe 'map parameter constraints' do
   subject do

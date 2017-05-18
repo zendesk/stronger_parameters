@@ -1,4 +1,6 @@
-require_relative 'test_helper'
+require_relative '../test_helper'
+
+SingleCov.covered! uncovered: 18
 
 describe StrongerParameters::Parameters do
   describe ".bigid" do

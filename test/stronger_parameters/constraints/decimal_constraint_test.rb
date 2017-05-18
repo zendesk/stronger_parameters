@@ -1,4 +1,6 @@
-require_relative 'test_helper'
+require_relative '../../test_helper'
+
+SingleCov.covered!
 
 describe 'decimal parameter constraints' do
   describe 'with 2 scale and 4 precision' do
