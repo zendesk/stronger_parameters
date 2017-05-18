@@ -1,4 +1,6 @@
-require_relative 'test_helper'
+require_relative '../../test_helper'
+
+SingleCov.covered!
 
 describe 'date parameter constraints' do
   subject { ActionController::Parameters.datetime }

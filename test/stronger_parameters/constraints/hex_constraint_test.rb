@@ -1,4 +1,6 @@
-require_relative 'test_helper'
+require_relative '../../test_helper'
+
+SingleCov.covered!
 
 describe 'hexadecimal parameter constraints' do
   subject { ActionController::Parameters.hex }

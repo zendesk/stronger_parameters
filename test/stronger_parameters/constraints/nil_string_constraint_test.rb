@@ -1,4 +1,6 @@
-require_relative 'test_helper'
+require_relative '../../test_helper'
+
+SingleCov.covered!
 
 describe 'nil_string parameter constraints' do
   subject { ActionController::Parameters.nil_string }

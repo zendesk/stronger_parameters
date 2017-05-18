@@ -1,4 +1,6 @@
-require_relative 'test_helper'
+require_relative '../test_helper'
+
+SingleCov.covered! uncovered: 8
 
 describe 'operator parameter constraints' do
   describe 'OR types' do

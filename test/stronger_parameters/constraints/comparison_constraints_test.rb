@@ -1,4 +1,6 @@
-require_relative 'test_helper'
+require_relative '../../test_helper'
+
+SingleCov.covered! uncovered: 1
 
 describe 'comparison parameter constraints' do
   describe 'less-than types' do

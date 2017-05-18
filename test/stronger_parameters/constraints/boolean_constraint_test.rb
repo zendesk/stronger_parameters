@@ -1,4 +1,6 @@
-require_relative 'test_helper'
+require_relative '../../test_helper'
+
+SingleCov.covered!
 
 describe 'boolean parameter constraints' do
   subject { ActionController::Parameters.boolean }
