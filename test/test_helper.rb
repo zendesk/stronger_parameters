@@ -78,7 +78,11 @@ class MiniTest::Spec
     it "permits #{value.inspect} as #{type_casted.inspect}" do
       permitted = params(:value => value).permit(:value => subject)
       permitted = permitted.to_h if Rails::VERSION::MAJOR >= 5
-      permitted[:value].must_equal type_casted
+      if type_casted.nil?
+        permitted[:value].must_be_nil
+      else
+        permitted[:value].must_equal type_casted
+      end
     end
   end
 
@@ -89,4 +93,17 @@ class MiniTest::Spec
       assert_rejects(key) { params(:value => value).permit(:value => subject) }
     end
   end
+end
+
+# https://github.com/seattlerb/minitest/issues/666
+if RUBY_VERSION > "2.1.0"
+  Object.prepend(Module.new do
+    def must_equal(*args)
+      if args.first.nil?
+        raise "Use must_be_nil"
+      else
+        super
+      end
+    end
+  end)
 end
