@@ -1,312 +1,280 @@
 require_relative '../../test_helper'
 require 'stronger_parameters/controller_support/permitted_parameters'
 
-SingleCov.covered! unless Rails::VERSION::MAJOR >= 5 && Rails::VERSION::MINOR > 0
+SingleCov.covered!
 
-describe StrongerParameters::ControllerSupport::PermittedParameters do
-  class WhitelistControllerTester < ActionController::Base
-    include StrongerParameters::ControllerSupport::PermittedParameters
+class WhitelistsController < ActionController::Base
+  ROUTES = ActionDispatch::Routing::RouteSet.new
+  ROUTES.draw { resources :whitelists }
+  include ROUTES.url_helpers
 
-    def arrrr; end
+  include StrongerParameters::ControllerSupport::PermittedParameters
+
+  def create
+    head :ok
   end
 
+  def index
+    head :ok
+  end
+
+  def show
+    raise "Should not get here"
+  end
+end
+
+describe WhitelistsController do
   Parameters = ActionController::Parameters
 
-  def permit_without_raising
-    old = Parameters.action_on_invalid_parameters
-    Parameters.action_on_invalid_parameters = :log
-    @controller.send(:permit_parameters)
-  ensure
-    Parameters.action_on_invalid_parameters = old
-  end
-
-  def initialize_test_request(env = {})
-    if Rails::VERSION::MAJOR >= 5
-      ActionController::TestRequest.create.tap do |request|
-        request.content_type = env['CONTENT_TYPE'] if env['CONTENT_TYPE']
-      end
+  def get(action, options = {})
+    if Rails::VERSION::MAJOR < 5
+      super(action, options.fetch(:params).merge(format: options[:format] || 'html'))
     else
-      ActionController::TestRequest.new(env)
-    end
-  end
-
-  def initialize_test_response
-    if Rails::VERSION::MAJOR >= 5
-      ActionDispatch::TestResponse.create
-    else
-      ActionController::TestResponse.new
-    end
-  end
-
-  def normalize_params(params)
-    if Rails::VERSION::MAJOR >= 5
-      ActionDispatch::Request::Utils.normalize_encode_params(params)
-    elsif Rails::VERSION::MAJOR == 4
-      ActionDispatch::Request::Utils.deep_munge(params)
-    else
-      @controller.request.send(:deep_munge, params)
+      super
     end
   end
 
   before do
-    if Rails::VERSION::MAJOR >= 5 && Rails::VERSION::MINOR > 0
-      skip('PermittedParameters not compatible with Rails 5.1 or later')
-    end
-    WhitelistControllerTester.instance_variable_set(:@permit_parameters, nil)
-    @oldu = Parameters.action_on_unpermitted_parameters
-    Parameters.action_on_unpermitted_parameters = :log # same as dev/production
+    @routes = WhitelistsController::ROUTES
+
+    # cannot use around since it is not ordered in rails 3.2
+    @old_invalid = ActionController::Parameters.action_on_invalid_parameters
+    ActionController::Parameters.action_on_invalid_parameters = :log
+    @old_unpermitted = ActionController::Parameters.action_on_unpermitted_parameters
+    ActionController::Parameters.action_on_unpermitted_parameters = :log
   end
 
   after do
-    WhitelistControllerTester.log_unpermitted_parameters = false
-    Parameters.action_on_unpermitted_parameters = @oldu
+    ActionController::Parameters.action_on_invalid_parameters = @old_invalid
+    ActionController::Parameters.action_on_unpermitted_parameters = @old_unpermitted
+
+    WhitelistsController.instance_variable_set(:@permit_parameters, nil)
+    WhitelistsController.log_unpermitted_parameters = false
   end
 
   describe 'inheritance' do
-    class ChildController < WhitelistControllerTester
+    class ChildController < WhitelistsController
     end
 
     before do
-      WhitelistControllerTester.permitted_parameters :create, first: Parameters.string
-      WhitelistControllerTester.log_unpermitted_parameters!
+      WhitelistsController.permitted_parameters :create, first: Parameters.string
+      WhitelistsController.log_invalid_parameters!
       ChildController.permitted_parameters :create, last: Parameters.string
     end
 
     it 'inherits from parent to child' do
-      assert_instance_of StrongerParameters::StringConstraint, WhitelistControllerTester.permitted_parameters_for(:create)[:first]
+      assert_instance_of StrongerParameters::StringConstraint, WhitelistsController.permitted_parameters_for(:create)[:first]
       assert_instance_of StrongerParameters::StringConstraint, ChildController.permitted_parameters_for(:create)[:first]
       assert_equal true, ChildController.log_unpermitted_parameters
     end
 
     it 'does not inherit from child to parent' do
-      assert_nil WhitelistControllerTester.permitted_parameters_for(:create)[:last]
+      assert_nil WhitelistsController.permitted_parameters_for(:create)[:last]
       assert_instance_of StrongerParameters::StringConstraint, ChildController.permitted_parameters_for(:create)[:last]
     end
   end
 
-  describe 'permitted parameters' do
+  describe '.permitted_parameters' do
     before do
-      WhitelistControllerTester.permitted_parameters :all, user_id: Parameters.integer
-      WhitelistControllerTester.permitted_parameters :foo, ticket_id: Parameters.integer
-      WhitelistControllerTester.permitted_parameters :bar, group_id: Parameters.integer
-      WhitelistControllerTester.permitted_parameters :bar, nested: {a: Parameters.integer}
-      WhitelistControllerTester.permitted_parameters :bar, nested: {b: Parameters.integer}
+      WhitelistsController.permitted_parameters :all, user_id: Parameters.integer
+      WhitelistsController.permitted_parameters :foo, ticket_id: Parameters.integer
+      WhitelistsController.permitted_parameters :bar, group_id: Parameters.integer
+      WhitelistsController.permitted_parameters :bar, nested: {a: Parameters.integer}
+      WhitelistsController.permitted_parameters :bar, nested: {b: Parameters.integer}
     end
 
     it 'allows general whitelisting' do
-      WhitelistControllerTester.permitted_parameters_for(:foo)[:user_id].must_equal Parameters.integer
-      WhitelistControllerTester.permitted_parameters_for(:bar)[:user_id].must_equal Parameters.integer
+      WhitelistsController.permitted_parameters_for(:foo)[:user_id].must_equal Parameters.integer
+      WhitelistsController.permitted_parameters_for(:bar)[:user_id].must_equal Parameters.integer
     end
 
     it 'allows nested whitelisting' do
-      WhitelistControllerTester.permitted_parameters_for(:foo)[:ticket_id].must_equal Parameters.integer
-      WhitelistControllerTester.permitted_parameters_for(:foo)[:group_id].must_be_nil
+      WhitelistsController.permitted_parameters_for(:foo)[:ticket_id].must_equal Parameters.integer
+      WhitelistsController.permitted_parameters_for(:foo)[:group_id].must_be_nil
 
-      WhitelistControllerTester.permitted_parameters_for(:bar)[:group_id].must_equal Parameters.integer
-      WhitelistControllerTester.permitted_parameters_for(:bar)[:ticket_id].must_be_nil
+      WhitelistsController.permitted_parameters_for(:bar)[:group_id].must_equal Parameters.integer
+      WhitelistsController.permitted_parameters_for(:bar)[:ticket_id].must_be_nil
     end
 
     it 'allows merging' do
-      WhitelistControllerTester.permitted_parameters_for(:bar)[:nested].constraints.must_equal(
+      WhitelistsController.permitted_parameters_for(:bar)[:nested].constraints.must_equal(
         "a" => Parameters.integer, "b" => Parameters.integer
       )
     end
   end
 
-  describe 'sugar' do
+  describe '.sugar' do
     it 'turns Array into Parameters.array' do
-      WhitelistControllerTester.permitted_parameters :foo, ticket: [Parameters.integer]
-      constraint = WhitelistControllerTester.permitted_parameters_for(:foo)[:ticket]
+      WhitelistsController.permitted_parameters :foo, ticket: [Parameters.integer]
+      constraint = WhitelistsController.permitted_parameters_for(:foo)[:ticket]
       assert_instance_of StrongerParameters::ArrayConstraint, constraint
       assert_equal Parameters.integer, constraint.item_constraint
     end
 
     it 'turns Hash into Parameters.map' do
-      WhitelistControllerTester.permitted_parameters :foo, ticket: { id: Parameters.integer }
-      constraint = WhitelistControllerTester.permitted_parameters_for(:foo)[:ticket]
+      WhitelistsController.permitted_parameters :foo, ticket: { id: Parameters.integer }
+      constraint = WhitelistsController.permitted_parameters_for(:foo)[:ticket]
       assert_instance_of StrongerParameters::HashConstraint, constraint
       assert_equal({ 'id' => Parameters.integer }, constraint.constraints)
     end
   end
 
-  describe 'with prevent_nil_values_in_params' do
+  describe 'emptied containers' do
+    def do_request(params)
+      get :index, params: params, format: :json
+    end
+
     before do
-      WhitelistControllerTester.permitted_parameters :show, something: {
-        test: {
-          all: Parameters.anything,
-          day: Parameters.anything
-        }
-      }
-      @controller = WhitelistControllerTester.new
-      @controller.request = initialize_test_request('CONTENT_TYPE' => 'application/json')
-      params = { action: 'show', controller: 'test' }.merge(subject)
-      @controller.params = normalize_params(params)
-      @controller.response = initialize_test_request
-      permit_without_raising
+      WhitelistsController.permitted_parameters :index,
+        something: {
+          test: {
+            all: Parameters.anything,
+            day: Parameters.anything
+          }
+        },
+        array: Parameters.array(Parameters.integer)
     end
 
-    describe 'with child empty hash' do
-      subject { { something: { test: {} } } }
-
-      it 'does not remove test' do
-        assert @controller.params[:something].key?(:test)
-      end
+    # should behave exactly like submitting and empty array does ... but that's a bug in .permit
+    it 'does not removes emptied hash' do
+      do_request something: {remove: 1}
+      @controller.params[:something].must_equal({})
     end
 
-    describe 'with child empty array' do
-      subject { { something: { test: [] } } }
-
-      it 'does not remove test' do
-        assert @controller.params[:something].key?(:test)
-      end
-    end
-
-    describe 'with empty array' do
-      subject { { something: [] } }
-
-      it 'does not remove something' do
-        assert @controller.params.key?(:something)
-      end
-    end
-
-    describe 'with empty hash' do
-      subject { { something: {} } }
-
-      it 'does not remove something' do
-        assert @controller.params.key?(:something)
+    # should behave exactly like submitting and empty array does ... but that's a bug in .permit
+    it 'does not removes emptied array' do
+      do_request array: ["foo"]
+      pending "array passes through ... not good" do
+        @controller.params[:array].must_equal([])
       end
     end
   end
 
   describe 'parameter filtering' do
-    before do
-      WhitelistControllerTester.permitted_parameters :show, something: Parameters.anything, user: { name: Parameters.string }
-      WhitelistControllerTester.permitted_parameters :create, :anything
-      @controller = WhitelistControllerTester.new
-      @controller.request = initialize_test_request
-      @controller.response = initialize_test_response
-      @controller.params = {
-        id: '4',
-        action: 'show',
-        controller: 'test',
-        format: 'png',
-        authenticity_token: 'auth'
-      }
+    def do_request
+      get :index, params: parameters, format: 'png'
     end
 
-    it 'does not filter special cases' do
-      permit_without_raising
-      assert @controller.params.key?(:action)
-      assert @controller.params.key?(:controller)
-      assert @controller.params.key?(:format)
-      assert @controller.params.key?(:authenticity_token)
+    let(:parameters) { {id: '4', authenticity_token: 'auth'} }
+
+    before do
+      WhitelistsController.permitted_parameters :index, something: Parameters.anything, user: { name: Parameters.string }
+    end
+
+    it 'does not filter default params' do
+      do_request
+      assert_response :success
+      @controller.params.to_h.must_equal(
+        "controller" => "whitelists",
+        "action" => "index",
+        "format" => "png",
+        "authenticity_token" => "auth"
+      )
+    end
+
+    it 'filters request.params' do
+      do_request
+      assert_response :success
+      @controller.request.params.must_equal(
+        "controller" => "whitelists",
+        "action" => "index",
+        "format" => "png",
+        "authenticity_token" => "auth"
+      )
+    end
+
+    it "allows anything through, but warns" do
+      WhitelistsController.instance_variable_set(:@permit_parameters, nil)
+      WhitelistsController.permitted_parameters :index, :anything
+      capture_log do
+        do_request
+        assert_response :success
+      end.must_include "whitelists/index does not filter parameters"
+      @controller.request.params.must_equal(
+        "controller" => "whitelists",
+        "action" => "index",
+        "format" => "png",
+        "authenticity_token" => "auth",
+        "id"=>"4"
+      )
+    end
+
+    it "filers array when hash was requested" do
+      parameters[:user] = [1, 2, 3]
+      do_request
+      assert_response :success
+      pending "array passes through ... not good" do
+        @controller.params.to_h["user"].must_be_nil
+      end
+    end
+
+    it 'raises when action is not configured' do
+      assert_raises(KeyError) { get :show, params: {id: 1} }
+    end
+
+    it 'raises when trying to add to :anything' do
+      WhitelistsController.permitted_parameters :index, :anything
+      assert_raises(ArgumentError) do
+        WhitelistsController.permitted_parameters :index, bar: Parameters.boolean
+      end
+    end
+
+    describe "when raising on invalid params" do
+      def do_request
+        get :index, params: {user: {name: ["123"]}}
+      end
+
+      before { Parameters.action_on_invalid_parameters = :raise }
+
+      it "raises" do
+        do_request
+        assert_response :bad_request
+      end
+
+      it "logs with log_invalid_parameters" do
+        WhitelistsController.log_invalid_parameters!
+        do_request
+        assert_response :success
+      end
+    end
+
+
+    describe "when raising on unpermitted params" do
+      before { ActionController::Parameters.action_on_unpermitted_parameters = :raise }
+
+      it "raises" do
+        assert_raises(ActionController::UnpermittedParameters) { do_request }
+      end
+
+      it "raises with log_invalid_parameters on unpermitted" do
+        WhitelistsController.log_invalid_parameters!
+        assert_raises(ActionController::UnpermittedParameters) { do_request }
+      end
     end
 
     describe 'headers' do
-      before { @controller.response.headers['X-StrongerParameters-API-Warn'] = nil }
+      before { Rails.configuration.stronger_parameters_violation_header = 'X-StrongerParameters-API-Warn' }
+      after { Rails.configuration.stronger_parameters_violation_header = nil }
 
-      it 'filters false values and send warn' do
-        @controller.params[:invalid] = false
-        Rails.configuration.stronger_parameters_violation_header = 'X-StrongerParameters-API-Warn'
-        permit_without_raising
-
-        assert !@controller.params.key?(:invalid)
-        refute @controller.response.headers['X-StrongerParameters-API-Warn'].nil?
+      it 'warns about filtered parms' do
+        do_request
+        @controller.response.headers['X-StrongerParameters-API-Warn'].must_equal(
+          "Removed restricted keys [\"id\"] from parameters according to permitted list"
+        )
       end
 
-      it 'filters nil values and send warn' do
-        @controller.params[:invalid] = nil
-        Rails.configuration.stronger_parameters_violation_header = 'X-StrongerParameters-API-Warn'
-        permit_without_raising
-
-        assert !@controller.params.key?(:invalid)
-        refute @controller.response.headers['X-StrongerParameters-API-Warn'].nil?
+      it 'warns about nil values' do
+        @controller.params[:id] = nil
+        do_request
+        @controller.response.headers['X-StrongerParameters-API-Warn'].must_equal(
+          "Removed restricted keys [\"id\"] from parameters according to permitted list"
+        )
       end
 
-      it 'filters values and does not send header if not configured' do
-        @controller.params[:invalid] = false
+      it 'does not warn when not configured' do
         Rails.configuration.stronger_parameters_violation_header = nil
-        permit_without_raising
-
-        assert     !@controller.params.key?(:invalid)
-        assert_nil @controller.response.headers['X-StrongerParameters-API-Warn']
-      end
-    end
-
-    it 'filters specific actions' do
-      @controller.params.merge!(action: 'show', everything: 'bleh', something: 'hello')
-      permit_without_raising
-
-      refute @controller.params.key?(:everything)
-      assert @controller.params.key?(:something)
-
-      @controller.params.merge!(action: 'create', everything: 'bleh', something: 'hello')
-      permit_without_raising
-
-      assert @controller.params.key?(:everything)
-      assert @controller.params.key?(:something)
-    end
-
-    it 'alsos filter request.params' do
-      @controller.params.merge!(action: 'show', everything: 'bleh', something: 'hello')
-      permit_without_raising
-
-      refute @controller.params.key?(:everything)
-      assert @controller.params.key?(:something)
-
-      refute @controller.request.params.key?(:everything)
-      assert @controller.request.params.key?(:something)
-    end
-
-    it 'raises if not declared' do
-      assert_raises(KeyError) do
-        @controller.params.merge!(action: 'arrrr', everything: 'bleh', something: 'hello')
-        permit_without_raising
-      end
-    end
-
-    it 'raises if trying to add to :anything' do
-      assert_raises(ArgumentError) do
-        WhitelistControllerTester.permitted_parameters :create, bar: Parameters.boolean
-        permit_without_raising
-      end
-    end
-  end
-
-  describe 'stronger_parameter violations' do
-    before do
-      WhitelistControllerTester.permitted_parameters :show, foo: Parameters.integer
-      @controller = WhitelistControllerTester.new
-      @controller.request = initialize_test_request
-      @controller.response = initialize_test_response
-      @controller.params = {
-        action: 'show',
-        controller: 'test',
-        foo: 'bar'
-      }
-    end
-
-    it 'does not permit the violation' do
-      assert_raises(StrongerParameters::InvalidParameter) do
-        @controller.send(:permit_parameters)
-      end
-    end
-
-    it 'can permit the violations' do
-      begin
-        WhitelistControllerTester.log_unpermitted_parameters!
-        @controller.params = {
-          action: 'show',
-          controller: 'test',
-          foo: 'bar',
-          invalid: 'foo'
-        }.with_indifferent_access
-
-        permit_without_raising
-
-        assert @controller.params.key?(:invalid)
-      ensure
-        WhitelistControllerTester.log_unpermitted_parameters = false
+        do_request
+        refute @controller.response.headers.key?('X-StrongerParameters-API-Warn')
       end
     end
   end

@@ -189,13 +189,13 @@ class TestController < ApplicationController
 ```
 
 
-### Log only mode
+### Log only mode for invalid parameters
 
-Just want to log violations in production, let all params pass through:
+To only log invalid (not unpermitted) parameters during rollout of stronger_parameters:
 
 ```ruby
 class MyController < ApplicationController
-  log_unpermitted_parameters! if Rails.env.production? # Still want other environments to raise
+  log_invalid_parameters! if Rails.env.production? # Still want other environments to raise
 
   permitted_parameters :update, user: { name: Parameters.string }
   def update
@@ -205,7 +205,7 @@ end
 
 ### Notifying users about unpermitted params
 
-Add headers to all requests that have unpermitted params:
+Add headers to all requests that have unpermitted params (does not log invalid):
 
 ```Ruby
 # config/application.rb
