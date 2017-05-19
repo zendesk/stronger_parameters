@@ -35,7 +35,7 @@ module StrongerParameters
           base.send :class_attribute, :log_unpermitted_parameters, instance_accessor: false
         end
 
-        def log_unpermitted_parameters!
+        def log_invalid_parameters!
           self.log_unpermitted_parameters = true
         end
 
@@ -85,15 +85,15 @@ module StrongerParameters
         end
 
         # TODO: invalid values should also be logged, but atm only invalid keys are
-        permitted_params = without_invalid_parameter_exceptions { params.permit(permitted) }
-        unpermitted_keys = flat_keys(params) - flat_keys(permitted_params)
         log_unpermitted = self.class.log_unpermitted_parameters
+        permitted_params = without_invalid_parameter_exceptions(log_unpermitted) { params.permit(permitted) }
+        unpermitted_keys = flat_keys(params) - flat_keys(permitted_params)
 
         show_unpermitted_keys(unpermitted_keys, log_unpermitted)
 
         return if log_unpermitted
 
-        params.replace(permitted_params)
+        (ActionPack::VERSION::MAJOR >= 5 ? params.send(:parameters) : params).replace(permitted_params)
         params.permit!
         request.params.replace(permitted_params)
 
@@ -107,14 +107,16 @@ module StrongerParameters
         log_prefix = (log_unpermitted ? 'Found' : 'Removed')
         message = "#{log_prefix} restricted keys #{unpermitted_keys.inspect} from parameters according to permitted list"
 
-        header = Rails.configuration.stronger_parameters_violation_header if Rails.configuration.respond_to?(:stronger_parameters_violation_header)
+        if Rails.configuration.respond_to?(:stronger_parameters_violation_header)
+          header = Rails.configuration.stronger_parameters_violation_header
+        end
         response.headers[header] = message if response && header
 
         Rails.logger.info("  #{message}")
       end
 
-      def without_invalid_parameter_exceptions
-        if self.class.log_unpermitted_parameters
+      def without_invalid_parameter_exceptions(log)
+        if log
           begin
             old = ActionController::Parameters.action_on_invalid_parameters
             ActionController::Parameters.action_on_invalid_parameters = :log
@@ -128,6 +130,7 @@ module StrongerParameters
       end
 
       def flat_keys(hash)
+        hash = hash.send(:parameters) if ActionPack::VERSION::MAJOR >= 5 && hash.is_a?(ActionController::Parameters)
         hash.flat_map { |k, v| v.is_a?(Hash) ? flat_keys(v).map { |x| "#{k}.#{x}" }.push(k) : k }
       end
     end
