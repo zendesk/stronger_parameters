@@ -25,12 +25,11 @@ params.permit(
 This will allow an array of id parameters that all are IDs (integer less than 2**31, greater than 0) and convert to Fixnum (`'2' --> 2`).
 
 ### Empty array -> nil
-Rails converts empty arrays to nil unless `config.action_dispatch.perform_deep_munge = false` is set
-(available in Rails 4.1+). Either use this or `Parameters.array | Parameters.nil` to deal with this.
+Rails converts empty arrays to nil, so often `Parameters.array | Parameters.nil` is needed.
 
 ### Allowing nils
 
-It can be convenient to allow nil to be passed as all kinds of attributes since ActiveRecord converts it to false/0 behind the scenes.
+It can be convenient to allow nil for all attributes since ActiveRecord converts it to false/0.
 `ActionController::Parameters.allow_nil_for_everything = true`
 
 ## Nested Parameters
@@ -44,7 +43,7 @@ params.permit(
       name: Parameters.string,
       family: Parameters.map(
         name: Parameters.string
-      )
+      ),
       hobbies: Parameters.array(Parameters.string)
     )
   )
@@ -149,7 +148,7 @@ This will permit these parameters:
 }
 ```
 
-## Production rollout
+## Rollout in log-only mode
 
 Just want to log violations in production:
 
@@ -158,7 +157,7 @@ Just want to log violations in production:
 ActionController::Parameters.action_on_invalid_parameters = :log
 ```
 
-## Controller support (compatible with Rails 3 and 4, untested on Rails 5)
+## Controller support
 
 Include `PermittedParameters` into a controller to force the developer
 to explicitly permit params for every action.
@@ -186,6 +185,7 @@ class TestController < ApplicationController
   permitted_parameters :update, :anything # all parameters permitted, use when migrating old controllers/actions
   def update
   end
+end
 ```
 
 
@@ -195,7 +195,7 @@ To only log invalid (not unpermitted) parameters during rollout of stronger_para
 
 ```ruby
 class MyController < ApplicationController
-  log_invalid_parameters! if Rails.env.production? # Still want other environments to raise
+  log_invalid_parameters! if Rails.env.production? # Still want other environments and controllers to raise
 
   permitted_parameters :update, user: { name: Parameters.string }
   def update
