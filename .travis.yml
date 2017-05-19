@@ -15,7 +15,9 @@ gemfile:
   - gemfiles/rails5.1.gemfile
 branches:
   only: master
-script: bundle exec rake test
+script: bundle exec rake $TASK
+env:
+  - TASK=test
 matrix:
   fast_finish: true
   exclude:
@@ -27,3 +29,7 @@ matrix:
       gemfile: gemfiles/rails5.1.gemfile
     - rvm: 2.1.8
       gemfile: gemfiles/rails5.1.gemfile
+  include:
+    - rvm: 2.4.1
+      gemfile: gemfiles/rails5.1.gemfile
+      env: TASK=rubocop

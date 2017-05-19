@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../test_helper'
 require 'stronger_parameters/controller_support/permitted_parameters'
 
@@ -63,8 +64,10 @@ describe WhitelistsController do
     end
 
     it 'inherits from parent to child' do
-      assert_instance_of StrongerParameters::StringConstraint, WhitelistsController.permitted_parameters_for(:create)[:first]
-      assert_instance_of StrongerParameters::StringConstraint, ChildController.permitted_parameters_for(:create)[:first]
+      WhitelistsController.permitted_parameters_for(:create)[:first].
+        must_be_instance_of StrongerParameters::StringConstraint
+      ChildController.permitted_parameters_for(:create)[:first].
+        must_be_instance_of StrongerParameters::StringConstraint
       assert_equal true, ChildController.log_unpermitted_parameters
     end
 
@@ -158,7 +161,11 @@ describe WhitelistsController do
     let(:parameters) { {id: '4', authenticity_token: 'auth'} }
 
     before do
-      WhitelistsController.permitted_parameters :index, something: Parameters.anything, user: { name: Parameters.string }
+      WhitelistsController.permitted_parameters(
+        :index,
+        something: Parameters.anything,
+        user: { name: Parameters.string }
+      )
     end
 
     it 'does not filter default params' do
@@ -221,7 +228,7 @@ describe WhitelistsController do
 
     describe "when raising on invalid params" do
       def do_request
-        get :index, params: {user: {name: ["123"]}}
+        get :index, params: {user: {name: ["123".dup]}}
       end
 
       before { Parameters.action_on_invalid_parameters = :raise }
@@ -237,7 +244,6 @@ describe WhitelistsController do
         assert_response :success
       end
     end
-
 
     describe "when raising on unpermitted params" do
       before { ActionController::Parameters.action_on_unpermitted_parameters = :raise }

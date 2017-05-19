@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../test_helper'
 
 SingleCov.covered! uncovered: 8
@@ -7,7 +8,7 @@ describe 'operator parameter constraints' do
     subject { ActionController::Parameters.integer | ActionController::Parameters.string }
 
     permits 'abc'
-    permits '123', :as => 123
+    permits '123', as: 123
 
     rejects Date.today
     rejects Time.now
@@ -17,7 +18,7 @@ describe 'operator parameter constraints' do
   describe 'AND types' do
     subject { ActionController::Parameters.string & ActionController::Parameters.integer }
 
-    permits '123', :as => 123
+    permits '123', as: 123
 
     rejects 123
     rejects 'abc'

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../test_helper'
 
 SingleCov.covered! uncovered: 18
@@ -88,7 +89,7 @@ describe StrongerParameters::Parameters do
     it "calls a block on mismatch" do
       calls = []
       ActionController::Parameters.action_on_invalid_parameters = lambda { |*args| calls << args }
-      result = params(:value => "a").permit(:value => ActionController::Parameters.integer32).to_h
+      result = params(value: "a").permit(value: ActionController::Parameters.integer32).to_h
       calls.size.must_equal 1
       calls[0].size.must_equal 2
       calls[0][0].value.must_equal "a"
@@ -100,7 +101,7 @@ describe StrongerParameters::Parameters do
     it "logs on log" do
       ActionController::Parameters.action_on_invalid_parameters = :log
       log = capture_log do
-        result = params(:value => "a").permit(:value => ActionController::Parameters.integer32).to_h
+        result = params(value: "a").permit(value: ActionController::Parameters.integer32).to_h
         result.must_equal "value" => "a"
       end
       log.must_include "value must be an integer, but was: \"a\""
@@ -108,57 +109,59 @@ describe StrongerParameters::Parameters do
 
     it "raises on default" do
       assert_raises StrongerParameters::InvalidParameter do
-        params(:value => "a").permit(:value => ActionController::Parameters.integer32)
+        params(value: "a").permit(value: ActionController::Parameters.integer32)
       end
     end
 
     it "raises on :raise" do
       ActionController::Parameters.action_on_invalid_parameters = :raise
       assert_raises StrongerParameters::InvalidParameter do
-        params(:value => "a").permit(:value => ActionController::Parameters.integer32)
+        params(value: "a").permit(value: ActionController::Parameters.integer32)
       end
     end
 
     it "fails on unknown" do
       ActionController::Parameters.action_on_invalid_parameters = :sdfssfd
       assert_raises ArgumentError do
-        params(:value => "a").permit(:value => ActionController::Parameters.integer32)
+        params(value: "a").permit(value: ActionController::Parameters.integer32)
       end
     end
   end
 
   describe "mixing non constraints" do
     it "passes normal" do
-      params(:foo => "b", :value => "a").permit(:value).to_h.must_equal "value" => "a"
+      params(foo: "b", value: "a").permit(:value).to_h.must_equal "value" => "a"
     end
 
     it "passes nested constraints in non-constraint" do
-      params(:value => {:key => 123}).permit(:value => {:key => ActionController::Parameters.integer32}).to_h.must_equal "value" => {"key" => 123}
+      params(value: {key: 123}).permit(value: {key: ActionController::Parameters.integer32}).to_h.
+        must_equal "value" => {"key" => 123}
     end
 
     it "fails nested constraints in non-constraint" do
       assert_raises StrongerParameters::InvalidParameter do
-        params(:value => {:key => "xxx"}).permit(:value => {:key => ActionController::Parameters.integer32}).to_h
+        params(value: {key: "xxx"}).permit(value: {key: ActionController::Parameters.integer32}).to_h
       end
     end
 
     it "passes nested constraints in non-constraint array" do
-      params(:value => [{:key => 123}]).permit(:value => [{:key => ActionController::Parameters.integer32}]).to_h.must_equal "value" => [{"key" => 123}]
+      params(value: [{key: 123}]).permit(value: [{key: ActionController::Parameters.integer32}]).to_h.
+        must_equal "value" => [{"key" => 123}]
     end
 
     it "fails nested constraints in non-constraint array" do
       assert_raises StrongerParameters::InvalidParameter do
-        params(:value => [{:key => "xxx"}]).permit(:value => [{:key => ActionController::Parameters.integer32}])
+        params(value: [{key: "xxx"}]).permit(value: [{key: ActionController::Parameters.integer32}])
       end
     end
 
     describe "nils" do
       def pass_nil_as_constrain
-        params(:value => nil).permit(:value => ActionController::Parameters.integer32)
+        params(value: nil).permit(value: ActionController::Parameters.integer32)
       end
 
       it "passes with nil for non-constraints" do
-        params(:value => nil).permit(:value => [{:key => ActionController::Parameters.integer32}])
+        params(value: nil).permit(value: [{key: ActionController::Parameters.integer32}])
       end
 
       it "does not pass with nil for constraints" do
@@ -169,7 +172,8 @@ describe StrongerParameters::Parameters do
 
       it "passes with nil for constraints when allow_nil_for_everything is on" do
         begin
-          old, ActionController::Parameters.allow_nil_for_everything = ActionController::Parameters.allow_nil_for_everything, true
+          old = ActionController::Parameters.allow_nil_for_everything
+          ActionController::Parameters.allow_nil_for_everything = true
           pass_nil_as_constrain.to_h.must_equal("value" => nil)
         ensure
           ActionController::Parameters.allow_nil_for_everything = old

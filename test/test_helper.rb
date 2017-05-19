@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 ENV["RAILS_ENV"] = "test"
 
 require 'bundler/setup'
@@ -39,7 +40,8 @@ class Minitest::Test
 
   def capture_log
     io = StringIO.new
-    old, Rails.logger = Rails.logger, Logger.new(io)
+    old = Rails.logger
+    Rails.logger = Logger.new(io)
     yield
     io.string
   ensure
@@ -50,7 +52,7 @@ class Minitest::Test
     type_casted = options.fetch(:as, value)
 
     it "permits #{value.inspect} as #{type_casted.inspect}" do
-      permitted = params(:value => value).permit(:value => subject)
+      permitted = params(value: value).permit(value: subject)
       permitted = permitted.to_h if Rails::VERSION::MAJOR >= 5
       if type_casted.nil?
         permitted[:value].must_be_nil
@@ -64,7 +66,7 @@ class Minitest::Test
     key = options.fetch(:key, :value)
 
     it "rejects #{value.inspect}" do
-      assert_rejects(key) { params(:value => value).permit(:value => subject) }
+      assert_rejects(key) { params(value: value).permit(value: subject) }
     end
   end
 end
@@ -72,7 +74,7 @@ end
 # copied from https://github.com/grosser/maxitest/blob/master/lib/maxitest/pending.rb
 module Maxitest
   module Pending
-    def pending(reason=nil)
+    def pending(reason = nil)
       if block_given?
         begin
           yield

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'stronger_parameters/constraints'
 
 module StrongerParameters
@@ -28,7 +29,7 @@ module StrongerParameters
         action: ActionController::Parameters.anything,
         format: ActionController::Parameters.anything,
         authenticity_token: ActionController::Parameters.string
-      }
+      }.freeze
 
       module ClassMethods
         def self.extended(base)
@@ -53,7 +54,10 @@ module StrongerParameters
         def permitted_parameters_for(action)
           unless for_action = permit_parameters[action]
             location = instance_method(action).source_location
-            raise KeyError, "Action #{action} for #{self} does not have any permitted parameters (#{location.join(":")})"
+            raise(
+              KeyError,
+              "Action #{action} for #{self} does not have any permitted parameters (#{location.join(":")})"
+            )
           end
           return :anything if for_action == :anything
 
@@ -105,7 +109,8 @@ module StrongerParameters
         return if unpermitted_keys.empty?
 
         log_prefix = (log_unpermitted ? 'Found' : 'Removed')
-        message = "#{log_prefix} restricted keys #{unpermitted_keys.inspect} from parameters according to permitted list"
+        message =
+          "#{log_prefix} restricted keys #{unpermitted_keys.inspect} from parameters according to permitted list"
 
         if Rails.configuration.respond_to?(:stronger_parameters_violation_header)
           header = Rails.configuration.stronger_parameters_violation_header

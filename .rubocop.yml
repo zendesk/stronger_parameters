@@ -1,0 +1,120 @@
+AllCops:
+  DisplayCopNames: true
+  TargetRubyVersion: 2.4
+  Exclude:
+    - vendor/**/*
+    - gemfiles/vendor/**/*
+
+LineLength:
+  Max: 120
+
+ClassLength:
+  Enabled: false
+
+Style/CommentIndentation:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: false
+
+HashSyntax:
+   EnforcedStyle: ruby19
+
+Style/SignalException:
+  Enabled: false
+
+Style/SpaceInsideHashLiteralBraces:
+  Enabled: false
+
+Style/PerlBackrefs:
+  Enabled: false
+
+Lint/AmbiguousOperator:
+  Enabled: false
+
+Style/Lambda:
+  Enabled: false
+
+Style/SpecialGlobalVars:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Style/WordArray:
+  Enabled: false
+
+Lint/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
+Style/StringLiteralsInInterpolation:
+  Enabled: false
+
+Style/NumericLiterals:
+  Enabled: false
+
+Style/FirstParameterIndentation:
+  Enabled: false
+
+Style/IndentHash:
+  Enabled: false
+
+Style/AlignParameters:
+  Enabled: false
+
+Style/MultilineOperationIndentation:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Style/DoubleNegation:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Style/MultilineMethodCallIndentation:
+  Enabled: false
+
+Lint/AssignmentInCondition:
+  Enabled: false
+
+Style/DotPosition:
+  EnforcedStyle: trailing
+
+Style/EmptyLineAfterMagicComment:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: false
+
+Bundler/OrderedGems:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Performance/RegexpMatch:
+  Enabled: false
+
+Style/NumericPredicate:
+  Enabled: false

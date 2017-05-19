@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative 'test_helper'
 
 SingleCov.not_covered!
@@ -13,7 +14,7 @@ class BooksController < ActionController::Base
   end
 
   def create
-    params.require(:book).permit(:id => Parameters.integer)
+    params.require(:book).permit(id: Parameters.integer)
 
     head :ok
   end

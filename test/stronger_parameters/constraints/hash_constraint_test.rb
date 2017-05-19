@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../test_helper'
 
 SingleCov.covered! uncovered: 5
@@ -5,8 +6,8 @@ SingleCov.covered! uncovered: 5
 describe 'map parameter constraints' do
   subject do
     ActionController::Parameters.map(
-      :id => ActionController::Parameters.integer,
-      :name => ActionController::Parameters.string
+      id: ActionController::Parameters.integer,
+      name: ActionController::Parameters.string
     )
   end
 
@@ -17,14 +18,14 @@ describe 'map parameter constraints' do
     super(value, options)
   end
 
-  permits(:id => 1, :name => 'Mick')
-  permits({:id => '1', :name => 'Mick'}, :as => {:id => 1, :name => 'Mick'})
-  permits(:id => 1)
-  permits({:id => '1'}, :as => {:id => 1})
-  permits(:name => 'Mick')
+  permits(id: 1, name: 'Mick')
+  permits({id: '1', name: 'Mick'}, as: {id: 1, name: 'Mick'})
+  permits(id: 1)
+  permits({id: '1'}, as: {id: 1})
+  permits(name: 'Mick')
 
-  rejects({:id => 1, :name => 123}, :key => :name)
-  rejects({:id => 'Mick', :name => 'Mick'}, :key => :id)
+  rejects({id: 1, name: 123}, key: :name)
+  rejects({id: 'Mick', name: 'Mick'}, key: :id)
   rejects(123)
   rejects('abc')
   rejects nil
@@ -42,8 +43,8 @@ describe 'open-ended map parameter constraints' do
     super(value, options)
   end
 
-  permits(:id => 1, :name => 'Mick')
-  permits({:id => 1, :name => 'Mick'})
+  permits(id: 1, name: 'Mick')
+  permits(id: 1, name: 'Mick')
   rejects("a string")
   rejects(123)
   rejects nil

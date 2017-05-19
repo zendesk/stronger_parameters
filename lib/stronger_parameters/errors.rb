@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module StrongerParameters
   class InvalidValue
     attr_accessor :value, :message
