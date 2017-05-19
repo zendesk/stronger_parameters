@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require './lib/stronger_parameters/version'
 
 Gem::Specification.new do |spec|
@@ -9,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/zendesk/stronger_parameters'
   spec.license       = 'Apache License Version 2.0'
 
-  spec.files         = Dir.glob('lib/**/*') + %w(README.md)
+  spec.files         = Dir.glob('lib/**/*') + %w[README.md]
 
   spec.add_development_dependency 'bundler', '~> 1.3'
   spec.add_development_dependency 'rake'
@@ -20,6 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'wwtd'
   spec.add_development_dependency 'bump'
   spec.add_development_dependency 'single_cov'
+  spec.add_development_dependency 'rubocop'
 
   spec.add_runtime_dependency 'actionpack', '>= 3.2', '< 5.2'
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'bundler/setup'
 require 'bundler/gem_tasks'
 require 'wwtd/tasks'
@@ -9,4 +10,9 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = false
 end
 
-task :default => "wwtd:local"
+task default: "wwtd:local"
+
+desc "Run rubocop"
+task :rubocop do
+  sh "rubocop"
+end
