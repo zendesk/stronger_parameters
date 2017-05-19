@@ -202,7 +202,7 @@ describe WhitelistsController do
         "action" => "index",
         "format" => "png",
         "authenticity_token" => "auth",
-        "id"=>"4"
+        "id" => "4"
       )
     end
 
