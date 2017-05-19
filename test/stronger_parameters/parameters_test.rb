@@ -1,9 +1,134 @@
 # frozen_string_literal: true
 require_relative '../test_helper'
 
-SingleCov.covered! uncovered: 18
+SingleCov.covered! uncovered: 3 # rails if/else code and controller support which is tested in controller_test.rb
 
 describe StrongerParameters::Parameters do
+  describe ".anything" do
+    subject { ActionController::Parameters.anything }
+
+    permits '1'
+    permits 1
+    permits []
+  end
+
+  describe ".nil" do
+    subject { ActionController::Parameters.nil }
+
+    permits nil
+    rejects 1
+    rejects false
+  end
+
+  describe ".string" do
+    subject { ActionController::Parameters.string }
+
+    permits "a"
+    rejects 1
+  end
+
+  describe ".regexp" do
+    subject { ActionController::Parameters.regexp(/foo/) }
+
+    permits "xfoox"
+    rejects "bar"
+  end
+
+  describe ".lte" do
+    subject { ActionController::Parameters.lte(4) }
+
+    permits 4
+    rejects 5
+  end
+
+  describe ".gt" do
+    subject { ActionController::Parameters.gt(4) }
+
+    permits 5
+    rejects 4
+  end
+
+  describe ".gte" do
+    subject { ActionController::Parameters.gte(4) }
+
+    permits 4
+    rejects 3
+  end
+
+  describe ".enumeration" do
+    subject { ActionController::Parameters.enumeration(1, 2) }
+
+    permits 1
+    permits 2
+    rejects 4
+  end
+
+  describe ".boolean" do
+    subject { ActionController::Parameters.boolean }
+
+    permits true
+    permits false
+    rejects nil
+    permits 1, as: true
+  end
+
+  describe ".float" do
+    subject { ActionController::Parameters.float }
+
+    permits 1.0
+    rejects "X"
+  end
+
+  describe ".array" do
+    subject { ActionController::Parameters.array(ActionController::Parameters.id) }
+
+    permits [1, 2]
+    rejects ["X"]
+    rejects "X"
+  end
+
+  describe ".map" do
+    subject { ActionController::Parameters.map(foo: ActionController::Parameters.id) }
+
+    permits({foo: 1}, as: {"foo" => 1})
+    rejects 1
+  end
+
+  describe ".nil_string" do
+    subject { ActionController::Parameters.nil_string }
+
+    permits "undefined", as: nil
+    rejects 1
+  end
+
+  describe ".datetime" do
+    subject { ActionController::Parameters.datetime }
+
+    permits "2016-01-01 00:00:00 +0000", as: Time.parse("2016-01-01 00:00:00 +0000")
+    rejects 1
+  end
+
+  describe ".file" do
+    subject { ActionController::Parameters.file }
+
+    permits StringIO.new
+    rejects 1
+  end
+
+  describe ".decimal" do
+    subject { ActionController::Parameters.decimal 4, 2 }
+
+    permits "12.34", as: BigDecimal("12.34")
+    rejects "12345.12"
+  end
+
+  describe ".hex" do
+    subject { ActionController::Parameters.hex }
+
+    permits "ab125"
+    rejects "abg"
+  end
+
   describe ".bigid" do
     subject { ActionController::Parameters.bigid }
 
