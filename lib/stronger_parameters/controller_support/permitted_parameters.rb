@@ -61,7 +61,7 @@ module StrongerParameters
           end
           return :anything if for_action == :anything
 
-          # TODO: we should be able to call sugar on the result of deep_merge, but it breaks tests
+          # FYI: we should be able to call sugar on the result of deep_merge, but it breaks tests
           permit_parameters[:all].deep_merge(for_action).
             each_with_object({}) { |(k, v), a| a[k] = PermittedParameters.sugar(v) }
         end

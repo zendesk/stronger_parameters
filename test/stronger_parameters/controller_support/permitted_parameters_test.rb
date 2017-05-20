@@ -53,27 +53,19 @@ describe WhitelistsController do
     WhitelistsController.log_unpermitted_parameters = false
   end
 
-  describe 'inheritance' do
-    class ChildController < WhitelistsController
+  describe '.sugar' do
+    it 'turns Array into Parameters.array' do
+      WhitelistsController.permitted_parameters :foo, ticket: [Parameters.integer]
+      constraint = WhitelistsController.permitted_parameters_for(:foo)[:ticket]
+      assert_instance_of StrongerParameters::ArrayConstraint, constraint
+      assert_equal Parameters.integer, constraint.item_constraint
     end
 
-    before do
-      WhitelistsController.permitted_parameters :create, first: Parameters.string
-      WhitelistsController.log_invalid_parameters!
-      ChildController.permitted_parameters :create, last: Parameters.string
-    end
-
-    it 'inherits from parent to child' do
-      WhitelistsController.permitted_parameters_for(:create)[:first].
-        must_be_instance_of StrongerParameters::StringConstraint
-      ChildController.permitted_parameters_for(:create)[:first].
-        must_be_instance_of StrongerParameters::StringConstraint
-      assert_equal true, ChildController.log_unpermitted_parameters
-    end
-
-    it 'does not inherit from child to parent' do
-      assert_nil WhitelistsController.permitted_parameters_for(:create)[:last]
-      assert_instance_of StrongerParameters::StringConstraint, ChildController.permitted_parameters_for(:create)[:last]
+    it 'turns Hash into Parameters.map' do
+      WhitelistsController.permitted_parameters :foo, ticket: { id: Parameters.integer }
+      constraint = WhitelistsController.permitted_parameters_for(:foo)[:ticket]
+      assert_instance_of StrongerParameters::HashConstraint, constraint
+      assert_equal({ 'id' => Parameters.integer }, constraint.constraints)
     end
   end
 
@@ -104,56 +96,34 @@ describe WhitelistsController do
         "a" => Parameters.integer, "b" => Parameters.integer
       )
     end
-  end
 
-  describe '.sugar' do
-    it 'turns Array into Parameters.array' do
-      WhitelistsController.permitted_parameters :foo, ticket: [Parameters.integer]
-      constraint = WhitelistsController.permitted_parameters_for(:foo)[:ticket]
-      assert_instance_of StrongerParameters::ArrayConstraint, constraint
-      assert_equal Parameters.integer, constraint.item_constraint
-    end
+    describe 'inheritance' do
+      class ChildController < WhitelistsController
+      end
 
-    it 'turns Hash into Parameters.map' do
-      WhitelistsController.permitted_parameters :foo, ticket: { id: Parameters.integer }
-      constraint = WhitelistsController.permitted_parameters_for(:foo)[:ticket]
-      assert_instance_of StrongerParameters::HashConstraint, constraint
-      assert_equal({ 'id' => Parameters.integer }, constraint.constraints)
-    end
-  end
+      before do
+        WhitelistsController.permitted_parameters :create, first: Parameters.string
+        WhitelistsController.log_invalid_parameters!
+        ChildController.permitted_parameters :create, last: Parameters.string
+      end
 
-  describe 'emptied containers' do
-    def do_request(params)
-      get :index, params: params, format: :json
-    end
+      it 'inherits from parent to child' do
+        WhitelistsController.permitted_parameters_for(:create)[:first].
+          must_be_instance_of StrongerParameters::StringConstraint
+        ChildController.permitted_parameters_for(:create)[:first].
+          must_be_instance_of StrongerParameters::StringConstraint
+        assert_equal true, ChildController.log_unpermitted_parameters
+      end
 
-    before do
-      WhitelistsController.permitted_parameters :index,
-        something: {
-          test: {
-            all: Parameters.anything,
-            day: Parameters.anything
-          }
-        },
-        array: Parameters.array(Parameters.integer)
-    end
-
-    # should behave exactly like submitting and empty array does ... but that's a bug in .permit
-    it 'does not removes emptied hash' do
-      do_request something: {remove: 1}
-      @controller.params[:something].must_equal({})
-    end
-
-    # should behave exactly like submitting and empty array does ... but that's a bug in .permit
-    it 'does not removes emptied array' do
-      do_request array: ["foo"]
-      pending "array passes through ... not good" do
-        @controller.params[:array].must_equal([])
+      it 'does not inherit from child to parent' do
+        assert_nil WhitelistsController.permitted_parameters_for(:create)[:last]
+        ChildController.permitted_parameters_for(:create)[:last].
+          must_be_instance_of StrongerParameters::StringConstraint
       end
     end
   end
 
-  describe 'parameter filtering' do
+  describe '#permit_parameters' do
     def do_request
       get :index, params: parameters, format: 'png'
     end
@@ -206,13 +176,11 @@ describe WhitelistsController do
       )
     end
 
-    it "filers array when hash was requested" do
-      parameters[:user] = [1, 2, 3]
+    it "does not remove invalid because they only raise and do not filter" do
+      parameters[:user] = {name: {so: "evil".dup}}
       do_request
       assert_response :success
-      pending "array passes through ... not good" do
-        @controller.params.to_h["user"].must_be_nil
-      end
+      @controller.params.to_h["user"]["name"].must_equal("so" => "evil")
     end
 
     it 'raises when action is not configured' do
