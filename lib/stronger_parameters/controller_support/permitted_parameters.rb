@@ -41,9 +41,7 @@ module StrongerParameters
         end
 
         def permitted_parameters(action, permitted)
-          if permit_parameters[action] == :anything
-            raise ArgumentError, "#{self}/#{action} can not add to :anything" if permitted != :anything
-          elsif permitted == :anything
+          if permit_parameters[action] == :skip || permitted == :skip
             permit_parameters[action] = permitted
           else
             action_permitted = (permit_parameters[action] ||= {})
@@ -59,7 +57,7 @@ module StrongerParameters
               "Action #{action} for #{self} does not have any permitted parameters (#{location.join(":")})"
             )
           end
-          return :anything if for_action == :anything
+          return :skip if for_action == :skip
 
           # FYI: we should be able to call sugar on the result of deep_merge, but it breaks tests
           permit_parameters[:all].deep_merge(for_action).
@@ -80,13 +78,9 @@ module StrongerParameters
       private
 
       def permit_parameters
-        action = params[:action].to_sym
+        action = params.fetch(:action).to_sym
         permitted = self.class.permitted_parameters_for(action)
-
-        if permitted == :anything
-          Rails.logger.warn("#{params[:controller]}/#{params[:action]} does not filter parameters")
-          return
-        end
+        return if permitted == :skip
 
         # TODO: invalid values should also be logged, but atm only invalid keys are
         log_unpermitted = self.class.log_unpermitted_parameters
