@@ -182,7 +182,7 @@ class TestController < ApplicationController
   def index
   end
 
-  permitted_parameters :update, :anything # all parameters permitted, use when migrating old controllers/actions
+  permitted_parameters :update, :skip # use when migrating old controllers/actions
   def update
   end
 end

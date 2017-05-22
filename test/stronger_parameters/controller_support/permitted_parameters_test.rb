@@ -160,13 +160,11 @@ describe WhitelistsController do
       )
     end
 
-    it "allows anything through, but warns" do
+    it "can skip" do
       WhitelistsController.instance_variable_set(:@permit_parameters, nil)
-      WhitelistsController.permitted_parameters :index, :anything
-      capture_log do
-        do_request
-        assert_response :success
-      end.must_include "whitelists/index does not filter parameters"
+      WhitelistsController.permitted_parameters :index, :skip
+      do_request
+      assert_response :success
       @controller.request.params.must_equal(
         "controller" => "whitelists",
         "action" => "index",
@@ -187,11 +185,12 @@ describe WhitelistsController do
       assert_raises(KeyError) { get :show, params: {id: 1} }
     end
 
-    it 'raises when trying to add to :anything' do
-      WhitelistsController.permitted_parameters :index, :anything
-      assert_raises(ArgumentError) do
-        WhitelistsController.permitted_parameters :index, bar: Parameters.boolean
-      end
+    it 'overrides :skip' do
+      WhitelistsController.permitted_parameters :index, :skip
+      WhitelistsController.permitted_parameters :index, bar: Parameters.boolean
+      get :index, params: {bar: true}
+      assert_response :success
+      @controller.params.to_h["bar"].must_equal(true)
     end
 
     describe "when raising on invalid params" do
