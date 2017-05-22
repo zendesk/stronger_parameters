@@ -17,7 +17,7 @@ branches:
   only: master
 script: bundle exec rake $TASK
 env:
-  - TASK=test
+  - TASK=default
 matrix:
   fast_finish: true
   exclude:

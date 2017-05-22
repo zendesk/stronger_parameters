@@ -5,12 +5,10 @@ require 'wwtd/tasks'
 require 'rake/testtask'
 require 'bump/tasks'
 
-Rake::TestTask.new(:test) do |t|
+Rake::TestTask.new(:default) do |t|
   t.pattern = 'test/**/*_test.rb'
   t.verbose = false
 end
-
-task default: "wwtd:local"
 
 desc "Run rubocop"
 task :rubocop do
