@@ -28,7 +28,10 @@ module StrongerParameters
         controller: ActionController::Parameters.anything,
         action: ActionController::Parameters.anything,
         format: ActionController::Parameters.anything,
-        authenticity_token: ActionController::Parameters.string
+        authenticity_token: ActionController::Parameters.string,
+        utf8: Parameters.string,
+        _method: Parameters.string,
+        commit: Parameters.string
       }.freeze
 
       module ClassMethods
