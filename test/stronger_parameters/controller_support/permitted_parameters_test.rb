@@ -185,6 +185,11 @@ describe WhitelistsController do
       assert_raises(KeyError) { get :show, params: {id: 1} }
     end
 
+    it 'raises proper exception even if action is not defined (and not configured)' do
+      @controller.params.merge!(action: 'ops_not_here', id: 1)
+      assert_raises(KeyError) { @controller.send(:permit_parameters) }
+    end
+
     it 'overrides :skip' do
       WhitelistsController.permitted_parameters :index, :skip
       WhitelistsController.permitted_parameters :index, bar: Parameters.boolean

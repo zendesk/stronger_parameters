@@ -54,11 +54,11 @@ module StrongerParameters
 
         def permitted_parameters_for(action)
           unless for_action = permit_parameters[action]
-            location = instance_method(action).source_location
-            raise(
-              KeyError,
-              "Action #{action} for #{self} does not have any permitted parameters (#{location.join(":")})"
-            )
+            # NOTE: there is no easy way to test this, so make sure to test with
+            # a real rails controller if you make changes.
+            message = "Action #{action} for #{self} does not have any permitted parameters"
+            message += " (#{instance_method(action).source_location.join(":")})" if method_defined?(action)
+            raise(KeyError, message)
           end
           return :skip if for_action == :skip
 
