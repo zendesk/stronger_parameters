@@ -27,7 +27,7 @@ module StrongerParameters
     end
 
     def ==(other)
-      super && maximum_length == other.maximum_length
+      super && maximum_length == other.maximum_length && minimum_length == other.minimum_length
     end
   end
 end
