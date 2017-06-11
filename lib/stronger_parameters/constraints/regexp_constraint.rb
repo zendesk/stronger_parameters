@@ -19,9 +19,5 @@ module StrongerParameters
         InvalidValue.new(v, "must match #{regexp.source}")
       end
     end
-
-    def ==(other)
-      super && regexp == other.regexp
-    end
   end
 end
