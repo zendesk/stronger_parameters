@@ -25,9 +25,5 @@ module StrongerParameters
       other_constraints = other.is_a?(HashConstraint) ? other.constraints : other
       self.class.new(constraints.merge(other_constraints))
     end
-
-    def ==(other)
-      super && constraints == other.constraints
-    end
   end
 end

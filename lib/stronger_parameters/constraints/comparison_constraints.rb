@@ -8,10 +8,6 @@ module StrongerParameters
     def initialize(limit)
       @limit = limit
     end
-
-    def ==(other)
-      super && limit == other.limit
-    end
   end
 
   class LessThanConstraint < ComparisonConstraints

@@ -25,9 +25,5 @@ module StrongerParameters
 
       InvalidValue.new(v, 'must be a string')
     end
-
-    def ==(other)
-      super && maximum_length == other.maximum_length
-    end
   end
 end

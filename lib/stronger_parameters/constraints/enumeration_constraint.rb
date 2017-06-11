@@ -14,9 +14,5 @@ module StrongerParameters
 
       InvalidValue.new(v, "must be one of these: #{allowed.to_sentence}")
     end
-
-    def ==(other)
-      super && allowed == other.allowed
-    end
   end
 end

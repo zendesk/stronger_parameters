@@ -16,7 +16,9 @@ module StrongerParameters
     end
 
     def ==(other)
-      self.class == other.class
+      self.class == other.class && instance_variables.all? do |i|
+        instance_variable_get(i) == other.instance_variable_get(i)
+      end
     end
   end
 
@@ -46,10 +48,6 @@ module StrongerParameters
       constraints << other
       self
     end
-
-    def ==(other)
-      super && constraints == other.constraints
-    end
   end
 
   class AndConstraint < Constraint
@@ -70,10 +68,6 @@ module StrongerParameters
     def &(other)
       constraints << other
       self
-    end
-
-    def ==(other)
-      super && constraints == other.constraints
     end
   end
 end
