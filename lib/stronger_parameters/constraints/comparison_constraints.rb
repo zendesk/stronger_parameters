@@ -9,6 +9,10 @@ module StrongerParameters
       @limit = limit
     end
 
+    def value(*)
+      raise NotImplementedError
+    end
+
     def ==(other)
       super && limit == other.limit
     end
