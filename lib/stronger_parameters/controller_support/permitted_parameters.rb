@@ -25,9 +25,9 @@ module StrongerParameters
       end
 
       DEFAULT_PERMITTED = {
-        controller: ActionController::Parameters.anything,
-        action: ActionController::Parameters.anything,
-        format: ActionController::Parameters.anything,
+        controller: ActionController::Parameters.string,
+        action: ActionController::Parameters.string,
+        format: ActionController::Parameters.string,
         authenticity_token: ActionController::Parameters.string,
         utf8: Parameters.string,
         _method: Parameters.string,
