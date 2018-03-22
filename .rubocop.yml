@@ -11,7 +11,7 @@ LineLength:
 ClassLength:
   Enabled: false
 
-Style/CommentIndentation:
+Layout/CommentIndentation:
   Enabled: false
 
 Style/StringLiterals:
@@ -23,7 +23,7 @@ HashSyntax:
 Style/SignalException:
   Enabled: false
 
-Style/SpaceInsideHashLiteralBraces:
+Layout/SpaceInsideHashLiteralBraces:
   Enabled: false
 
 Style/PerlBackrefs:
@@ -47,7 +47,7 @@ Metrics/AbcSize:
 Style/WordArray:
   Enabled: false
 
-Lint/EndAlignment:
+Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 
 Style/StringLiteralsInInterpolation:
@@ -56,16 +56,16 @@ Style/StringLiteralsInInterpolation:
 Style/NumericLiterals:
   Enabled: false
 
-Style/FirstParameterIndentation:
+Layout/FirstParameterIndentation:
   Enabled: false
 
-Style/IndentHash:
+Layout/IndentHash:
   Enabled: false
 
-Style/AlignParameters:
+Layout/AlignParameters:
   Enabled: false
 
-Style/MultilineOperationIndentation:
+Layout/MultilineOperationIndentation:
   Enabled: false
 
 Metrics/ModuleLength:
@@ -89,16 +89,16 @@ Style/Documentation:
 Metrics/CyclomaticComplexity:
   Enabled: false
 
-Style/MultilineMethodCallIndentation:
+Layout/MultilineMethodCallIndentation:
   Enabled: false
 
 Lint/AssignmentInCondition:
   Enabled: false
 
-Style/DotPosition:
+Layout/DotPosition:
   EnforcedStyle: trailing
 
-Style/EmptyLineAfterMagicComment:
+Layout/EmptyLineAfterMagicComment:
   Enabled: false
 
 Style/SymbolArray:
@@ -117,4 +117,21 @@ Performance/RegexpMatch:
   Enabled: false
 
 Style/NumericPredicate:
+  Enabled: false
+
+# TODO: enable once our minimum ruby version is >=2.3
+Performance/UnfreezeString:
+  Enabled: false
+
+Naming/UncommunicativeMethodParamName:
+  Enabled: false
+
+Gemspec/OrderedDependencies:
+  Enabled: false
+
+# TODO: enable and fix once our minimum ruby version is >=2.3
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
+Style/IfUnlessModifier:
   Enabled: false
