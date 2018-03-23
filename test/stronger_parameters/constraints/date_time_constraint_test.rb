@@ -7,6 +7,7 @@ SingleCov.covered!
 describe 'date parameter constraints' do
   subject { ActionController::Parameters.datetime }
 
+  permits DateTime.parse("2015-03-31"), as: DateTime.parse("2015-03-31")
   permits "2015-03-31", as: DateTime.parse("2015-03-31")
   permits "2015-03-31T14:34:56Z", as: DateTime.parse("2015-03-31T14:34:56Z")
 

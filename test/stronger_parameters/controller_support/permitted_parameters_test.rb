@@ -2,7 +2,7 @@
 require_relative '../../test_helper'
 require 'stronger_parameters/controller_support/permitted_parameters'
 
-SingleCov.covered!
+SingleCov.covered! uncovered: (RUBY_VERSION >= "2.5.0" ? 2 : 0) # uncovered branches for rails version check
 
 class WhitelistsController < ActionController::Base
   ROUTES = ActionDispatch::Routing::RouteSet.new
@@ -239,6 +239,21 @@ describe WhitelistsController do
         @controller.response.headers['X-StrongerParameters-API-Warn'].must_equal(
           "Removed restricted keys [\"id\"] from parameters according to permitted list"
         )
+      end
+
+      it "warns about unfiltered parameters" do
+        WhitelistsController.log_unpermitted_parameters = true
+        do_request
+        @controller.response.headers['X-StrongerParameters-API-Warn'].must_equal(
+          "Found restricted keys [\"id\"] from parameters according to permitted list"
+        )
+      end
+
+      it "does not blow up when header is not available" do
+        Rails.configuration.expects(:respond_to?)
+        Rails.configuration.expects(:stronger_parameters_violation_header).never
+        do_request
+        refute @controller.response.headers['X-StrongerParameters-API-Warn']
       end
 
       it 'warns about nil values' do

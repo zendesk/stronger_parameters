@@ -18,6 +18,14 @@ describe StrongerParameters::HashConstraint do
     )
   end
 
+  # idk if that actually happens, just adding test coverage
+  it "can handle non-params" do
+    constraint = StrongerParameters::HashConstraint.new(foo: ActionController::Parameters.string)
+    expected = ActionController::Parameters.new(foo: "bar")
+    expected.permit!
+    constraint.value(foo: "bar").must_equal(expected)
+  end
+
   describe 'map parameter constraints' do
     permits(id: 1, name: 'Mick')
     permits({id: '1', name: 'Mick'}, as: {id: 1, name: 'Mick'})
@@ -43,13 +51,25 @@ describe StrongerParameters::HashConstraint do
   end
 
   describe 'merged constraints' do
-    subject do
-      ActionController::Parameters.map(id: ActionController::Parameters.integer).
-        merge(ActionController::Parameters.map(name: ActionController::Parameters.string))
+    describe "hash" do
+      subject do
+        ActionController::Parameters.map(id: ActionController::Parameters.integer).
+          merge(ActionController::Parameters.map(name: ActionController::Parameters.string))
+      end
+
+      permits(id: 1, name: 'Mick')
+      rejects({id: 'Mick', foo: 'Mick'}, key: :id) # TODO: key: :id is wrong
     end
 
-    permits(id: 1, name: 'Mick')
-    rejects({id: 'Mick', foo: 'Mick'}, key: :id) # TODO: key: :id is wrong
+    describe "other" do
+      subject do
+        ActionController::Parameters.map(id: ActionController::Parameters.integer).
+          merge(name: ActionController::Parameters.string)
+      end
+
+      permits(id: 1, name: 'Mick')
+      rejects({id: 'Mick', foo: 'Mick'}, key: :id) # TODO: key: :id is wrong
+    end
   end
 
   describe "#==" do
