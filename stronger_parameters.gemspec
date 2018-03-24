@@ -22,8 +22,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bump'
   spec.add_development_dependency 'single_cov'
   spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'mocha'
 
   spec.add_runtime_dependency 'actionpack', '>= 3.2', '< 5.2'
 
-  spec.required_ruby_version = '>= 2.0.0'
+  spec.required_ruby_version = '>= 2.2.0'
 end

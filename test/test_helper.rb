@@ -9,6 +9,7 @@ SingleCov.setup :minitest
 require 'minitest/autorun'
 require 'minitest/rg'
 require 'minitest/around'
+require 'mocha/setup'
 require 'rails'
 require 'action_controller'
 require 'rails/generators'
