@@ -2,29 +2,29 @@ language: ruby
 sudo: false
 cache: bundler
 rvm:
-  - 2.2.9
-  - 2.3.5
-  - 2.4.3
-  - 2.5.0
+  - 2.2.10
+  - 2.3.7
+  - 2.4.4
+  - 2.5.1
 gemfile:
   - gemfiles/rails3.2.gemfile
   - gemfiles/rails4.2.gemfile
   - gemfiles/rails5.0.gemfile
   - gemfiles/rails5.1.gemfile
+  - gemfiles/rails5.2.gemfile
 branches:
   only: master
+before_install: gem install bundler --no-ri --no-rdoc
 script: bundle exec rake $TASK
 env:
   - TASK=default
 matrix:
   exclude:
-    - rvm: 2.5.0
+    - rvm: 2.5.1
       gemfile: gemfiles/rails3.2.gemfile
-    - rvm: 2.5.0
+    - rvm: 2.5.1
       gemfile: gemfiles/rails4.2.gemfile
-    - rvm: 2.0.0
-      gemfile: gemfiles/rails5.0.gemfile
   include:
     - rvm: 2.4.3
-      gemfile: gemfiles/rails5.1.gemfile
+      gemfile: gemfiles/rails5.2.gemfile
       env: TASK=rubocop

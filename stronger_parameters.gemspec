@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'mocha'
 
-  spec.add_runtime_dependency 'actionpack', '>= 3.2', '< 5.2'
+  spec.add_runtime_dependency 'actionpack', '>= 3.2', '< 5.3'
 
   spec.required_ruby_version = '>= 2.2.0'
 end
