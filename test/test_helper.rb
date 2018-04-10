@@ -29,6 +29,11 @@ require 'stronger_parameters'
 require 'minitest/rails'
 require 'minitest/autorun'
 
+# https://github.com/rails/rails/issues/31324
+if ActionPack::VERSION::STRING >= "5.2.0"
+  Minitest::Rails::TestUnit = Rails::TestUnit
+end
+
 class Minitest::Test
   def params(hash)
     ActionController::Parameters.new(hash)
