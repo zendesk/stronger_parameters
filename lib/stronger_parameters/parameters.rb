@@ -112,6 +112,10 @@ module StrongerParameters
         DateTimeConstraint.new
       end
 
+      def datetime_iso8601
+        DateTimeIso8601Constraint.new
+      end
+
       def file
         FileConstraint.new
       end
