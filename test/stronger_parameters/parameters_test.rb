@@ -280,6 +280,16 @@ describe StrongerParameters::Parameters do
       end
     end
 
+    describe "requireds" do
+      it "does not pass if a required parameter is not supplied" do
+        error = assert_raises StrongerParameters::InvalidParameter do
+          params({}).permit(value: ActionController::Parameters.string.required)
+        end
+
+        assert_match("value must be present", error.message)
+      end
+    end
+
     describe "nils" do
       def pass_nil_as_constrain
         params(value: nil).permit(value: ActionController::Parameters.integer32)

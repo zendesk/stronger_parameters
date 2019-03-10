@@ -18,6 +18,14 @@ module StrongerParameters
     def ==(other)
       self.class == other.class
     end
+
+    def required
+      RequiredConstraint.new(self)
+    end
+
+    def required?
+      false
+    end
   end
 
   class OrConstraint < Constraint
@@ -50,6 +58,10 @@ module StrongerParameters
     def ==(other)
       super && constraints == other.constraints
     end
+
+    def required?
+      constraints.all?(&:required?)
+    end
   end
 
   class AndConstraint < Constraint
@@ -74,6 +86,24 @@ module StrongerParameters
 
     def ==(other)
       super && constraints == other.constraints
+    end
+
+    def required?
+      constraints.any?(&:required?)
+    end
+  end
+
+  class RequiredConstraint < Constraint
+    def initialize(other)
+      @other = other
+    end
+
+    def value(v)
+      @other.value(v)
+    end
+
+    def required?
+      true
     end
   end
 end

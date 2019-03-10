@@ -143,14 +143,25 @@ module StrongerParameters
 
       hash_filter_without_stronger_parameters(params, other_filter)
 
-      slice(*stronger_filter.keys).each do |key, value|
+      stronger_filter.keys.each do |key|
+        value = fetch(key, nil)
+        result = nil
+
         if value.nil? && self.class.allow_nil_for_everything
           params[key] = nil
           next
         end
 
         constraint = stronger_filter[key]
-        result = constraint.value(value)
+
+        if key?(key)
+          result = constraint.value(value)
+        elsif constraint.required?
+          result = InvalidValue.new(nil, 'must be present')
+        else
+          next
+        end
+
         if result.is_a?(InvalidValue)
           name = "invalid_parameter.action_controller"
           ActiveSupport::Notifications.publish(name, key: key, value: value, message: result.message)

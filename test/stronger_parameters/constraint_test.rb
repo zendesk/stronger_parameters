@@ -23,6 +23,12 @@ describe StrongerParameters::Constraint do
       subject.wont_equal StrongerParameters::OrConstraint.new
     end
   end
+
+  describe "#required?" do
+    it "is false by default" do
+      subject.required?.must_equal(false)
+    end
+  end
 end
 
 describe StrongerParameters::OrConstraint do
@@ -57,6 +63,26 @@ describe StrongerParameters::OrConstraint do
       subject.wont_equal(ActionController::Parameters.string & ActionController::Parameters.integer)
     end
   end
+
+  describe "#required?" do
+    it "is true if all of the constraints are required" do
+      subject = (
+        ActionController::Parameters.string.required |
+        ActionController::Parameters.integer.required
+      )
+
+      subject.required?.must_equal(true)
+    end
+
+    it "is false if one of the constrants is not required" do
+      subject = (
+        ActionController::Parameters.string.required |
+        ActionController::Parameters.integer
+      )
+
+      subject.required?.must_equal(false)
+    end
+  end
 end
 
 describe StrongerParameters::AndConstraint do
@@ -89,4 +115,31 @@ describe StrongerParameters::AndConstraint do
       subject.wont_equal(ActionController::Parameters.integer & ActionController::Parameters.string)
     end
   end
+
+  describe "#required?" do
+    it "is true if any of the constraints is required" do
+      subject = (
+        ActionController::Parameters.string.required &
+        ActionController::Parameters.integer
+      )
+
+      subject.required?.must_equal(true)
+    end
+
+    it "is false if none of the constrants are required" do
+      subject = (
+        ActionController::Parameters.string &
+        ActionController::Parameters.integer
+      )
+
+      subject.required?.must_equal(false)
+    end
+  end
+end
+
+describe StrongerParameters::RequiredConstraint do
+  subject { ActionController::Parameters.string.required }
+
+  rejects nil
+  permits '123'
 end
