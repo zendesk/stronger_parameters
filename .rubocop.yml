@@ -1,6 +1,6 @@
 AllCops:
   DisplayCopNames: true
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.4 # lowest supported version
   Exclude:
     - vendor/**/*
     - gemfiles/vendor/**/*
@@ -38,12 +38,6 @@ Style/Lambda:
 Style/SpecialGlobalVars:
   Enabled: false
 
-Metrics/MethodLength:
-  Enabled: false
-
-Metrics/AbcSize:
-  Enabled: false
-
 Style/WordArray:
   Enabled: false
 
@@ -56,10 +50,10 @@ Style/StringLiteralsInInterpolation:
 Style/NumericLiterals:
   Enabled: false
 
-Layout/FirstParameterIndentation:
+Layout/IndentFirstArgument:
   Enabled: false
 
-Layout/IndentHash:
+Layout/IndentFirstHashElement:
   Enabled: false
 
 Layout/AlignParameters:
@@ -68,25 +62,13 @@ Layout/AlignParameters:
 Layout/MultilineOperationIndentation:
   Enabled: false
 
-Metrics/ModuleLength:
-  Enabled: false
-
-Metrics/PerceivedComplexity:
-  Enabled: false
-
-Metrics/CyclomaticComplexity:
-  Enabled: false
-
-Metrics/BlockLength:
+Metrics:
   Enabled: false
 
 Style/DoubleNegation:
   Enabled: false
 
 Style/Documentation:
-  Enabled: false
-
-Metrics/CyclomaticComplexity:
   Enabled: false
 
 Layout/MultilineMethodCallIndentation:
@@ -113,24 +95,13 @@ Style/GuardClause:
 Style/ClassAndModuleChildren:
   Enabled: false
 
-Performance/RegexpMatch:
-  Enabled: false
-
 Style/NumericPredicate:
-  Enabled: false
-
-# TODO: enable once our minimum ruby version is >=2.3
-Performance/UnfreezeString:
   Enabled: false
 
 Naming/UncommunicativeMethodParamName:
   Enabled: false
 
 Gemspec/OrderedDependencies:
-  Enabled: false
-
-# TODO: enable and fix once our minimum ruby version is >=2.3
-Gemspec/RequiredRubyVersion:
   Enabled: false
 
 Style/IfUnlessModifier:
