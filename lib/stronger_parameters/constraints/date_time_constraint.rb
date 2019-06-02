@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# rubocop:disable Style/DateTime
 require 'stronger_parameters/constraint'
 
 module StrongerParameters
@@ -15,4 +14,3 @@ module StrongerParameters
     end
   end
 end
-# rubocop:enable Style/DateTime

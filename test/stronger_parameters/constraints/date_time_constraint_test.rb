@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# # rubocop:disable Style/DateTime
 require_relative '../../test_helper'
 
 SingleCov.covered!
@@ -17,4 +16,3 @@ describe 'date parameter constraints' do
   rejects "2015-03-32"  # Invalid day
   rejects "2015-00-15"  # Invalid month
 end
-# rubocop:enable Style/DateTime
