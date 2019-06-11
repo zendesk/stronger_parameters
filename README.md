@@ -32,6 +32,27 @@ Rails converts empty arrays to nil, so often `Parameters.array | Parameters.nil`
 It can be convenient to allow nil for all attributes since ActiveRecord converts it to false/0.
 `ActionController::Parameters.allow_nil_for_everything = true`
 
+### Rejecting nils
+
+You can reject a request that fails to supply certain parameters by marking them
+as required with the `.required` operator:
+
+```ruby
+params.permit(
+  name: Parameters.string.required, # will not accept a nil or a non-String
+  email: Parameters.string          # optional, may be omitted
+)
+```
+
+This also works in conjunction with the `&` and `|` constraints. For example, to
+express that a `uid` must be either a string or a number:
+
+```ruby
+params.permit(
+  uid: (Parameters.string | Parameters.integer).required
+)
+```
+
 ## Nested Parameters
 
 ```ruby
