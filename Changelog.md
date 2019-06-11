@@ -1,5 +1,6 @@
-# v2.9.0
+# NEXT
 
+# v2.12.0
 - allow parameters to be marked as required (refs GH#72)
 
 # v2.8.0
