@@ -1,3 +1,7 @@
+# v2.9.0
+
+- allow parameters to be marked as required (refs GH#72)
+
 # v2.8.0
 - Controller support (PermittedParameters)
 
