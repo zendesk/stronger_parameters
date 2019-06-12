@@ -314,6 +314,16 @@ describe StrongerParameters::Parameters do
           ActionController::Parameters.allow_nil_for_everything = old
         end
       end
+
+      it "does not create keys if parameter is not supplied and allow_nil_for_everything is on" do
+        begin
+          old = ActionController::Parameters.allow_nil_for_everything
+          ActionController::Parameters.allow_nil_for_everything = true
+          params({}).permit(value: ActionController::Parameters.string).to_h.must_equal({})
+        ensure
+          ActionController::Parameters.allow_nil_for_everything = old
+        end
+      end
     end
   end
 end
