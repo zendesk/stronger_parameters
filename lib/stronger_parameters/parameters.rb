@@ -147,7 +147,7 @@ module StrongerParameters
         value = fetch(key, nil)
         result = nil
 
-        if value.nil? && self.class.allow_nil_for_everything
+        if key?(key) && value.nil? && self.class.allow_nil_for_everything
           params[key] = nil
           next
         end
