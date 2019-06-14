@@ -14,7 +14,7 @@ gemfile:
 - gemfiles/rails6.0.gemfile
 branches:
   only: master
-before_install: gem update --system >/dev/null && gem install matching_bundle -v ">= 0.3.2" --no-doc && matching_bundle install
+before_install: gem update --system >/dev/null && gem install matching_bundle -v ">= 0.3.4" --no-doc && matching_bundle install
 script: matching_bundle exec rake $TASK
 env:
 - TASK=default
