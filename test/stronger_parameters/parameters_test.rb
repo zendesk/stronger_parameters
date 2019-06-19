@@ -295,6 +295,14 @@ describe StrongerParameters::Parameters do
         params(value: nil).permit(value: ActionController::Parameters.integer32)
       end
 
+      def with_allow_nil_for_everything(value = true)
+        old = ActionController::Parameters.allow_nil_for_everything
+        ActionController::Parameters.allow_nil_for_everything = value
+        yield
+      ensure
+        ActionController::Parameters.allow_nil_for_everything = old
+      end
+
       it "passes with nil for non-constraints" do
         params(value: nil).permit(value: [{key: ActionController::Parameters.integer32}])
       end
@@ -306,12 +314,14 @@ describe StrongerParameters::Parameters do
       end
 
       it "passes with nil for constraints when allow_nil_for_everything is on" do
-        begin
-          old = ActionController::Parameters.allow_nil_for_everything
-          ActionController::Parameters.allow_nil_for_everything = true
+        with_allow_nil_for_everything do
           pass_nil_as_constrain.to_h.must_equal("value" => nil)
-        ensure
-          ActionController::Parameters.allow_nil_for_everything = old
+        end
+      end
+
+      it "does not create keys if parameter is not supplied and allow_nil_for_everything is on" do
+        with_allow_nil_for_everything do
+          params({}).permit(value: ActionController::Parameters.string).to_h.must_equal({})
         end
       end
     end

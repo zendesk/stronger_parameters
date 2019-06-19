@@ -148,7 +148,7 @@ module StrongerParameters
         result = nil
 
         if value.nil? && self.class.allow_nil_for_everything
-          params[key] = nil
+          params[key] = nil if key?(key)
           next
         end
 
