@@ -1,4 +1,5 @@
-require 'stronger_parameters/constraints'
+# frozen_string_literal: true
+require 'stronger_parameters/constraint'
 
 module StrongerParameters
   class HashConstraint < Constraint
@@ -9,16 +10,14 @@ module StrongerParameters
     end
 
     def value(v)
-      case
-      when v.is_a?(Hash)
-        return ActionController::Parameters.new(v).permit! if constraints.nil?
-        return ActionController::Parameters.new(v).permit(constraints)
-      when ActionPack::VERSION::MAJOR >= 5 && v.is_a?(ActionController::Parameters)
-        return v.permit! if constraints.nil?
-        return v.permit(constraints)
-      end
+      return InvalidValue.new(v, "must be a hash") if !v.is_a?(Hash) && !v.is_a?(ActionController::Parameters)
 
-      InvalidValue.new(v, "must be a hash")
+      v = ActionController::Parameters.new(v) if v.is_a?(Hash)
+      if constraints.nil?
+        v.permit!
+      else
+        v.permit(constraints)
+      end
     end
 
     def merge(other)

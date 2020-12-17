@@ -25,13 +25,33 @@ params.permit(
 This will allow an array of id parameters that all are IDs (integer less than 2**31, greater than 0) and convert to Fixnum (`'2' --> 2`).
 
 ### Empty array -> nil
-Rails converts empty arrays to nil unless `config.action_dispatch.perform_deep_munge = false` is set
-(available in Rails 4.1+). Either use this or `Parameters.array | Parameters.nil` to deal with this.
+Rails converts empty arrays to nil, so often `Parameters.array | Parameters.nil` is needed.
 
 ### Allowing nils
 
-It can be convenient to allow nil to be passed as all kinds of attributes since ActiveRecord converts it to false/0 behind the scenes.
+It can be convenient to allow nil for all attributes since ActiveRecord converts it to false/0.
 `ActionController::Parameters.allow_nil_for_everything = true`
+
+### Rejecting nils
+
+You can reject a request that fails to supply certain parameters by marking them
+as required with the `.required` operator:
+
+```ruby
+params.permit(
+  name: Parameters.string.required, # will not accept a nil or a non-String
+  email: Parameters.string          # optional, may be omitted
+)
+```
+
+This also works in conjunction with the `&` and `|` constraints. For example, to
+express that a `uid` must be either a string or a number:
+
+```ruby
+params.permit(
+  uid: (Parameters.string | Parameters.integer).required
+)
+```
 
 ## Nested Parameters
 
@@ -44,7 +64,7 @@ params.permit(
       name: Parameters.string,
       family: Parameters.map(
         name: Parameters.string
-      )
+      ),
       hobbies: Parameters.array(Parameters.string)
     )
   )
@@ -149,7 +169,7 @@ This will permit these parameters:
 }
 ```
 
-## Production rollout
+## Rollout in log-only mode
 
 Just want to log violations in production:
 
@@ -157,6 +177,69 @@ Just want to log violations in production:
 # config/environments/production.rb
 ActionController::Parameters.action_on_invalid_parameters = :log
 ```
+
+## Controller support
+
+Include `PermittedParameters` into a controller to force the developer
+to explicitly permit params for every action.
+
+Examples:
+
+```ruby
+class TestController < ApplicationController
+  include StrongerParameters::ControllerSupport::PermittedParameters
+
+  permitted_parameters :all, locale: Parameters.string # permit :locale in all actions for this controller
+
+  permitted_parameters :show, id: Parameters.integer
+  def show
+  end
+
+  permitted_parameters :create, topic: { forum: { id: Parameters.integer } }
+  def create
+  end
+
+  permitted_parameters :index, {} # no parameters permitted
+  def index
+  end
+
+  permitted_parameters :update, :skip # use when migrating old controllers/actions
+  def update
+  end
+end
+```
+
+
+### Log only mode for invalid parameters
+
+To only log invalid (not unpermitted) parameters during rollout of stronger_parameters:
+
+```ruby
+class MyController < ApplicationController
+  log_invalid_parameters! if Rails.env.production? # Still want other environments and controllers to raise
+
+  permitted_parameters :update, user: { name: Parameters.string }
+  def update
+  end
+end
+```
+
+### Notifying users about unpermitted params
+
+Add headers to all requests that have unpermitted params (does not log invalid):
+
+```Ruby
+# config/application.rb
+config.stronger_parameters_violation_header = 'X-StrongerParameters-API-Warn'
+```
+
+```shell
+curl -I 'http://localhost/api/users/1.json' -X POST -d '{ "user": { "id": 1 } }'
+=> HTTP/1.1 200 OK
+=> ...
+=> X-StrongerParameters-API-Warn: Removed restricted keys ["user.id"] from parameters
+```
+
 
 ## Types
 
@@ -166,6 +249,7 @@ ActionController::Parameters.action_on_invalid_parameters = :log
 | Parameters.integer             | value.is_a?(Fixnum) or '-1'                                                                |
 | Parameters.float               | value.is_a?(Float) or '-1.2'                                                               |
 | Parameters.datetime            | value.is_a?(DateTime) or '2014-05-13' or '2015-03-31T14:34:56Z'                            |
+| Parameters.datetime_iso8601    | value is a date that conforms to ISO8601: '2014-05-13' or '2015-03-31T14:34:56Z'           |
 | Parameters.regexp(/foo/)       | value =~ regexp                                                                            |
 | Parameters.enum('asc', 'desc') | ['asc', 'desc'].include?(value)                                                            |
 | Parameters.lt(10)              | value < 10                                                                                 |

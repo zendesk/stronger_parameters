@@ -1,4 +1,5 @@
-require 'stronger_parameters/constraints'
+# frozen_string_literal: true
+require 'stronger_parameters/constraint'
 
 module StrongerParameters
   class ArrayConstraint < Constraint
@@ -13,6 +14,7 @@ module StrongerParameters
         return v.map do |item|
           result = item_constraint.value(item)
           return result if result.is_a?(InvalidValue)
+
           result
         end
       end

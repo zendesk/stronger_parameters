@@ -1,4 +1,5 @@
-require 'stronger_parameters/constraints'
+# frozen_string_literal: true
+require 'stronger_parameters/constraint'
 
 module StrongerParameters
   class StringConstraint < Constraint
@@ -26,7 +27,7 @@ module StrongerParameters
     end
 
     def ==(other)
-      super && maximum_length == other.maximum_length
+      super && maximum_length == other.maximum_length && minimum_length == other.minimum_length
     end
   end
 end

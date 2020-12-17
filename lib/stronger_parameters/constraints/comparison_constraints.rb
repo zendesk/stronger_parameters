@@ -1,4 +1,5 @@
-require 'stronger_parameters/constraints'
+# frozen_string_literal: true
+require 'stronger_parameters/constraint'
 
 module StrongerParameters
   class ComparisonConstraints < Constraint
@@ -6,6 +7,10 @@ module StrongerParameters
 
     def initialize(limit)
       @limit = limit
+    end
+
+    def value(*)
+      raise NotImplementedError
     end
 
     def ==(other)

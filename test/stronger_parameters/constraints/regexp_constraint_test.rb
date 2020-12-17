@@ -1,4 +1,7 @@
-require_relative 'test_helper'
+# frozen_string_literal: true
+require_relative '../../test_helper'
+
+SingleCov.covered!
 
 describe 'regexp parameter constraints' do
   subject { ActionController::Parameters.regexp(/\Aab?c\Z/) }

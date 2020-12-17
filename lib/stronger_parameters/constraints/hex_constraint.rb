@@ -1,4 +1,5 @@
-require 'stronger_parameters/constraints'
+# frozen_string_literal: true
+require 'stronger_parameters/constraint'
 
 module StrongerParameters
   class HexConstraint < Constraint

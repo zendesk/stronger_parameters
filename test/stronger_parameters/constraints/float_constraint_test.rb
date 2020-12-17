@@ -1,4 +1,7 @@
-require_relative 'test_helper'
+# frozen_string_literal: true
+require_relative '../../test_helper'
+
+SingleCov.covered!
 
 describe 'float parameter constraints' do
   subject { ActionController::Parameters.float }
@@ -6,7 +9,7 @@ describe 'float parameter constraints' do
   permits "1.2", as: 1.2
   permits "-1.2", as: -1.2
   permits 1.2
-  permits -1.2
+  permits(-1.2)
 
   rejects 1
   rejects '1'

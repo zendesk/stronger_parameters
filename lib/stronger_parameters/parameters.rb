@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'action_pack'
 
 if ActionPack::VERSION::MAJOR == 3
@@ -17,8 +18,8 @@ module StrongerParameters
     included do
       alias_method :hash_filter_without_stronger_parameters, :hash_filter
       alias_method :hash_filter, :hash_filter_with_stronger_parameters
-      cattr_accessor :action_on_invalid_parameters, :instance_accessor => false
-      cattr_accessor :allow_nil_for_everything, :instance_accessor => false
+      cattr_accessor :action_on_invalid_parameters, instance_accessor: false
+      cattr_accessor :allow_nil_for_everything, instance_accessor: false
     end
 
     module ClassMethods
@@ -59,33 +60,33 @@ module StrongerParameters
       end
 
       def integer32
-        integer & lt(2 ** 31) & gte(-2 ** 31)
+        integer & lt(2**31) & gte(-2**31)
       end
 
       def integer64
-        integer & lt(2 ** 63) & gte(-2 ** 63)
+        integer & lt(2**63) & gte(-2**63)
       end
 
       def id
-        integer & lt(2 ** 31) & gte(0)
+        integer & lt(2**31) & gte(0)
       end
 
       def uid
-        integer & lt(2 ** 32) & gte(0)
+        integer & lt(2**32) & gte(0)
       end
 
       def bigid
-        integer & lt(2 ** 63) & gte(0)
+        integer & lt(2**63) & gte(0)
       end
 
       def ubigid
-        integer & lt(2 ** 64) & gte(0)
+        integer & lt(2**64) & gte(0)
       end
 
       def enumeration(*allowed)
         EnumerationConstraint.new(*allowed)
       end
-      alias_method :enum, :enumeration
+      alias enum enumeration
 
       def boolean
         BooleanConstraint.new
@@ -111,11 +112,15 @@ module StrongerParameters
         DateTimeConstraint.new
       end
 
+      def datetime_iso8601
+        DateTimeIso8601Constraint.new
+      end
+
       def file
         FileConstraint.new
       end
 
-      def decimal(precision = 8, scale =2)
+      def decimal(precision = 8, scale = 2)
         DecimalConstraint.new(precision, scale)
       end
 
@@ -128,7 +133,7 @@ module StrongerParameters
       stronger_filter = ActiveSupport::HashWithIndifferentAccess.new
       other_filter    = ActiveSupport::HashWithIndifferentAccess.new
 
-      filter.each do |k,v|
+      filter.each do |k, v|
         if v.is_a?(Constraint)
           stronger_filter[k] = v
         else
@@ -138,17 +143,28 @@ module StrongerParameters
 
       hash_filter_without_stronger_parameters(params, other_filter)
 
-      slice(*stronger_filter.keys).each do |key, value|
+      stronger_filter.keys.each do |key|
+        value = fetch(key, nil)
+        result = nil
+
         if value.nil? && self.class.allow_nil_for_everything
-          params[key] = nil
+          params[key] = nil if key?(key)
           next
         end
 
         constraint = stronger_filter[key]
-        result = constraint.value(value)
+
+        if key?(key)
+          result = constraint.value(value)
+        elsif constraint.required?
+          result = InvalidValue.new(nil, 'must be present')
+        else
+          next
+        end
+
         if result.is_a?(InvalidValue)
           name = "invalid_parameter.action_controller"
-          ActiveSupport::Notifications.publish(name, :key => key, :value => value, :message => result.message)
+          ActiveSupport::Notifications.publish(name, key: key, value: value, message: result.message)
 
           action = self.class.action_on_invalid_parameters
           case action
@@ -176,8 +192,11 @@ module StrongerParameters
     Parameters = ActionController::Parameters
 
     included do
+      # TODO: this is not consistent with the behavior of raising ActionController::UnpermittedParameters
+      # should have the same render vs raise behavior in test/dev ... see permitted_parameters_test.rb
       rescue_from(StrongerParameters::InvalidParameter) do |e|
-        render (ActiveSupport::VERSION::MAJOR < 5 ? :text : :plain) => "Invalid parameter: #{e.key} #{e.message}", :status => :bad_request
+        type = (ActiveSupport::VERSION::MAJOR < 5 ? :text : :plain)
+        render type => e.message, :status => :bad_request
       end
     end
   end

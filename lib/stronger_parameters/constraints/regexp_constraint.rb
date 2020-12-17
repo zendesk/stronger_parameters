@@ -1,4 +1,5 @@
-require 'stronger_parameters/constraints'
+# frozen_string_literal: true
+require 'stronger_parameters/constraint'
 
 module StrongerParameters
   class RegexpConstraint < Constraint
@@ -12,6 +13,7 @@ module StrongerParameters
     def value(v)
       v = @string.value(v)
       return v if v.is_a?(InvalidValue)
+
       if v =~ regexp
         v
       else

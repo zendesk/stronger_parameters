@@ -1,4 +1,5 @@
-require 'stronger_parameters/constraints'
+# frozen_string_literal: true
+require 'stronger_parameters/constraint'
 
 module StrongerParameters
   class FileConstraint < Constraint
@@ -7,7 +8,7 @@ module StrongerParameters
       StringIO,
       Rack::Test::UploadedFile,
       ActionDispatch::Http::UploadedFile
-    ]
+    ].freeze
 
     def value(v)
       if VALID_FILE_TYPES.any? { |valid_file_type| v.is_a?(valid_file_type) }

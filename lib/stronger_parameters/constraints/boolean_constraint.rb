@@ -1,4 +1,5 @@
-require 'stronger_parameters/constraints'
+# frozen_string_literal: true
+require 'stronger_parameters/constraint'
 
 module StrongerParameters
   class BooleanConstraint < Constraint
@@ -6,13 +7,9 @@ module StrongerParameters
     FALSE_VALUES = [false, 'false', '0', 0].freeze
 
     def value(v)
-      if TRUE_VALUES.include?(v)
-        return true
-      end
+      return true if TRUE_VALUES.include?(v)
 
-      if FALSE_VALUES.include?(v)
-        return false
-      end
+      return false if FALSE_VALUES.include?(v)
 
       InvalidValue.new(v, "must be either true or false")
     end

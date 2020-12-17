@@ -3,7 +3,6 @@
 .bundle
 .config
 .yardoc
-Gemfile.lock
 InstalledFiles
 _yardoc
 coverage
@@ -15,4 +14,3 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
-gemfiles/*.lock
