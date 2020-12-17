@@ -2,15 +2,9 @@ language: ruby
 sudo: false
 cache: bundler
 rvm:
-- 2.4
 - 2.5
 - 2.6
 gemfile:
-- gemfiles/rails3.2.gemfile
-- gemfiles/rails4.2.gemfile
-- gemfiles/rails5.0.gemfile
-- gemfiles/rails5.1.gemfile
-- gemfiles/rails5.2.gemfile
 - gemfiles/rails6.0.gemfile
 branches:
   only: master
@@ -20,20 +14,11 @@ env:
 - TASK=default
 matrix:
   exclude:
-  - rvm: 2.4
+  - rvm: 2.5
     gemfile: gemfiles/rails6.0.gemfile
-  - rvm: 2.5
-    gemfile: gemfiles/rails4.2.gemfile
-  - rvm: 2.5
-    gemfile: gemfiles/rails3.2.gemfile
   - rvm: 2.6
-    gemfile: gemfiles/rails4.2.gemfile
+    gemfile: gemfiles/rails6.0.gemfile
   include:
-  - rvm: 2.4 # lowest ruby version
-    env: TASK=rubocop
-  # TODO: fix weird rails testing errors unrelated to the library
-  allow_failures:
   - rvm: 2.5
-    gemfile: gemfiles/rails6.0.gemfile
-  - rvm: 2.6
-    gemfile: gemfiles/rails6.0.gemfile
+    env: TASK=rubocop
+

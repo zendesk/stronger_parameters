@@ -1,2 +1,7 @@
 # frozen_string_literal: true
-eval_gemfile Dir["gemfiles/*.gemfile"].max
+
+source "https://rubygems.org"
+
+git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
+
+gemspec

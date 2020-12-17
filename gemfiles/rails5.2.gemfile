@@ -1,5 +1,0 @@
-# frozen_string_literal: true
-gem "rails", "~> 5.2.0"
-gem "rails-controller-testing"
-
-eval_gemfile 'common.rb'

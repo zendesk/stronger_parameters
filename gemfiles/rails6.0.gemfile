@@ -1,5 +1,0 @@
-# frozen_string_literal: true
-gem "rails", "~> 6.0.0.rc1"
-gem "rails-controller-testing"
-gem "minitest-rails", git: "https://github.com/blowmage/minitest-rails.git" # TODO: use latest once it supports rails 6
-eval_gemfile 'common.rb'
