@@ -6,27 +6,29 @@ require 'bundler/setup'
 require 'single_cov'
 SingleCov.setup :minitest
 
+require 'rails'
+require 'rails/generators'
+
 require 'minitest/autorun'
 require 'minitest/rg'
 require 'minitest/around'
-require 'mocha/setup'
-require 'rails'
-require 'action_controller'
-require 'rails/generators'
-
-class FakeApplication < Rails::Application; end
-
-Rails.application = FakeApplication
-Rails.configuration.action_controller = ActiveSupport::OrderedOptions.new
-Rails.configuration.secret_key_base = 'secret_key_base'
-Rails.logger = Logger.new("/dev/null")
-
-ActiveSupport.test_order = :random if ActiveSupport.respond_to?(:test_order=)
-
-require 'action_pack'
-require 'stronger_parameters'
 require 'minitest/rails'
-require 'minitest/autorun'
+require 'mocha/setup'
+require 'pry'
+
+require 'stronger_parameters'
+
+class FakeApplication < Rails::Application
+  config.action_dispatch.show_exceptions = false
+  config.logger = Logger.new("/dev/null")
+end
+
+FakeApplication.initialize!
+
+FakeApplication.routes.draw do
+  resources :whitelists
+  resources :books
+end
 
 class Minitest::Test
   def params(hash)

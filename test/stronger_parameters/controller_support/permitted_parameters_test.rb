@@ -5,11 +5,11 @@ require 'stronger_parameters/controller_support/permitted_parameters'
 SingleCov.covered! uncovered: 3
 
 class WhitelistsController < ActionController::Base
-  ROUTES = ActionDispatch::Routing::RouteSet.new
-  ROUTES.draw { resources :whitelists }
-  include ROUTES.url_helpers
-
   include StrongerParameters::ControllerSupport::PermittedParameters
+
+  rescue_from(KeyError) do |e|
+    render :plain => e.message, :status => :bad_request
+  end
 
   def create
     head :ok
@@ -28,8 +28,6 @@ describe WhitelistsController do
   Parameters = ActionController::Parameters
 
   before do
-    @routes = WhitelistsController::ROUTES
-
     # cannot use around since it is not ordered in rails 3.2
     @old_invalid = ActionController::Parameters.action_on_invalid_parameters
     ActionController::Parameters.action_on_invalid_parameters = :log
@@ -117,7 +115,7 @@ describe WhitelistsController do
 
   describe '#permit_parameters' do
     def do_request
-      get "/", params: parameters.merge(format: 'png')
+      get "/whitelists", params: parameters.merge(format: 'png')
     end
 
     let(:parameters) { {id: '4', authenticity_token: 'auth'} }
@@ -174,25 +172,26 @@ describe WhitelistsController do
     end
 
     it 'raises when action is not configured' do
-      assert_raises(KeyError) { get "/1" }
+      get "/whitelists/1"
+      assert_response :bad_request
     end
 
     it 'raises proper exception even if action is not defined (and not configured)' do
-      @controller.params.merge!(action: 'ops_not_here', id: 1)
-      assert_raises(KeyError) { @controller.send(:permit_parameters) }
+      get "/whitelists/1", params: {action: 'ops_not_here'}
+      assert_response :bad_request
     end
 
     it 'overrides :skip' do
       WhitelistsController.permitted_parameters :index, :skip
       WhitelistsController.permitted_parameters :index, bar: Parameters.boolean
-      get "/", params: {bar: true}
+      get "/whitelists", params: {bar: true}
       assert_response :success
       @controller.params.to_h["bar"].must_equal(true)
     end
 
     describe "when raising on invalid params" do
       def do_request
-        get "/", params: {user: {name: ["123".dup]}}
+        get "/whitelists", params: {user: {name: ["123".dup]}}
       end
 
       before { Parameters.action_on_invalid_parameters = :raise }
@@ -249,7 +248,7 @@ describe WhitelistsController do
       end
 
       it 'warns about nil values' do
-        @controller.params[:id] = nil
+        # @controller.params[:id] = nil
         do_request
         @controller.response.headers['X-StrongerParameters-API-Warn'].must_equal(
           "Removed restricted keys [\"id\"] from parameters according to permitted list"

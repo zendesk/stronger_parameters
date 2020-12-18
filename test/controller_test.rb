@@ -4,13 +4,8 @@ require_relative 'test_helper'
 SingleCov.not_covered!
 
 class BooksController < ActionController::Base
-  ROUTES = ActionDispatch::Routing::RouteSet.new
-  ROUTES.draw { resources :books }
-  include ROUTES.url_helpers
-
   rescue_from(ActionController::ParameterMissing) do |e|
-    type = (ActiveSupport::VERSION::MAJOR < 5 ? :text : :plain)
-    render type => "Required parameter missing: #{e.param}", :status => :bad_request
+    render :plain => "Required parameter missing: #{e.param}", :status => :bad_request
   end
 
   def create
@@ -21,20 +16,18 @@ class BooksController < ActionController::Base
 end
 
 describe BooksController do
-  before { @routes = BooksController::ROUTES }
-
   it 'rejects invalid params' do
-    post "/", params: {magazine: {name: 'Mjallo!'}}
+    post "/books", params: {magazine: {name: 'Mjallo!'}}
     assert_response :bad_request
     response.body.must_equal 'Required parameter missing: book'
 
-    post "/", params: {book: {id: 'Mjallo!'}}
+    post "/books", params: {book: {id: 'Mjallo!'}}
     assert_response :bad_request
     response.body.must_equal 'Invalid parameter: id must be an integer'
   end
 
   it 'permits valid params' do
-    post "/", params: {book: {id: '123'}}
+    post "/books", params: {book: {id: '123'}}
     assert_response :ok
   end
 end
