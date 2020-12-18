@@ -175,7 +175,7 @@ DEPENDENCIES
   bundler (<= 3)
   minitest
   minitest-around
-  minitest-rails
+  minitest-rails (~> 6.0.0, < 6.1)
   minitest-rg
   mocha
   rails (~> 6.0.0, < 6.1)

@@ -13,10 +13,11 @@ Gem::Specification.new do |spec|
   spec.files         = Dir.glob('lib/**/*') + %w[README.md]
 
   spec.add_development_dependency "appraisal"
+  spec.add_development_dependency 'rails', '~> 6'
   spec.add_development_dependency 'bundler', '<= 3'
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'minitest'
-  spec.add_development_dependency 'minitest-rails'
+  spec.add_development_dependency 'minitest-rails', '~> 6'
   spec.add_development_dependency 'minitest-around'
   spec.add_development_dependency 'minitest-rg'
   spec.add_development_dependency 'wwtd'
