@@ -21,28 +21,20 @@ class BooksController < ActionController::Base
 end
 
 describe BooksController do
-  def post(action, options = {})
-    if Rails::VERSION::MAJOR < 5
-      super(action, options.fetch(:params))
-    else
-      super
-    end
-  end
-
   before { @routes = BooksController::ROUTES }
 
   it 'rejects invalid params' do
-    post :create, params: {magazine: {name: 'Mjallo!'}}
+    post "/", params: {magazine: {name: 'Mjallo!'}}
     assert_response :bad_request
     response.body.must_equal 'Required parameter missing: book'
 
-    post :create, params: {book: {id: 'Mjallo!'}}
+    post "/", params: {book: {id: 'Mjallo!'}}
     assert_response :bad_request
     response.body.must_equal 'Invalid parameter: id must be an integer'
   end
 
   it 'permits valid params' do
-    post :create, params: {book: {id: '123'}}
+    post "/", params: {book: {id: '123'}}
     assert_response :ok
   end
 end

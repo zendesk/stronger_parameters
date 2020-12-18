@@ -1,12 +1,7 @@
 # frozen_string_literal: true
 require 'action_pack'
-
-if ActionPack::VERSION::MAJOR == 3
-  require 'action_controller/parameters'
-else
-  require 'action_controller/base'
-  require 'action_controller/metal/strong_parameters'
-end
+require 'action_controller/base'
+require 'action_controller/metal/strong_parameters'
 
 require 'stronger_parameters/constraints'
 require 'stronger_parameters/errors'
@@ -195,8 +190,7 @@ module StrongerParameters
       # TODO: this is not consistent with the behavior of raising ActionController::UnpermittedParameters
       # should have the same render vs raise behavior in test/dev ... see permitted_parameters_test.rb
       rescue_from(StrongerParameters::InvalidParameter) do |e|
-        type = (ActiveSupport::VERSION::MAJOR < 5 ? :text : :plain)
-        render type => e.message, :status => :bad_request
+        render :plain => e.message, :status => :bad_request
       end
     end
   end

@@ -2,7 +2,7 @@
 require_relative '../../test_helper'
 require 'stronger_parameters/controller_support/permitted_parameters'
 
-SingleCov.covered! uncovered: (RUBY_VERSION >= "2.5.0" ? 3 : 0) # uncovered branches for rails version check
+SingleCov.covered! uncovered: 3
 
 class WhitelistsController < ActionController::Base
   ROUTES = ActionDispatch::Routing::RouteSet.new
@@ -26,14 +26,6 @@ end
 
 describe WhitelistsController do
   Parameters = ActionController::Parameters
-
-  def get(action, options = {})
-    if Rails::VERSION::MAJOR < 5
-      super(action, options.fetch(:params).merge(format: options[:format] || 'html'))
-    else
-      super
-    end
-  end
 
   before do
     @routes = WhitelistsController::ROUTES
@@ -125,7 +117,7 @@ describe WhitelistsController do
 
   describe '#permit_parameters' do
     def do_request
-      get :index, params: parameters, format: 'png'
+      get "/", params: parameters.merge(format: 'png')
     end
 
     let(:parameters) { {id: '4', authenticity_token: 'auth'} }
@@ -182,7 +174,7 @@ describe WhitelistsController do
     end
 
     it 'raises when action is not configured' do
-      assert_raises(KeyError) { get :show, params: {id: 1} }
+      assert_raises(KeyError) { get "/1" }
     end
 
     it 'raises proper exception even if action is not defined (and not configured)' do
@@ -193,14 +185,14 @@ describe WhitelistsController do
     it 'overrides :skip' do
       WhitelistsController.permitted_parameters :index, :skip
       WhitelistsController.permitted_parameters :index, bar: Parameters.boolean
-      get :index, params: {bar: true}
+      get "/", params: {bar: true}
       assert_response :success
       @controller.params.to_h["bar"].must_equal(true)
     end
 
     describe "when raising on invalid params" do
       def do_request
-        get :index, params: {user: {name: ["123".dup]}}
+        get "/", params: {user: {name: ["123".dup]}}
       end
 
       before { Parameters.action_on_invalid_parameters = :raise }

@@ -24,15 +24,9 @@ Rails.logger = Logger.new("/dev/null")
 ActiveSupport.test_order = :random if ActiveSupport.respond_to?(:test_order=)
 
 require 'action_pack'
-require 'strong_parameters' if ActionPack::VERSION::MAJOR == 3
 require 'stronger_parameters'
 require 'minitest/rails'
 require 'minitest/autorun'
-
-# https://github.com/rails/rails/issues/31324
-if ActionPack::VERSION::STRING >= "5.2.0"
-  Minitest::Rails::TestUnit = Rails::TestUnit
-end
 
 class Minitest::Test
   def params(hash)
@@ -75,17 +69,4 @@ class Minitest::Test
       assert_rejects(key) { params(value: value).permit(value: subject) }
     end
   end
-end
-
-# https://github.com/seattlerb/minitest/issues/666
-if RUBY_VERSION > "2.1.0"
-  Object.prepend(Module.new do
-    def must_equal(*args)
-      if args.first.nil?
-        raise "Use must_be_nil"
-      else
-        super
-      end
-    end
-  end)
 end

@@ -6,8 +6,7 @@ module StrongerParameters
     module PermittedParameters
       def self.included(klass)
         klass.extend ClassMethods
-        method = (klass.respond_to?(:before_action) ? :before_action : :before_filter)
-        klass.public_send method, :permit_parameters
+        klass.public_send :before_action, :permit_parameters
       end
 
       def self.sugar(value)
@@ -94,8 +93,9 @@ module StrongerParameters
 
         return if log_unpermitted
 
-        (ActionPack::VERSION::MAJOR >= 5 ? params.send(:parameters) : params).replace(permitted_params)
+        params.send(:parameters).replace(permitted_params)
         params.permit!
+
         request.params.replace(permitted_params)
 
         logged_params = request.send(:parameter_filter).filter(permitted_params) # Removing passwords, etc
@@ -132,7 +132,7 @@ module StrongerParameters
       end
 
       def flat_keys(hash)
-        hash = hash.send(:parameters) if ActionPack::VERSION::MAJOR >= 5 && hash.is_a?(ActionController::Parameters)
+        hash = hash.send(:parameters) if hash.is_a?(ActionController::Parameters)
         hash.flat_map { |k, v| v.is_a?(Hash) ? flat_keys(v).map { |x| "#{k}.#{x}" }.push(k) : k }
       end
     end
