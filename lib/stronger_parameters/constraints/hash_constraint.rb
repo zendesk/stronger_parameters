@@ -7,7 +7,7 @@ module StrongerParameters
 
     def initialize(constraints)
       @constraints = constraints.with_indifferent_access unless constraints.nil?
-      super
+      super()
     end
 
     def value(v)

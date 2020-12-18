@@ -7,7 +7,7 @@ module StrongerParameters
 
     def initialize(*allowed)
       @allowed = allowed
-      super
+      super()
     end
 
     def value(v)

@@ -7,7 +7,7 @@ module StrongerParameters
       @precision = precision
       @scale = scale
       @regex = /\A-?\d{1,#{precision - scale}}#{"(\\.\\d{1,#{scale}})?" if scale > 0}\Z/
-      super
+      super()
     end
 
     def value(v)
