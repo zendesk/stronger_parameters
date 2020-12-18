@@ -7,6 +7,7 @@ module StrongerParameters
 
     def initialize(limit)
       @limit = limit
+      super
     end
 
     def value(*)

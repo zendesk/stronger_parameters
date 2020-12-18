@@ -138,7 +138,7 @@ module StrongerParameters
 
       hash_filter_without_stronger_parameters(params, other_filter)
 
-      stronger_filter.keys.each do |key|
+      stronger_filter.each_key do |key|
         value = fetch(key, nil)
         result = nil
 
@@ -190,11 +190,11 @@ module StrongerParameters
       # TODO: this is not consistent with the behavior of raising ActionController::UnpermittedParameters
       # should have the same render vs raise behavior in test/dev ... see permitted_parameters_test.rb
       rescue_from(StrongerParameters::InvalidParameter) do |e|
-        render :plain => e.message, :status => :bad_request
+        render plain: e.message, status: :bad_request
       end
     end
   end
 end
 
-ActionController::Parameters.send :include, StrongerParameters::Parameters
-ActionController::Base.send :include, StrongerParameters::ControllerSupport
+ActionController::Parameters.include StrongerParameters::Parameters
+ActionController::Base.include StrongerParameters::ControllerSupport

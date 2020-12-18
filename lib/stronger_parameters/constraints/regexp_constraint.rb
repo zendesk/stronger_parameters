@@ -8,6 +8,7 @@ module StrongerParameters
     def initialize(regexp)
       @regexp = regexp
       @string = StringConstraint.new
+      super
     end
 
     def value(v)

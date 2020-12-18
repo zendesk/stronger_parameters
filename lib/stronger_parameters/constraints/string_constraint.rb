@@ -8,6 +8,7 @@ module StrongerParameters
     def initialize(options = {})
       @maximum_length = options[:maximum_length] || options[:max_length]
       @minimum_length = options[:minimum_length] || options[:min_length]
+      super
     end
 
     def value(v)

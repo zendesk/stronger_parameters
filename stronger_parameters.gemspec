@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'wwtd'
   spec.add_development_dependency 'bump'
   spec.add_development_dependency 'single_cov'
-  spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'rubocop', '= 1.6.1'
   spec.add_development_dependency 'mocha'
   spec.add_development_dependency 'pry'
 

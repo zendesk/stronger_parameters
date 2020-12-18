@@ -5,7 +5,7 @@ rvm:
 - 2.5
 - 2.6
 gemfile:
-- gemfiles/rails6.0.gemfile
+- gemfiles/rails_6.gemfile
 branches:
   only: master
 before_install: gem update --system >/dev/null && gem install matching_bundle -v ">= 0.3.4" --no-doc && matching_bundle install
@@ -15,9 +15,13 @@ env:
 matrix:
   exclude:
   - rvm: 2.5
-    gemfile: gemfiles/rails6.0.gemfile
+    gemfile: gemfiles/rails_6.gemfile
   - rvm: 2.6
-    gemfile: gemfiles/rails6.0.gemfile
+    gemfile: gemfiles/rails_6.gemfile
+  - rvm: 2.5
+    gemfile: gemfiles/rails_6_1.gemfile
+  - rvm: 2.6
+    gemfile: gemfiles/rails_6_1.gemfile
   include:
   - rvm: 2.5
     env: TASK=rubocop

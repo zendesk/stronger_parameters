@@ -7,6 +7,7 @@ module StrongerParameters
 
     def initialize(item_constraint)
       @item_constraint = item_constraint
+      super
     end
 
     def value(v)

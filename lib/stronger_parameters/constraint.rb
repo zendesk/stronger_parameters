@@ -33,6 +33,7 @@ module StrongerParameters
 
     def initialize(*constraints)
       @constraints = constraints
+      super
     end
 
     def value(v)
@@ -69,6 +70,7 @@ module StrongerParameters
 
     def initialize(*constraints)
       @constraints = constraints
+      super
     end
 
     def value(v)
@@ -96,6 +98,7 @@ module StrongerParameters
   class RequiredConstraint < Constraint
     def initialize(other)
       @other = other
+      super
     end
 
     def value(v)

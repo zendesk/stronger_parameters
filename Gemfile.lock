@@ -188,7 +188,7 @@ DEPENDENCIES
   pry
   rails (~> 6)
   rake
-  rubocop
+  rubocop (= 1.6.1)
   single_cov
   stronger_parameters!
   wwtd

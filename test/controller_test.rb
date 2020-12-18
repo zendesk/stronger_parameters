@@ -5,7 +5,7 @@ SingleCov.not_covered!
 
 class BooksController < ActionController::Base
   rescue_from(ActionController::ParameterMissing) do |e|
-    render :plain => "Required parameter missing: #{e.param}", :status => :bad_request
+    render plain: "Required parameter missing: #{e.param}", status: :bad_request
   end
 
   def create

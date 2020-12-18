@@ -1,6 +1,8 @@
 AllCops:
   DisplayCopNames: true
-  TargetRubyVersion: 2.5 # lowest supported version
+  NewCops: disable
+  SuggestExtensions: false
+  TargetRubyVersion: 2.5
   Exclude:
     - vendor/**/*
     - gemfiles/vendor/**/*
@@ -50,13 +52,13 @@ Style/StringLiteralsInInterpolation:
 Style/NumericLiterals:
   Enabled: false
 
-Layout/IndentFirstArgument:
+Layout/FirstArgumentIndentation:
   Enabled: false
 
-Layout/IndentFirstHashElement:
+Layout/FirstHashElementIndentation:
   Enabled: false
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   Enabled: false
 
 Layout/MultilineOperationIndentation:
@@ -98,11 +100,14 @@ Style/ClassAndModuleChildren:
 Style/NumericPredicate:
   Enabled: false
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: false
 
 Gemspec/OrderedDependencies:
   Enabled: false
 
 Style/IfUnlessModifier:
+  Enabled: false
+
+Style/OptionalBooleanParameter:
   Enabled: false

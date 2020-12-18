@@ -8,7 +8,7 @@ class WhitelistsController < ActionController::Base
   include StrongerParameters::ControllerSupport::PermittedParameters
 
   rescue_from(KeyError) do |e|
-    render :plain => e.message, :status => :bad_request
+    render plain: e.message, status: :bad_request
   end
 
   def create
@@ -25,7 +25,9 @@ class WhitelistsController < ActionController::Base
 end
 
 describe WhitelistsController do
+  # rubocop:disable Lint/ConstantDefinitionInBlock
   Parameters = ActionController::Parameters
+  # rubocop:enable Lint/ConstantDefinitionInBlock
 
   before do
     # cannot use around since it is not ordered in rails 3.2
@@ -88,8 +90,10 @@ describe WhitelistsController do
     end
 
     describe 'inheritance' do
+      # rubocop:disable Lint/ConstantDefinitionInBlock
       class ChildController < WhitelistsController
       end
+      # rubocop:enable Lint/ConstantDefinitionInBlock
 
       before do
         WhitelistsController.permitted_parameters :create, first: Parameters.string

@@ -14,8 +14,8 @@ module StrongerParameters
         when Array
           ActionController::Parameters.array(*value.map { |v| sugar(v) })
         when Hash
-          constraints = value.each_with_object({}) do |(key, v), memo|
-            memo[key] = sugar(v)
+          constraints = value.transform_values do |v|
+            sugar(v)
           end
           ActionController::Parameters.map(constraints)
         else
@@ -63,7 +63,7 @@ module StrongerParameters
 
           # FYI: we should be able to call sugar on the result of deep_merge, but it breaks tests
           permit_parameters[:all].deep_merge(for_action).
-            each_with_object({}) { |(k, v), a| a[k] = PermittedParameters.sugar(v) }
+            transform_values { |v| PermittedParameters.sugar(v) }
         end
 
         private

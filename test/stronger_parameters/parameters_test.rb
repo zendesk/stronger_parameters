@@ -203,12 +203,10 @@ describe StrongerParameters::Parameters do
 
   describe ".action_on_invalid_parameters" do
     around do |test|
-      begin
-        old = ActionController::Parameters.action_on_invalid_parameters
-        test.call
-      ensure
-        ActionController::Parameters.action_on_invalid_parameters = old
-      end
+      old = ActionController::Parameters.action_on_invalid_parameters
+      test.call
+    ensure
+      ActionController::Parameters.action_on_invalid_parameters = old
     end
 
     it "calls a block on mismatch" do
