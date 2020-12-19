@@ -34,6 +34,9 @@ if ActionPack::VERSION::STRING >= "5.2.0"
   Minitest::Rails::TestUnit = Rails::TestUnit
 end
 
+# Use ActionController::TestCase for Controllers
+MiniTest::Spec::DSL::TYPES.unshift [/Controller$/, ActionController::TestCase]
+
 class Minitest::Test
   def params(hash)
     ActionController::Parameters.new(hash)

@@ -24,18 +24,6 @@ jobs:
         - ruby: '2.7'
           rails: '4.2'
           task: default
-        # TODO: check if this can be fixed
-        - ruby: '2.7'
-          rails: '6.0'
-          task: default
-        # TODO: fix by bumping test framework
-        - ruby: '2.5'
-          rails: '6.0'
-          task: default
-        # TODO: fix by bumping test framework
-        - ruby: '2.6'
-          rails: '6.0'
-          task: default
     name: ruby${{ matrix.ruby }} rails${{ matrix.rails }} rake ${{ matrix.task }}
     # TODO: use setup-ruby with bundler-cache: true ... but that fails on always using deployment mode
     steps:

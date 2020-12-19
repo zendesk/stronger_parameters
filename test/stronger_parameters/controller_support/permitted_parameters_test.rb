@@ -27,7 +27,7 @@ end
 describe WhitelistsController do
   Parameters = ActionController::Parameters
 
-  def get(action, options = {})
+  def get(action, options)
     if Rails::VERSION::MAJOR < 5
       super(action, options.fetch(:params).merge(format: options[:format] || 'html'))
     else
