@@ -24,15 +24,8 @@ Rails.logger = Logger.new("/dev/null")
 ActiveSupport.test_order = :random if ActiveSupport.respond_to?(:test_order=)
 
 require 'action_pack'
-require 'strong_parameters' if ActionPack::VERSION::MAJOR == 3
 require 'stronger_parameters'
 require 'minitest/rails'
-require 'minitest/autorun'
-
-# https://github.com/rails/rails/issues/31324
-if ActionPack::VERSION::STRING >= "5.2.0"
-  Minitest::Rails::TestUnit = Rails::TestUnit
-end
 
 # Use ActionController::TestCase for Controllers
 MiniTest::Spec::DSL::TYPES.unshift [/Controller$/, ActionController::TestCase]

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative '../../test_helper'
 
-SingleCov.covered! uncovered: (RUBY_VERSION >= "2.5.0" ? 1 : 0)
+SingleCov.covered! uncovered: 1
 
 describe StrongerParameters::HashConstraint do
   def self.permits(value, options = {})

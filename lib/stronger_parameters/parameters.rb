@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 require 'action_pack'
 
-if ActionPack::VERSION::MAJOR == 3
-  require 'action_controller/parameters'
-else
-  require 'action_controller/base'
-  require 'action_controller/metal/strong_parameters'
-end
+require 'action_controller/base'
+require 'action_controller/metal/strong_parameters'
 
 require 'stronger_parameters/constraints'
 require 'stronger_parameters/errors'
