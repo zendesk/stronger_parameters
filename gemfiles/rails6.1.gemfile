@@ -1,0 +1,6 @@
+# frozen_string_literal: true
+gem "rails", "~> 6.1.0"
+gem "rails-controller-testing"
+gem "minitest-rails", "~> 6.1.0", "< 6.2"
+
+eval_gemfile 'common.rb'
