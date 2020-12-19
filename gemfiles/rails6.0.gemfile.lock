@@ -2,7 +2,7 @@ PATH
   remote: /Users/mgrosser/Code/tools/stronger_parameters
   specs:
     stronger_parameters (2.12.1)
-      actionpack (>= 4.2, < 6.1)
+      actionpack (>= 4.2, < 6.2)
 
 GEM
   remote: https://rubygems.org/
