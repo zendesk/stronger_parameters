@@ -1,7 +1,0 @@
-# frozen_string_literal: true
-gem "rails", "~> 3.2.21"
-gem "strong_parameters"
-gem "test-unit-minitest"
-gem "minitest-rails", "~> 1.0"
-
-eval_gemfile 'common.rb'

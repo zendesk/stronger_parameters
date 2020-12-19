@@ -18,13 +18,12 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'minitest-rails'
   spec.add_development_dependency 'minitest-around'
   spec.add_development_dependency 'minitest-rg'
-  spec.add_development_dependency 'wwtd'
   spec.add_development_dependency 'bump'
   spec.add_development_dependency 'single_cov'
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'mocha'
 
-  spec.add_runtime_dependency 'actionpack', '>= 3.2', '< 6.1'
+  spec.add_runtime_dependency 'actionpack', '>= 4.2', '< 6.1'
 
-  spec.required_ruby_version = '>= 2.4.0'
+  spec.required_ruby_version = '>= 2.5.0'
 end
