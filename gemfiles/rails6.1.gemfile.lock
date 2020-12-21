@@ -1,5 +1,5 @@
 PATH
-  remote: /Users/mgrosser/Code/tools/stronger_parameters
+  remote: ..
   specs:
     stronger_parameters (2.12.1)
       actionpack (>= 4.2, < 6.2)
