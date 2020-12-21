@@ -1,7 +1,9 @@
 # NEXT
+
+# v2.13.0
 - rails 6.1 support
-- drop rails 3 support 
-- drop ruby 2.4 support 
+- drop rails 3 support
+- drop ruby 2.4 support
 
 # v2.12.0
 - allow parameters to be marked as required (refs GH#72)
