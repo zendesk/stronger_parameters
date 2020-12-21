@@ -1,0 +1,44 @@
+name: CI
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby: ['2.5', '2.6', '2.7']
+        rails: ['4.2', '5.0', '5.1', '5.2', '6.0', '6.1']
+        task: [default]
+        include:
+        # run rubocop against lowest supported ruby
+        - ruby: '2.5'
+          rails: '6.1'
+          task: rubocop
+        exclude:
+        - ruby: '2.6'
+          rails: '4.2'
+          task: default
+        - ruby: '2.7'
+          rails: '4.2'
+          task: default
+    name: ruby${{ matrix.ruby }} rails${{ matrix.rails }} rake ${{ matrix.task }}
+    # TODO: use setup-ruby with bundler-cache: true ... but that fails on always using deployment mode
+    steps:
+    - uses: zendesk/checkout@v2
+    - uses: zendesk/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+    # TODO: use regular bundle install once we are done with bundler v1
+    - run: gem install matching_bundle && matching_bundle install
+      env:
+        BUNDLE_GEMFILE: gemfiles/rails${{ matrix.rails }}.gemfile
+    - uses: zendesk/cache@v2
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-${{ hashFiles('**/Gemfile.lock') }}
+    - run: bundle exec rake ${{ matrix.task }}
+      env:
+        BUNDLE_GEMFILE: gemfiles/rails${{ matrix.rails }}.gemfile

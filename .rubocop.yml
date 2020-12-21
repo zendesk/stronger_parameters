@@ -1,6 +1,6 @@
 AllCops:
   DisplayCopNames: true
-  TargetRubyVersion: 2.4 # lowest supported version
+  TargetRubyVersion: 2.5 # lowest supported version
   Exclude:
     - vendor/**/*
     - gemfiles/vendor/**/*
