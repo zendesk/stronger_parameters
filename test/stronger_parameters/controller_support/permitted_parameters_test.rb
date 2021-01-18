@@ -2,7 +2,7 @@
 require_relative '../../test_helper'
 require 'stronger_parameters/controller_support/permitted_parameters'
 
-SingleCov.covered! uncovered: 3 # uncovered branches for rails version check
+SingleCov.covered! uncovered: (ActiveSupport::VERSION::MAJOR < 5 ? 3 : 2) # uncovered branches for rails version check
 
 class WhitelistsController < ActionController::Base
   ROUTES = ActionDispatch::Routing::RouteSet.new
