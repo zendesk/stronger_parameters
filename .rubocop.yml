@@ -1,24 +1,19 @@
 AllCops:
-  DisplayCopNames: true
+  SuggestExtensions: false # TODO: add rubocop-rails
+  NewCops: enable # TODO: turn on
   TargetRubyVersion: 2.5 # lowest supported version
   Exclude:
-    - vendor/**/*
-    - gemfiles/vendor/**/*
+  - vendor/**/*
+  - gemfiles/vendor/**/*
 
-LineLength:
+Layout/LineLength:
   Max: 120
-
-ClassLength:
-  Enabled: false
 
 Layout/CommentIndentation:
   Enabled: false
 
 Style/StringLiterals:
   Enabled: false
-
-HashSyntax:
-   EnforcedStyle: ruby19
 
 Style/SignalException:
   Enabled: false
@@ -50,13 +45,13 @@ Style/StringLiteralsInInterpolation:
 Style/NumericLiterals:
   Enabled: false
 
-Layout/IndentFirstArgument:
+Layout/FirstArgumentIndentation:
   Enabled: false
 
-Layout/IndentFirstHashElement:
+Layout/FirstHashElementIndentation:
   Enabled: false
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   Enabled: false
 
 Layout/MultilineOperationIndentation:
@@ -98,11 +93,14 @@ Style/ClassAndModuleChildren:
 Style/NumericPredicate:
   Enabled: false
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: false
 
 Gemspec/OrderedDependencies:
   Enabled: false
 
 Style/IfUnlessModifier:
+  Enabled: false
+
+Lint/MissingSuper:
   Enabled: false
