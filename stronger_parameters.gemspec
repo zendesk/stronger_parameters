@@ -14,10 +14,8 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler', '<= 3'
   spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'minitest'
   spec.add_development_dependency 'minitest-rails'
-  spec.add_development_dependency 'minitest-around'
-  spec.add_development_dependency 'minitest-rg'
+  spec.add_development_dependency 'maxitest'
   spec.add_development_dependency 'bump'
   spec.add_development_dependency 'single_cov'
   spec.add_development_dependency 'rubocop'
