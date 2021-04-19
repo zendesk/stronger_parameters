@@ -139,9 +139,8 @@ module StrongerParameters
 
       hash_filter_without_stronger_parameters(params, other_filter)
 
-      stronger_filter.keys.each do |key|
+      stronger_filter.each_key do |key|
         value = fetch(key, nil)
-        result = nil
 
         if value.nil? && self.class.allow_nil_for_everything
           params[key] = nil if key?(key)
@@ -198,5 +197,5 @@ module StrongerParameters
   end
 end
 
-ActionController::Parameters.send :include, StrongerParameters::Parameters
-ActionController::Base.send :include, StrongerParameters::ControllerSupport
+ActionController::Parameters.include StrongerParameters::Parameters
+ActionController::Base.include StrongerParameters::ControllerSupport

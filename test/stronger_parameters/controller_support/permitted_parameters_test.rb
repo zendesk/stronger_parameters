@@ -2,7 +2,7 @@
 require_relative '../../test_helper'
 require 'stronger_parameters/controller_support/permitted_parameters'
 
-SingleCov.covered! uncovered: 3 # uncovered branches for rails version check
+SingleCov.covered! uncovered: (ActiveSupport::VERSION::MAJOR < 5 ? 3 : 2) # uncovered branches for rails version check
 
 class WhitelistsController < ActionController::Base
   ROUTES = ActionDispatch::Routing::RouteSet.new
@@ -25,8 +25,6 @@ class WhitelistsController < ActionController::Base
 end
 
 describe WhitelistsController do
-  Parameters = ActionController::Parameters
-
   def get(action, options)
     if Rails::VERSION::MAJOR < 5
       super(action, options.fetch(:params).merge(format: options[:format] || 'html'))
@@ -55,69 +53,68 @@ describe WhitelistsController do
 
   describe '.sugar' do
     it 'turns Array into Parameters.array' do
-      WhitelistsController.permitted_parameters :foo, ticket: [Parameters.integer]
+      WhitelistsController.permitted_parameters :foo, ticket: [ActionController::Parameters.integer]
       constraint = WhitelistsController.permitted_parameters_for(:foo)[:ticket]
       assert_instance_of StrongerParameters::ArrayConstraint, constraint
-      assert_equal Parameters.integer, constraint.item_constraint
+      assert_equal ActionController::Parameters.integer, constraint.item_constraint
     end
 
     it 'turns Hash into Parameters.map' do
-      WhitelistsController.permitted_parameters :foo, ticket: { id: Parameters.integer }
+      WhitelistsController.permitted_parameters :foo, ticket: { id: ActionController::Parameters.integer }
       constraint = WhitelistsController.permitted_parameters_for(:foo)[:ticket]
       assert_instance_of StrongerParameters::HashConstraint, constraint
-      assert_equal({ 'id' => Parameters.integer }, constraint.constraints)
+      assert_equal({ 'id' => ActionController::Parameters.integer }, constraint.constraints)
     end
   end
 
   describe '.permitted_parameters' do
     before do
-      WhitelistsController.permitted_parameters :all, user_id: Parameters.integer
-      WhitelistsController.permitted_parameters :foo, ticket_id: Parameters.integer
-      WhitelistsController.permitted_parameters :bar, group_id: Parameters.integer
-      WhitelistsController.permitted_parameters :bar, nested: {a: Parameters.integer}
-      WhitelistsController.permitted_parameters :bar, nested: {b: Parameters.integer}
+      WhitelistsController.permitted_parameters :all, user_id: ActionController::Parameters.integer
+      WhitelistsController.permitted_parameters :foo, ticket_id: ActionController::Parameters.integer
+      WhitelistsController.permitted_parameters :bar, group_id: ActionController::Parameters.integer
+      WhitelistsController.permitted_parameters :bar, nested: {a: ActionController::Parameters.integer}
+      WhitelistsController.permitted_parameters :bar, nested: {b: ActionController::Parameters.integer}
     end
 
     it 'allows general whitelisting' do
-      WhitelistsController.permitted_parameters_for(:foo)[:user_id].must_equal Parameters.integer
-      WhitelistsController.permitted_parameters_for(:bar)[:user_id].must_equal Parameters.integer
+      WhitelistsController.permitted_parameters_for(:foo)[:user_id].must_equal ActionController::Parameters.integer
+      WhitelistsController.permitted_parameters_for(:bar)[:user_id].must_equal ActionController::Parameters.integer
     end
 
     it 'allows nested whitelisting' do
-      WhitelistsController.permitted_parameters_for(:foo)[:ticket_id].must_equal Parameters.integer
+      WhitelistsController.permitted_parameters_for(:foo)[:ticket_id].must_equal ActionController::Parameters.integer
       WhitelistsController.permitted_parameters_for(:foo)[:group_id].must_be_nil
 
-      WhitelistsController.permitted_parameters_for(:bar)[:group_id].must_equal Parameters.integer
+      WhitelistsController.permitted_parameters_for(:bar)[:group_id].must_equal ActionController::Parameters.integer
       WhitelistsController.permitted_parameters_for(:bar)[:ticket_id].must_be_nil
     end
 
     it 'allows merging' do
       WhitelistsController.permitted_parameters_for(:bar)[:nested].constraints.must_equal(
-        "a" => Parameters.integer, "b" => Parameters.integer
+        "a" => ActionController::Parameters.integer, "b" => ActionController::Parameters.integer
       )
     end
 
     describe 'inheritance' do
-      class ChildController < WhitelistsController
-      end
+      let(:child_controller) { Class.new(WhitelistsController) }
 
       before do
-        WhitelistsController.permitted_parameters :create, first: Parameters.string
+        WhitelistsController.permitted_parameters :create, first: ActionController::Parameters.string
         WhitelistsController.log_invalid_parameters!
-        ChildController.permitted_parameters :create, last: Parameters.string
+        child_controller.permitted_parameters :create, last: ActionController::Parameters.string
       end
 
       it 'inherits from parent to child' do
         WhitelistsController.permitted_parameters_for(:create)[:first].
           must_be_instance_of StrongerParameters::StringConstraint
-        ChildController.permitted_parameters_for(:create)[:first].
+        child_controller.permitted_parameters_for(:create)[:first].
           must_be_instance_of StrongerParameters::StringConstraint
-        assert_equal true, ChildController.log_unpermitted_parameters
+        assert_equal true, child_controller.log_unpermitted_parameters
       end
 
       it 'does not inherit from child to parent' do
         assert_nil WhitelistsController.permitted_parameters_for(:create)[:last]
-        ChildController.permitted_parameters_for(:create)[:last].
+        child_controller.permitted_parameters_for(:create)[:last].
           must_be_instance_of StrongerParameters::StringConstraint
       end
     end
@@ -133,8 +130,8 @@ describe WhitelistsController do
     before do
       WhitelistsController.permitted_parameters(
         :index,
-        something: Parameters.anything,
-        user: { name: Parameters.string }
+        something: ActionController::Parameters.anything,
+        user: { name: ActionController::Parameters.string }
       )
     end
 
@@ -192,7 +189,7 @@ describe WhitelistsController do
 
     it 'overrides :skip' do
       WhitelistsController.permitted_parameters :index, :skip
-      WhitelistsController.permitted_parameters :index, bar: Parameters.boolean
+      WhitelistsController.permitted_parameters :index, bar: ActionController::Parameters.boolean
       get :index, params: {bar: true}
       assert_response :success
       @controller.params.to_h["bar"].must_equal(true)
@@ -203,7 +200,7 @@ describe WhitelistsController do
         get :index, params: {user: {name: ["123".dup]}}
       end
 
-      before { Parameters.action_on_invalid_parameters = :raise }
+      before { ActionController::Parameters.action_on_invalid_parameters = :raise }
 
       it "raises" do
         do_request

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative '../test_helper'
 
-SingleCov.covered! uncovered: 3 # rails if/else code and controller support which is tested in controller_test.rb
+SingleCov.covered! uncovered: 4 # rails if/else code and controller support which is tested in controller_test.rb
 
 describe StrongerParameters::Parameters do
   describe ".anything" do
@@ -293,7 +293,7 @@ describe StrongerParameters::Parameters do
         params(value: nil).permit(value: ActionController::Parameters.integer32)
       end
 
-      def with_allow_nil_for_everything(value = true)
+      def with_allow_nil_for_everything(value = true) # rubocop:disable Style/OptionalBooleanParameter
         old = ActionController::Parameters.allow_nil_for_everything
         ActionController::Parameters.allow_nil_for_everything = value
         yield

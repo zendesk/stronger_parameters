@@ -6,9 +6,8 @@ require 'bundler/setup'
 require 'single_cov'
 SingleCov.setup :minitest
 
-require 'minitest/autorun'
-require 'minitest/rg'
-require 'minitest/around'
+require 'maxitest/global_must'
+require 'maxitest/autorun'
 require 'mocha/setup'
 require 'rails'
 require 'action_controller'
@@ -71,17 +70,4 @@ class Minitest::Test
       assert_rejects(key) { params(value: value).permit(value: subject) }
     end
   end
-end
-
-# https://github.com/seattlerb/minitest/issues/666
-if RUBY_VERSION > "2.1.0"
-  Object.prepend(Module.new do
-    def must_equal(*args)
-      if args.first.nil?
-        raise "Use must_be_nil"
-      else
-        super
-      end
-    end
-  end)
 end
