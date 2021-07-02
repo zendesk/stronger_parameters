@@ -169,6 +169,12 @@ module StrongerParameters
             action.call(result, key)
           when :log
             Rails.logger.warn("#{key} #{result.message}, but was: #{value.inspect}")
+          when :nullify
+            if constraint.required?
+              raise StrongerParameters::InvalidParameter.new(result, key)
+            else
+              value = nil
+            end
           else
             raise ArgumentError, "Unsupported value in action_on_invalid_parameters: #{action}"
           end
