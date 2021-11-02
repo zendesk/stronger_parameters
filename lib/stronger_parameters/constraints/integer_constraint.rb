@@ -6,7 +6,7 @@ module StrongerParameters
     def value(v)
       if v.is_a?(Integer)
         return v
-      elsif v.is_a?(String) && v =~ /\A-?\d+\Z/
+      elsif v.is_a?(String) && v.strip =~ /\A-?\d+\Z/
         return v.to_i
       end
 
