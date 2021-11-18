@@ -7,6 +7,8 @@ module StrongerParameters
     FALSE_VALUES = [false, 'false', '0', 0].freeze
 
     def value(v)
+      v = v.downcase if v.is_a? String
+
       return true if TRUE_VALUES.include?(v)
 
       return false if FALSE_VALUES.include?(v)
