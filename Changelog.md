@@ -1,5 +1,10 @@
 # NEXT
 
+# v2.14.1.1
+- Allow boolean string values of any casing (eg "TRUE")
+# v2.14.0
+- Allow strings of numbers with whitespace (eg " 123")
+
 # v2.13.0
 - rails 6.1 support
 - drop rails 3 support
