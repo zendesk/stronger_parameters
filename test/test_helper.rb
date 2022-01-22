@@ -6,10 +6,14 @@ require 'bundler/setup'
 require 'single_cov'
 SingleCov.setup :minitest
 
+require 'rails'
 require 'maxitest/global_must'
 require 'maxitest/autorun'
-require 'mocha/setup'
-require 'rails'
+if Rails::VERSION::MAJOR >= 7
+  require 'mocha/minitest'
+else
+  require 'mocha/setup'
+end
 require 'action_controller'
 require 'rails/generators'
 

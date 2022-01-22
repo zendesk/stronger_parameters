@@ -24,6 +24,8 @@ describe BooksController do
   def post(action, options = {})
     if Rails::VERSION::MAJOR < 5
       super(action, options.fetch(:params))
+    elsif Rails::VERSION::MAJOR >= 7
+      super(action, **options)
     else
       super
     end
