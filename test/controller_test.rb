@@ -9,8 +9,7 @@ class BooksController < ActionController::Base
   include ROUTES.url_helpers
 
   rescue_from(ActionController::ParameterMissing) do |e|
-    type = (ActiveSupport::VERSION::MAJOR < 5 ? :text : :plain)
-    render type => "Required parameter missing: #{e.param}", :status => :bad_request
+    render plain: "Required parameter missing: #{e.param}", status: :bad_request
   end
 
   def create
@@ -21,14 +20,6 @@ class BooksController < ActionController::Base
 end
 
 describe BooksController do
-  def post(action, options = {})
-    if Rails::VERSION::MAJOR < 5
-      super(action, options.fetch(:params))
-    else
-      super
-    end
-  end
-
   before { @routes = BooksController::ROUTES }
 
   it 'rejects invalid params' do

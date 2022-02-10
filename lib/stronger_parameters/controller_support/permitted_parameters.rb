@@ -91,7 +91,7 @@ module StrongerParameters
 
         return if log_unpermitted
 
-        (ActionPack::VERSION::MAJOR >= 5 ? params.send(:parameters) : params).replace(permitted_params)
+        params.replace(permitted_params)
         params.permit!
         request.params.replace(permitted_params)
 
@@ -129,7 +129,7 @@ module StrongerParameters
       end
 
       def flat_keys(hash)
-        hash = hash.send(:parameters) if ActionPack::VERSION::MAJOR >= 5 && hash.is_a?(ActionController::Parameters)
+        hash = hash.send(:parameters) if hash.is_a?(ActionController::Parameters)
         hash.flat_map { |k, v| v.is_a?(Hash) ? flat_keys(v).map { |x| "#{k}.#{x}" }.push(k) : k }
       end
     end
