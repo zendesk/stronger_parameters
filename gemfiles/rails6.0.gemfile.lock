@@ -2,7 +2,7 @@ PATH
   remote: ..
   specs:
     stronger_parameters (2.14.1.1)
-      actionpack (>= 5.0, < 6.2)
+      actionpack (>= 5.0, < 7.1)
 
 GEM
   remote: https://rubygems.org/
