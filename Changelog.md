@@ -1,7 +1,15 @@
 # NEXT
 
+# v2.6.0
+- rails 7 support
+- rails 4 removed
+
+# v2.15.0.1
+- Yanked
+
 # v2.14.1.1
 - Allow boolean string values of any casing (eg "TRUE")
+
 # v2.14.0
 - Allow strings of numbers with whitespace (eg " 123")
 
