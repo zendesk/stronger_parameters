@@ -6,8 +6,7 @@ module StrongerParameters
     module PermittedParameters
       def self.included(klass)
         klass.extend ClassMethods
-        method = (klass.respond_to?(:before_action) ? :before_action : :before_filter)
-        klass.public_send method, :permit_parameters
+        klass.before_action :permit_parameters
       end
 
       def self.sugar(value)
