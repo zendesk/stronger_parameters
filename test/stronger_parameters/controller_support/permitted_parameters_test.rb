@@ -2,7 +2,7 @@
 require_relative '../../test_helper'
 require 'stronger_parameters/controller_support/permitted_parameters'
 
-SingleCov.covered! uncovered: (ActiveSupport::VERSION::MAJOR < 5 ? 3 : 2) # uncovered branches for rails version check
+SingleCov.covered! uncovered: 2
 
 class WhitelistsController < ActionController::Base
   ROUTES = ActionDispatch::Routing::RouteSet.new
@@ -25,14 +25,6 @@ class WhitelistsController < ActionController::Base
 end
 
 describe WhitelistsController do
-  def get(action, options)
-    if Rails::VERSION::MAJOR < 5
-      super(action, options.fetch(:params).merge(format: options[:format] || 'html'))
-    else
-      super
-    end
-  end
-
   before do
     @routes = WhitelistsController::ROUTES
 

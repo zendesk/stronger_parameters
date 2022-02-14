@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         ruby: ['2.5', '2.6', '2.7']
-        rails: ['4.2', '5.0', '5.1', '5.2', '6.0', '6.1']
+        rails: ['5.0', '5.1', '5.2', '6.0', '6.1']
         task: [test]
         include:
         # run rubocop against lowest supported ruby
@@ -18,12 +18,11 @@ jobs:
           rails: '6.1'
           task: rubocop
         exclude:
-        - ruby: '2.6'
-          rails: '4.2'
-          task: test
-        - ruby: '2.7'
-          rails: '4.2'
-          task: test
+          - { ruby: '2.5', rails: '7.0', task: test }
+          - { ruby: '3.0', rails: '5.0', task: test }
+          - { ruby: '3.0', rails: '5.1', task: test }
+          - { ruby: '3.1', rails: '5.0', task: test }
+          - { ruby: '3.1', rails: '5.1', task: test }
     name: ruby${{ matrix.ruby }} rails${{ matrix.rails }} rake ${{ matrix.task }}
     steps:
     - uses: zendesk/checkout@v2

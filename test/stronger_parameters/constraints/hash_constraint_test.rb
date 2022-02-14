@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative '../../test_helper'
 
-SingleCov.covered! uncovered: (ActiveSupport::VERSION::MAJOR < 5 ? 1 : 0)
+SingleCov.covered!
 
 describe StrongerParameters::HashConstraint do
   def self.permits(value, options = {})

@@ -2,7 +2,7 @@ PATH
   remote: ..
   specs:
     stronger_parameters (2.14.1.1)
-      actionpack (>= 4.2, < 6.2)
+      actionpack (>= 5.0, < 7.1)
 
 GEM
   remote: https://rubygems.org/
@@ -83,7 +83,6 @@ GEM
     marcel (1.0.1)
     maxitest (3.6.0)
       minitest (>= 5.0.0, < 5.14.0)
-    metaclass (0.0.4)
     method_source (1.0.0)
     mini_mime (1.1.0)
     mini_portile2 (2.5.0)
@@ -91,8 +90,7 @@ GEM
     minitest-rails (6.0.1)
       minitest (~> 5.10)
       railties (~> 6.0.0)
-    mocha (1.9.0)
-      metaclass (~> 0.0.1)
+    mocha (1.13.0)
     nio4r (2.5.7)
     nokogiri (1.11.3)
       mini_portile2 (~> 2.5.0)
