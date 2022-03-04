@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative '../test_helper'
 
-SingleCov.covered! uncovered: 4 # rails if/else code and controller support which is tested in controller_test.rb
+SingleCov.covered!
 
 describe StrongerParameters::Parameters do
   describe ".anything" do
@@ -134,7 +134,7 @@ describe StrongerParameters::Parameters do
 
     permits '1', as: 1
     permits 1
-    permits 2**63 - 1
+    permits (2**63) - 1
 
     rejects(-1)
     rejects 'a'
@@ -146,7 +146,7 @@ describe StrongerParameters::Parameters do
 
     permits '1', as: 1
     permits 1
-    permits 2**31 - 1
+    permits (2**31) - 1
 
     rejects(-1)
     rejects 'a'
@@ -158,7 +158,7 @@ describe StrongerParameters::Parameters do
 
     permits '1', as: 1
     permits 1
-    permits 2**64 - 1
+    permits (2**64) - 1
 
     rejects(-1)
     rejects 'a'
@@ -170,7 +170,7 @@ describe StrongerParameters::Parameters do
 
     permits '1', as: 1
     permits 1
-    permits 2**32 - 1
+    permits (2**32) - 1
 
     rejects(-1)
     rejects 'a'
@@ -181,7 +181,7 @@ describe StrongerParameters::Parameters do
     subject { ActionController::Parameters.integer32 }
 
     permits '1', as: 1
-    permits 2**31 - 1
+    permits (2**31) - 1
     permits(-2**31)
 
     rejects 'a'
@@ -193,7 +193,7 @@ describe StrongerParameters::Parameters do
     subject { ActionController::Parameters.integer64 }
 
     permits '1', as: 1
-    permits 2**63 - 1
+    permits (2**63) - 1
     permits(-2**63)
 
     rejects 'a'

@@ -109,7 +109,7 @@ module StrongerParameters
       end
 
       def datetime_iso8601
-        DateTimeIso8601Constraint.new
+        DateTimeIso8601Constraint.new # uncovered
       end
 
       def file
@@ -154,7 +154,7 @@ module StrongerParameters
         elsif constraint.required?
           result = InvalidValue.new(nil, 'must be present')
         else
-          next
+          next # uncovered
         end
 
         if result.is_a?(InvalidValue)
@@ -196,8 +196,7 @@ module StrongerParameters
       # TODO: this is not consistent with the behavior of raising ActionController::UnpermittedParameters
       # should have the same render vs raise behavior in test/dev ... see permitted_parameters_test.rb
       rescue_from(StrongerParameters::InvalidParameter) do |e|
-        type = (ActiveSupport::VERSION::MAJOR < 5 ? :text : :plain)
-        render type => e.message, :status => :bad_request
+        render plain: e.message, status: :bad_request # uncovered
       end
     end
   end

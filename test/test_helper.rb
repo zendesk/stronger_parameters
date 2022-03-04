@@ -8,7 +8,7 @@ SingleCov.setup :minitest
 
 require 'maxitest/global_must'
 require 'maxitest/autorun'
-require 'mocha/setup'
+require 'mocha/minitest'
 require 'rails'
 require 'action_controller'
 require 'rails/generators'
@@ -54,7 +54,7 @@ class Minitest::Test
 
     it "permits #{value.inspect} as #{type_casted.inspect}" do
       permitted = params(value: value).permit(value: subject)
-      permitted = permitted.to_h if Rails::VERSION::MAJOR >= 5
+      permitted = permitted.to_h
       if type_casted.nil?
         permitted[:value].must_be_nil
       else

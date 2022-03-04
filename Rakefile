@@ -11,7 +11,7 @@ end
 
 desc "Run rubocop"
 task :rubocop do
-  sh "rubocop"
+  sh "rubocop -a --fail-level A"
 end
 
 desc "Bundle all gemfiles"
