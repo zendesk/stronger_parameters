@@ -2,6 +2,7 @@
 require 'action_pack'
 
 require 'action_controller/base'
+require 'action_controller/api'
 require 'action_controller/metal/strong_parameters'
 
 require 'stronger_parameters/constraints'
@@ -194,7 +195,22 @@ module StrongerParameters
       end
     end
   end
+
+  module APIControllerSupport
+    extend ActiveSupport::Concern
+
+    Parameters = ActionController::Parameters
+
+    included do
+      # TODO: this is not consistent with the behavior of raising ActionController::UnpermittedParameters
+      # should have the same render vs raise behavior in test/dev ... see permitted_parameters_test.rb
+      rescue_from(StrongerParameters::InvalidParameter) do |e|
+        render json: { error: e.message }, status: :bad_request # uncovered
+      end
+    end
+  end
 end
 
 ActionController::Parameters.include StrongerParameters::Parameters
 ActionController::Base.include StrongerParameters::ControllerSupport
+ActionController::API.include StrongerParameters::APIControllerSupport
