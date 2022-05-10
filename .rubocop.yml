@@ -1,7 +1,7 @@
 AllCops:
-  SuggestExtensions: false # TODO: add rubocop-rails
-  NewCops: enable # TODO: turn on
-  TargetRubyVersion: 2.5 # lowest supported version
+  SuggestExtensions: false
+  NewCops: enable
+  TargetRubyVersion: 2.7 # lowest supported version
   Exclude:
   - vendor/**/*
   - gemfiles/vendor/**/*
@@ -103,4 +103,10 @@ Style/IfUnlessModifier:
   Enabled: false
 
 Lint/MissingSuper:
+  Enabled: false
+
+Style/FetchEnvVar:
+  Enabled: false
+
+Lint/ParenthesesAsGroupedExpression:
   Enabled: false
