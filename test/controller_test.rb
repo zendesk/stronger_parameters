@@ -45,7 +45,7 @@ describe BooksController do
 
   context 'for json format' do
     it 'rejects invalid params' do
-      post :create, params: {magazine: {name: 'Mjallo!'}}, format: :json 
+      post :create, params: {magazine: {name: 'Mjallo!'}}, format: :json
       assert_response :bad_request
       (JSON.parse(response.body)["error"]).must_equal 'Required parameter missing: book'
 

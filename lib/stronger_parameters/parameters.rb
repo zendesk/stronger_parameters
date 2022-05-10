@@ -192,7 +192,7 @@ module StrongerParameters
       # should have the same render vs raise behavior in test/dev ... see permitted_parameters_test.rb
       rescue_from(StrongerParameters::InvalidParameter) do |e|
         if request.format.to_s.include?('json')
-          render json: { error: e.message }, status: :bad_request 
+          render json: { error: e.message }, status: :bad_request
         else
           render plain: e.message, status: :bad_request
         end
