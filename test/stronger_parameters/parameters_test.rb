@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative '../test_helper'
 
-SingleCov.covered! uncovered: 3 #Covered in test/controller_test.rb
+SingleCov.covered! uncovered: 3 # Covered in test/controller_test.rb
 
 describe StrongerParameters::Parameters do
   describe ".anything" do
