@@ -1,6 +1,6 @@
 # NEXT
 
-# v2.6.0
+# v2.16.0
 - rails 7 support
 - rails 4 removed
 
