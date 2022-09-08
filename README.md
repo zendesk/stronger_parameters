@@ -248,6 +248,10 @@ curl -I 'http://localhost/api/users/1.json' -X POST -d '{ "user": { "id": 1 } }'
 | Parameters.string              | value.is_a?(String)                                                                        |
 | Parameters.integer             | value.is_a?(Fixnum) or '-1'                                                                |
 | Parameters.float               | value.is_a?(Float) or '-1.2'                                                               |
+| Parameters.date                | value.is_a?(Date) or '2014-05-13' or '13.05.2014'                                          |
+| Parameters.date_iso8601        | value is a date that conforms to ISO8601: '2014-05-13'                                     |
+| Parameters.time                | value.is_a?(Time) or '2014-05-13' or '2015-03-31 14:34:56 +0000'                           |
+| Parameters.time_iso8601        | value is a time that conforms to ISO8601: '2014-05-13' or '2015-03-31T14:34:56Z'           |
 | Parameters.datetime            | value.is_a?(DateTime) or '2014-05-13' or '2015-03-31T14:34:56Z'                            |
 | Parameters.datetime_iso8601    | value is a date that conforms to ISO8601: '2014-05-13' or '2015-03-31T14:34:56Z'           |
 | Parameters.regexp(/foo/)       | value =~ regexp                                                                            |

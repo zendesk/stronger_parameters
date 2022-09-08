@@ -2,14 +2,14 @@
 require 'stronger_parameters/constraint'
 
 module StrongerParameters
-  class DateTimeConstraint < Constraint
+  class DateConstraint < Constraint
     def value(v)
-      return v if v.is_a?(DateTime)
+      return v if v.is_a?(Date)
 
       begin
-        DateTime.parse v
+        Date.parse v
       rescue ArgumentError, TypeError
-        StrongerParameters::InvalidValue.new(v, "must be a datetime")
+        StrongerParameters::InvalidValue.new(v, "must be a date")
       end
     end
   end
