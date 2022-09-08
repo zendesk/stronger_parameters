@@ -101,6 +101,34 @@ describe StrongerParameters::Parameters do
     rejects 1
   end
 
+  describe ".date" do
+    subject { ActionController::Parameters.date }
+
+    permits "01.01.2016", as: Date.parse("2016-01-01")
+    rejects 1
+  end
+
+  describe ".date_iso8601" do
+    subject { ActionController::Parameters.date_iso8601 }
+
+    permits "2016-01-01", as: Date.iso8601("2016-01-01")
+    rejects 1
+  end
+
+  describe ".time" do
+    subject { ActionController::Parameters.time }
+
+    permits "2016-01-01 00:00:00 +0000", as: Time.parse("2016-01-01 00:00:00 +0000")
+    rejects 1
+  end
+
+  describe ".time_iso8601" do
+    subject { ActionController::Parameters.time_iso8601 }
+
+    permits "2016-01-01T00:00:00Z", as: Time.iso8601("2016-01-01T00:00:00Z")
+    rejects 1
+  end
+
   describe ".datetime" do
     subject { ActionController::Parameters.datetime }
 

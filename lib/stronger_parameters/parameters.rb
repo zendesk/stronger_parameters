@@ -105,6 +105,22 @@ module StrongerParameters
         NilStringConstraint.new
       end
 
+      def date
+        DateConstraint.new
+      end
+
+      def date_iso8601
+        DateIso8601Constraint.new
+      end
+
+      def time
+        TimeConstraint.new
+      end
+
+      def time_iso8601
+        TimeIso8601Constraint.new
+      end
+
       def datetime
         DateTimeConstraint.new
       end
