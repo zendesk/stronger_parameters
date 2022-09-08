@@ -6,7 +6,7 @@ module StrongerParameters
     def value(v)
       DateTime.iso8601 v
     rescue ArgumentError, TypeError
-      StrongerParameters::InvalidValue.new(v, "must be an iso8601 date")
+      StrongerParameters::InvalidValue.new(v, "must be an iso8601 datetime")
     end
   end
 end

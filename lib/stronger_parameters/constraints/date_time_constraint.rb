@@ -9,7 +9,7 @@ module StrongerParameters
       begin
         DateTime.parse v
       rescue ArgumentError, TypeError
-        StrongerParameters::InvalidValue.new(v, "must be a date")
+        StrongerParameters::InvalidValue.new(v, "must be a datetime")
       end
     end
   end
