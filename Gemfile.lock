@@ -10,7 +10,7 @@ GIT
 PATH
   remote: .
   specs:
-    stronger_parameters (2.17.0)
+    stronger_parameters (2.18.0)
       actionpack (>= 5.0, < 7.1)
 
 GEM
