@@ -176,7 +176,7 @@ module StrongerParameters
 
         if result.is_a?(InvalidValue)
           name = "invalid_parameter.action_controller"
-          ActiveSupport::Notifications.publish(name, key: key, value: value, message: result.message)
+          ActiveSupport::Notifications.instrument(name, key: key, value: value, message: result.message)
 
           action = self.class.action_on_invalid_parameters
           case action
