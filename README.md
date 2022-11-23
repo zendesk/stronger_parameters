@@ -240,7 +240,6 @@ curl -I 'http://localhost/api/users/1.json' -X POST -d '{ "user": { "id": 1 } }'
 => X-StrongerParameters-API-Warn: Removed restricted keys ["user.id"] from parameters
 ```
 
-
 ## Types
 
 | Syntax                         | (Simplified) Definition                                                                    |
@@ -272,3 +271,16 @@ curl -I 'http://localhost/api/users/1.json' -X POST -d '{ "user": { "id": 1 } }'
 | Parameters.file                | File, StringIO, Rack::Test::UploadedFile, ActionDispatch::Http::UploadedFile or subclasses |
 | Parameters.decimal(8,2)        | value is a String, Integer or Float with a precision of 9 and scale of 2                   |
 | Parameters.hex                  | value is a String that matches the hexadecimal format |
+
+## Development
+
+### Releasing a new version
+
+```
+git checkout master && git fetch origin && git reset --hard origin/master
+bundle exec rake bump:<patch|minor|major>
+git tag v<tag>
+git push --tags
+```
+
+[github action](.github/workflows/ruby-gem-publication.yml) will release a new version to rubygems.org
