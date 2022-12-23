@@ -2,6 +2,10 @@
 require 'bundler/setup'
 require 'bump/tasks'
 
+# Pushing to rubygems is handled by a github workflow
+require 'bundler/gem_tasks'
+ENV['gem_push'] = 'false'
+
 task default: [:test, :rubocop]
 
 task :test do

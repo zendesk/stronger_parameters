@@ -279,8 +279,7 @@ curl -I 'http://localhost/api/users/1.json' -X POST -d '{ "user": { "id": 1 } }'
 ```
 git checkout master && git fetch origin && git reset --hard origin/master
 bundle exec rake bump:<patch|minor|major>
-git tag v<tag>
-git push --tags
+bundle exec rake release
 ```
 
 [github action](.github/workflows/ruby-gem-publication.yml) will release a new version to rubygems.org
