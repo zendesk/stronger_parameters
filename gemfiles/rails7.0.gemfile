@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-gem "rails", "~> 7.0"
-gem "rails-controller-testing"
-gem "minitest-rails", git: "https://github.com/mauricebolhuis/minitest-rails", branch: 'feature/add-rails-7.0.1-support'
+gem "rails", "~> 7.0.0"
 
 eval_gemfile 'common.rb'
