@@ -239,9 +239,9 @@ describe WhitelistsController do
       end
 
       it "does not blow up when header is not available" do
-        Rails.configuration.expects(:respond_to?)
-        Rails.configuration.expects(:stronger_parameters_violation_header).never
-        do_request
+        Rails.configuration.stub(:respond_to?, nil) do
+          do_request
+        end
         refute @controller.response.headers['X-StrongerParameters-API-Warn']
       end
 

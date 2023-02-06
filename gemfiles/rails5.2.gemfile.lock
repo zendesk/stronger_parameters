@@ -77,7 +77,6 @@ GEM
     minitest-rails (3.0.0)
       minitest (~> 5.8)
       railties (~> 5.0)
-    mocha (1.13.0)
     nio4r (2.5.7)
     nokogiri (1.11.3)
       mini_portile2 (~> 2.5.0)
@@ -155,7 +154,6 @@ DEPENDENCIES
   forking_test_runner
   maxitest
   minitest-rails
-  mocha
   rails (~> 5.2.0)
   rails-controller-testing
   rake
@@ -164,4 +162,4 @@ DEPENDENCIES
   stronger_parameters!
 
 BUNDLED WITH
-   2.3.12
+   2.4.5

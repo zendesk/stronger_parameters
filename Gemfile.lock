@@ -106,7 +106,6 @@ GEM
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
     minitest (5.14.4)
-    mocha (1.14.0)
     net-imap (0.2.3)
       digest
       net-protocol
@@ -201,7 +200,6 @@ DEPENDENCIES
   forking_test_runner
   maxitest
   minitest-rails!
-  mocha
   rails (~> 7.0)
   rails-controller-testing
   rake
