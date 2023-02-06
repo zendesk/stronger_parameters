@@ -6,6 +6,9 @@ AllCops:
   - vendor/**/*
   - gemfiles/vendor/**/*
 
+Gemspec/DevelopmentDependencies:
+  EnforcedStyle: gemspec
+
 Layout/LineLength:
   Max: 120
 

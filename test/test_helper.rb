@@ -8,7 +8,6 @@ SingleCov.setup :minitest
 
 require 'maxitest/global_must'
 require 'maxitest/autorun'
-require 'mocha/minitest'
 require 'rails'
 require 'action_controller'
 require 'rails/generators'
