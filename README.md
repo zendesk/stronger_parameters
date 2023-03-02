@@ -271,6 +271,7 @@ curl -I 'http://localhost/api/users/1.json' -X POST -d '{ "user": { "id": 1 } }'
 | Parameters.file                | File, StringIO, Rack::Test::UploadedFile, ActionDispatch::Http::UploadedFile or subclasses |
 | Parameters.decimal(8,2)        | value is a String, Integer or Float with a precision of 9 and scale of 2                   |
 | Parameters.hex                  | value is a String that matches the hexadecimal format |
+| Parameters.ulid                 | value is a String of length 26 with only Crockford Base32 symbols |
 
 ## Development
 

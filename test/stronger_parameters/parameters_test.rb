@@ -157,6 +157,12 @@ describe StrongerParameters::Parameters do
     rejects "abg"
   end
 
+  describe ".ulid" do
+    subject { ActionController::Parameters.ulid }
+    permits "01GTJ6C0NF1MQX0KFZMS1RHTYF"
+    rejects "o-GTJ6C0NF1MQX0KFZMS1RHTYF"
+  end
+
   describe ".bigid" do
     subject { ActionController::Parameters.bigid }
 
