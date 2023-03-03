@@ -3,6 +3,18 @@
 # 2.20.0
 - Adds a ULID constraint type
 
+# 2.19.1
+- Error string correction in Datetime constraint
+- Adds support for date, date_iso8601, time, and time_iso8601 constraints
+- Changes ActiveSupport::Notifications.publish -> ActiveSupport::Notifications.instrument
+- CI automations
+
+# 2.17.0
+- Support for rails in API-only mode
+- Drop ruby 2.5 and 2.6 support
+- Add ruby 3.0 and 3.1 support
+- Add rails 7.0 support
+
 # v2.16.0
 - rails 7 support
 - rails 4 removed
