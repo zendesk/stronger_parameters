@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 module StrongerParameters
-  VERSION = '2.19.1'
+  VERSION = '2.20.0'
 end

@@ -1,5 +1,8 @@
 # NEXT
 
+# 2.20.0
+- Adds a ULID constraint type
+
 # v2.16.0
 - rails 7 support
 - rails 4 removed
