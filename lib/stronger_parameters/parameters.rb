@@ -140,6 +140,10 @@ module StrongerParameters
       def hex
         HexConstraint.new
       end
+
+      def ulid
+        UlidConstraint.new
+      end
     end
 
     def hash_filter_with_stronger_parameters(params, filter)
