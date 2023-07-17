@@ -5,33 +5,55 @@ on:
   pull_request:
     branches: [master]
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        ruby: ['2.7', '3.0', '3.1']
+        ruby: ['2.7', '3.0', '3.1', '3.2']
         rails: ['5.0', '5.1', '5.2', '6.0', '6.1', '7.0']
-        task: [test]
-        include:
-        # run rubocop against lowest supported ruby
-        - ruby: '2.7'
-          rails: '5.0'
-          task: rubocop
         exclude:
-        - { ruby: '3.0', rails: '5.0', task: test }
-        - { ruby: '3.0', rails: '5.1', task: test }
-        - { ruby: '3.0', rails: '5.2', task: test }
-        - { ruby: '3.1', rails: '5.0', task: test }
-        - { ruby: '3.1', rails: '5.1', task: test }
-        - { ruby: '3.1', rails: '5.2', task: test }
-    name: ruby${{ matrix.ruby }} rails${{ matrix.rails }} rake ${{ matrix.task }}
+        - { ruby: '3.0', rails: '5.0' }
+        - { ruby: '3.0', rails: '5.1' }
+        - { ruby: '3.0', rails: '5.2' }
+        - { ruby: '3.1', rails: '5.0' }
+        - { ruby: '3.1', rails: '5.1' }
+        - { ruby: '3.1', rails: '5.2' }
+        - { ruby: '3.2', rails: '5.0' }
+        - { ruby: '3.2', rails: '5.1' }
+        - { ruby: '3.2', rails: '5.2' }
+    name: ruby${{ matrix.ruby }} rails${{ matrix.rails }} rake test
     env:
       BUNDLE_GEMFILE: gemfiles/rails${{ matrix.rails }}.gemfile
     steps:
-    - uses: zendesk/checkout@v2
-    - uses: zendesk/setup-ruby@v1
+    - uses: actions/checkout@v3
+    - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
-    - run: bundle exec rake ${{ matrix.task }}
+    - run: bundle exec rake test
+
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: linter
+        run: bundle exec rake rubocop
+
+  tests_successful:
+    name: Tests passing?
+    needs: tests
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          if ${{ needs.tests.result == 'success' }}
+          then
+            echo "All tests pass"
+          else
+            echo "Some tests failed"
+            false
+          fi
