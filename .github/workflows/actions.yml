@@ -37,6 +37,8 @@ jobs:
       - name: linter
         run: bundle exec rake rubocop
 
+  # This wrapper is used in the main branch protection rules as a required check.
+  # This way, we don’t need to update those rules when we add or remove a version in the test matrix.
   tests_successful:
     name: Tests passing?
     needs: tests
