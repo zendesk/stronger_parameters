@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    stronger_parameters (2.20.0)
+    stronger_parameters (2.21.0)
       actionpack (>= 5.0, < 7.1)
 
 GEM
@@ -196,4 +196,4 @@ DEPENDENCIES
   stronger_parameters!
 
 BUNDLED WITH
-   2.4.5
+   2.4.12
