@@ -17,7 +17,7 @@ task :rubocop do
   sh "rubocop -a --fail-level A"
 end
 
-desc "Bundle all gemfiles"
+desc "Bundle all gemfiles [CMD=]"
 task :bundle_all do
   cmd = ENV["CMD"]
   Bundler.with_original_env do
