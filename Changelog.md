@@ -1,5 +1,11 @@
 # NEXT
 
+# v2.22.0
+- rails 7.1 support
+
+# v2.21.0
+- use match? instead of =~ in HexConstraint
+
 # 2.20.0
 - Adds a ULID constraint type
 
