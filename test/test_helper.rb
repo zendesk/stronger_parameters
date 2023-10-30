@@ -26,7 +26,7 @@ require 'stronger_parameters'
 require 'minitest/rails'
 
 # Use ActionController::TestCase for Controllers
-MiniTest::Spec::DSL::TYPES.unshift [/Controller$/, ActionController::TestCase]
+Minitest::Spec::DSL::TYPES.unshift [/Controller$/, ActionController::TestCase]
 
 class Minitest::Test
   def params(hash)

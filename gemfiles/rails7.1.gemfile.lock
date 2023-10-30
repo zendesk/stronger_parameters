@@ -1,5 +1,5 @@
 PATH
-  remote: .
+  remote: ..
   specs:
     stronger_parameters (2.21.1)
       actionpack (>= 5.0, < 7.2)
@@ -226,8 +226,7 @@ DEPENDENCIES
   bundler (<= 3)
   forking_test_runner
   maxitest
-  minitest (~> 5.20)
-  minitest-rails (~> 7.1)
+  minitest-rails
   rails (~> 7.1.0)
   rake
   rubocop
