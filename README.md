@@ -285,4 +285,5 @@ git commit -a --amend --no-edit
 bundle exec rake release
 ```
 
-[github action](.github/workflows/ruby-gem-publication.yml) will release a new version to rubygems.org
+- [github action](.github/workflows/ruby-gem-publication.yml) will release a new version to rubygems.org
+- approve the new version [here](https://github.com/zendesk/stronger_parameters/actions/workflows/ruby-gem-publication.yml)
