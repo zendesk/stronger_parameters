@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require_relative 'test_helper'
-require 'benchmark'
+require_relative "test_helper"
+require "benchmark"
 
 def build_stack(count, &block)
   if count.zero?

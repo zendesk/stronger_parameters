@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require_relative '../../test_helper'
+require_relative "../../test_helper"
 
 SingleCov.covered!
 
@@ -26,39 +26,39 @@ describe StrongerParameters::HashConstraint do
     constraint.value(foo: "bar").must_equal(expected)
   end
 
-  describe 'map parameter constraints' do
-    permits(id: 1, name: 'Mick')
-    permits({id: '1', name: 'Mick'}, as: {id: 1, name: 'Mick'})
+  describe "map parameter constraints" do
+    permits(id: 1, name: "Mick")
+    permits({id: "1", name: "Mick"}, as: {id: 1, name: "Mick"})
     permits(id: 1)
-    permits({id: '1'}, as: {id: 1})
-    permits(name: 'Mick')
+    permits({id: "1"}, as: {id: 1})
+    permits(name: "Mick")
 
     rejects({id: 1, name: 123}, key: :name)
-    rejects({id: 'Mick', name: 'Mick'}, key: :id)
+    rejects({id: "Mick", name: "Mick"}, key: :id)
     rejects(123)
-    rejects('abc')
+    rejects("abc")
     rejects nil
   end
 
-  describe 'open-ended map parameter constraints' do
+  describe "open-ended map parameter constraints" do
     subject { ActionController::Parameters.map }
 
-    permits(id: 1, name: 'Mick')
-    permits("id" => 1, "name" => 'Mick')
+    permits(id: 1, name: "Mick")
+    permits("id" => 1, "name" => "Mick")
     rejects("a string")
     rejects(123)
     rejects nil
   end
 
-  describe 'merged constraints' do
+  describe "merged constraints" do
     describe "hash" do
       subject do
         ActionController::Parameters.map(id: ActionController::Parameters.integer).
           merge(ActionController::Parameters.map(name: ActionController::Parameters.string))
       end
 
-      permits(id: 1, name: 'Mick')
-      rejects({id: 'Mick', foo: 'Mick'}, key: :id) # TODO: key: :id is wrong
+      permits(id: 1, name: "Mick")
+      rejects({id: "Mick", foo: "Mick"}, key: :id) # TODO: key: :id is wrong
     end
 
     describe "other" do
@@ -67,8 +67,8 @@ describe StrongerParameters::HashConstraint do
           merge(name: ActionController::Parameters.string)
       end
 
-      permits(id: 1, name: 'Mick')
-      rejects({id: 'Mick', foo: 'Mick'}, key: :id) # TODO: key: :id is wrong
+      permits(id: 1, name: "Mick")
+      rejects({id: "Mick", foo: "Mick"}, key: :id) # TODO: key: :id is wrong
     end
   end
 

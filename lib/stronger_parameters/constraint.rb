@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'stronger_parameters/errors'
+require "stronger_parameters/errors"
 
 module StrongerParameters
   class Constraint

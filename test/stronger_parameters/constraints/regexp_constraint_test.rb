@@ -1,17 +1,17 @@
 # frozen_string_literal: true
-require_relative '../../test_helper'
+require_relative "../../test_helper"
 
 SingleCov.covered!
 
-describe 'regexp parameter constraints' do
+describe "regexp parameter constraints" do
   subject { ActionController::Parameters.regexp(/\Aab?c\Z/) }
 
-  permits 'abc'
-  permits 'ac'
+  permits "abc"
+  permits "ac"
 
   rejects 123
   rejects nil
-  rejects 'abbc'
+  rejects "abbc"
 
   it "rejects non-strings with string constraint" do
     subject.value(123).message.must_equal "must be a string"

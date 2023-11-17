@@ -1,11 +1,11 @@
 # frozen_string_literal: true
-require 'bundler/setup'
-require 'standard/rake'
-require 'bump/tasks'
+require "bundler/setup"
+require "standard/rake"
+require "bump/tasks"
 
 # Pushing to rubygems is handled by a github workflow
-require 'bundler/gem_tasks'
-ENV['gem_push'] = 'false'
+require "bundler/gem_tasks"
+ENV["gem_push"] = "false"
 
 task default: [:test, :standard]
 

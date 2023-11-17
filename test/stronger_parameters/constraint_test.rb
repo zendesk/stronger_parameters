@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require_relative '../test_helper'
+require_relative "../test_helper"
 
 SingleCov.covered!
 
@@ -7,7 +7,7 @@ describe StrongerParameters::Constraint do
   subject { StrongerParameters::Constraint.new }
 
   describe "#value" do
-    permits 'abc'
+    permits "abc"
   end
 
   describe "#==" do
@@ -34,8 +34,8 @@ end
 describe StrongerParameters::OrConstraint do
   subject { ActionController::Parameters.integer | ActionController::Parameters.string }
 
-  permits 'abc'
-  permits '123', as: 123
+  permits "abc"
+  permits "123", as: 123
 
   rejects Date.today
   rejects Time.now
@@ -48,7 +48,7 @@ describe StrongerParameters::OrConstraint do
       ActionController::Parameters.boolean
     end
 
-    permits 'abc'
+    permits "abc"
     permits true
 
     rejects Date.today
@@ -88,10 +88,10 @@ end
 describe StrongerParameters::AndConstraint do
   subject { ActionController::Parameters.string & ActionController::Parameters.integer }
 
-  permits '123', as: 123
+  permits "123", as: 123
 
   rejects 123
-  rejects 'abc'
+  rejects "abc"
   rejects nil
 
   describe "multi-chain" do
@@ -101,9 +101,9 @@ describe StrongerParameters::AndConstraint do
       ActionController::Parameters.lt(5)
     end
 
-    permits '4', as: 4
+    permits "4", as: 4
 
-    rejects '5'
+    rejects "5"
   end
 
   describe "#==" do
@@ -141,5 +141,5 @@ describe StrongerParameters::RequiredConstraint do
   subject { ActionController::Parameters.string.required }
 
   rejects nil
-  permits '123'
+  permits "123"
 end

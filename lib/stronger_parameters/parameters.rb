@@ -1,12 +1,12 @@
 # frozen_string_literal: true
-require 'action_pack'
+require "action_pack"
 
-require 'action_controller/base'
-require 'action_controller/api'
-require 'action_controller/metal/strong_parameters'
+require "action_controller/base"
+require "action_controller/api"
+require "action_controller/metal/strong_parameters"
 
-require 'stronger_parameters/constraints'
-require 'stronger_parameters/errors'
+require "stronger_parameters/constraints"
+require "stronger_parameters/errors"
 
 module StrongerParameters
   module Parameters
@@ -173,7 +173,7 @@ module StrongerParameters
         if key?(key)
           result = constraint.value(value)
         elsif constraint.required?
-          result = InvalidValue.new(nil, 'must be present')
+          result = InvalidValue.new(nil, "must be present")
         else
           next # uncovered
         end
@@ -211,7 +211,7 @@ module StrongerParameters
       # TODO: this is not consistent with the behavior of raising ActionController::UnpermittedParameters
       # should have the same render vs raise behavior in test/dev ... see permitted_parameters_test.rb
       rescue_from(StrongerParameters::InvalidParameter) do |e|
-        if request.format.to_s.include?('json')
+        if request.format.to_s.include?("json")
           render json: { error: e.message }, status: :bad_request
         else
           render plain: e.message, status: :bad_request

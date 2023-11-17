@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'stronger_parameters/constraint'
+require "stronger_parameters/constraint"
 
 module StrongerParameters
   class StringConstraint < Constraint
@@ -17,13 +17,13 @@ module StrongerParameters
         elsif minimum_length && v.bytesize < minimum_length
           return InvalidValue.new(v, "can not be shorter than #{minimum_length} bytes")
         elsif !v.valid_encoding?
-          return InvalidValue.new(v, 'must have valid encoding')
+          return InvalidValue.new(v, "must have valid encoding")
         end
 
         return v
       end
 
-      InvalidValue.new(v, 'must be a string')
+      InvalidValue.new(v, "must be a string")
     end
 
     def ==(other)

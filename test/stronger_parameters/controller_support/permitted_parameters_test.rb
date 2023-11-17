@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require_relative '../../test_helper'
-require 'stronger_parameters/controller_support/permitted_parameters'
+require_relative "../../test_helper"
+require "stronger_parameters/controller_support/permitted_parameters"
 
 SingleCov.covered!
 
@@ -43,23 +43,23 @@ describe WhitelistsController do
     WhitelistsController.log_unpermitted_parameters = false
   end
 
-  describe '.sugar' do
-    it 'turns Array into Parameters.array' do
+  describe ".sugar" do
+    it "turns Array into Parameters.array" do
       WhitelistsController.permitted_parameters :foo, ticket: [ActionController::Parameters.integer]
       constraint = WhitelistsController.permitted_parameters_for(:foo)[:ticket]
       assert_instance_of StrongerParameters::ArrayConstraint, constraint
       assert_equal ActionController::Parameters.integer, constraint.item_constraint
     end
 
-    it 'turns Hash into Parameters.map' do
+    it "turns Hash into Parameters.map" do
       WhitelistsController.permitted_parameters :foo, ticket: { id: ActionController::Parameters.integer }
       constraint = WhitelistsController.permitted_parameters_for(:foo)[:ticket]
       assert_instance_of StrongerParameters::HashConstraint, constraint
-      assert_equal({ 'id' => ActionController::Parameters.integer }, constraint.constraints)
+      assert_equal({ "id" => ActionController::Parameters.integer }, constraint.constraints)
     end
   end
 
-  describe '.permitted_parameters' do
+  describe ".permitted_parameters" do
     before do
       WhitelistsController.permitted_parameters :all, user_id: ActionController::Parameters.integer
       WhitelistsController.permitted_parameters :foo, ticket_id: ActionController::Parameters.integer
@@ -68,12 +68,12 @@ describe WhitelistsController do
       WhitelistsController.permitted_parameters :bar, nested: {b: ActionController::Parameters.integer}
     end
 
-    it 'allows general whitelisting' do
+    it "allows general whitelisting" do
       WhitelistsController.permitted_parameters_for(:foo)[:user_id].must_equal ActionController::Parameters.integer
       WhitelistsController.permitted_parameters_for(:bar)[:user_id].must_equal ActionController::Parameters.integer
     end
 
-    it 'allows nested whitelisting' do
+    it "allows nested whitelisting" do
       WhitelistsController.permitted_parameters_for(:foo)[:ticket_id].must_equal ActionController::Parameters.integer
       WhitelistsController.permitted_parameters_for(:foo)[:group_id].must_be_nil
 
@@ -81,13 +81,13 @@ describe WhitelistsController do
       WhitelistsController.permitted_parameters_for(:bar)[:ticket_id].must_be_nil
     end
 
-    it 'allows merging' do
+    it "allows merging" do
       WhitelistsController.permitted_parameters_for(:bar)[:nested].constraints.must_equal(
         "a" => ActionController::Parameters.integer, "b" => ActionController::Parameters.integer
       )
     end
 
-    describe 'inheritance' do
+    describe "inheritance" do
       let(:child_controller) { Class.new(WhitelistsController) }
 
       before do
@@ -96,7 +96,7 @@ describe WhitelistsController do
         child_controller.permitted_parameters :create, last: ActionController::Parameters.string
       end
 
-      it 'inherits from parent to child' do
+      it "inherits from parent to child" do
         WhitelistsController.permitted_parameters_for(:create)[:first].
           must_be_instance_of StrongerParameters::StringConstraint
         child_controller.permitted_parameters_for(:create)[:first].
@@ -104,7 +104,7 @@ describe WhitelistsController do
         assert_equal true, child_controller.log_unpermitted_parameters
       end
 
-      it 'does not inherit from child to parent' do
+      it "does not inherit from child to parent" do
         assert_nil WhitelistsController.permitted_parameters_for(:create)[:last]
         child_controller.permitted_parameters_for(:create)[:last].
           must_be_instance_of StrongerParameters::StringConstraint
@@ -112,12 +112,12 @@ describe WhitelistsController do
     end
   end
 
-  describe '#permit_parameters' do
+  describe "#permit_parameters" do
     def do_request
-      get :index, params: parameters, format: 'png'
+      get :index, params: parameters, format: "png"
     end
 
-    let(:parameters) { {id: '4', authenticity_token: 'auth'} }
+    let(:parameters) { {id: "4", authenticity_token: "auth"} }
 
     before do
       WhitelistsController.permitted_parameters(
@@ -127,7 +127,7 @@ describe WhitelistsController do
       )
     end
 
-    it 'does not filter default params' do
+    it "does not filter default params" do
       do_request
       assert_response :success
       @controller.params.to_h.must_equal(
@@ -138,7 +138,7 @@ describe WhitelistsController do
       )
     end
 
-    it 'filters request.params' do
+    it "filters request.params" do
       do_request
       assert_response :success
       @controller.request.params.must_equal(
@@ -170,16 +170,16 @@ describe WhitelistsController do
       @controller.params.to_h["user"]["name"].must_equal("so" => "evil")
     end
 
-    it 'raises when action is not configured' do
+    it "raises when action is not configured" do
       assert_raises(KeyError) { get :show, params: {id: 1} }
     end
 
-    it 'raises proper exception even if action is not defined (and not configured)' do
-      @controller.params.merge!(action: 'ops_not_here', id: 1)
+    it "raises proper exception even if action is not defined (and not configured)" do
+      @controller.params.merge!(action: "ops_not_here", id: 1)
       assert_raises(KeyError) { @controller.send(:permit_parameters) }
     end
 
-    it 'overrides :skip' do
+    it "overrides :skip" do
       WhitelistsController.permitted_parameters :index, :skip
       WhitelistsController.permitted_parameters :index, bar: ActionController::Parameters.boolean
       get :index, params: {bar: true}
@@ -219,13 +219,13 @@ describe WhitelistsController do
       end
     end
 
-    describe 'headers' do
-      before { Rails.configuration.stronger_parameters_violation_header = 'X-StrongerParameters-API-Warn' }
+    describe "headers" do
+      before { Rails.configuration.stronger_parameters_violation_header = "X-StrongerParameters-API-Warn" }
       after { Rails.configuration.stronger_parameters_violation_header = nil }
 
-      it 'warns about filtered parms' do
+      it "warns about filtered parms" do
         do_request
-        @controller.response.headers['X-StrongerParameters-API-Warn'].must_equal(
+        @controller.response.headers["X-StrongerParameters-API-Warn"].must_equal(
           "Removed restricted keys [\"id\"] from parameters according to permitted list"
         )
       end
@@ -233,7 +233,7 @@ describe WhitelistsController do
       it "warns about unfiltered parameters" do
         WhitelistsController.log_unpermitted_parameters = true
         do_request
-        @controller.response.headers['X-StrongerParameters-API-Warn'].must_equal(
+        @controller.response.headers["X-StrongerParameters-API-Warn"].must_equal(
           "Found restricted keys [\"id\"] from parameters according to permitted list"
         )
       end
@@ -242,21 +242,21 @@ describe WhitelistsController do
         Rails.configuration.stub(:respond_to?, nil) do
           do_request
         end
-        refute @controller.response.headers['X-StrongerParameters-API-Warn']
+        refute @controller.response.headers["X-StrongerParameters-API-Warn"]
       end
 
-      it 'warns about nil values' do
+      it "warns about nil values" do
         @controller.params[:id] = nil
         do_request
-        @controller.response.headers['X-StrongerParameters-API-Warn'].must_equal(
+        @controller.response.headers["X-StrongerParameters-API-Warn"].must_equal(
           "Removed restricted keys [\"id\"] from parameters according to permitted list"
         )
       end
 
-      it 'does not warn when not configured' do
+      it "does not warn when not configured" do
         Rails.configuration.stronger_parameters_violation_header = nil
         do_request
-        refute @controller.response.headers.key?('X-StrongerParameters-API-Warn')
+        refute @controller.response.headers.key?("X-StrongerParameters-API-Warn")
       end
     end
   end

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require_relative 'test_helper'
+require_relative "test_helper"
 
 SingleCov.not_covered! # not testing any code in lib/
 

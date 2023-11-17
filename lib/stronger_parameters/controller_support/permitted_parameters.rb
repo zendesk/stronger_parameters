@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'stronger_parameters/constraints'
+require "stronger_parameters/constraints"
 
 module StrongerParameters
   module ControllerSupport
@@ -101,7 +101,7 @@ module StrongerParameters
       def show_unpermitted_keys(unpermitted_keys, log_unpermitted)
         return if unpermitted_keys.empty?
 
-        log_prefix = (log_unpermitted ? 'Found' : 'Removed')
+        log_prefix = (log_unpermitted ? "Found" : "Removed")
         message =
           "#{log_prefix} restricted keys #{unpermitted_keys.inspect} from parameters according to permitted list"
 
