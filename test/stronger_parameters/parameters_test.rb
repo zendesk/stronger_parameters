@@ -327,7 +327,7 @@ describe StrongerParameters::Parameters do
         params(value: nil).permit(value: ActionController::Parameters.integer32)
       end
 
-      def with_allow_nil_for_everything(value = true) # rubocop:disable Style/OptionalBooleanParameter
+      def with_allow_nil_for_everything(value = true)
         old = ActionController::Parameters.allow_nil_for_everything
         ActionController::Parameters.allow_nil_for_everything = value
         yield

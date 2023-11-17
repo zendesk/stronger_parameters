@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'maxitest'
   spec.add_development_dependency 'bump'
   spec.add_development_dependency 'single_cov'
-  spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'standard'
   spec.add_development_dependency 'forking_test_runner'
   spec.add_runtime_dependency 'actionpack', '>= 5.0', '< 7.2'
 

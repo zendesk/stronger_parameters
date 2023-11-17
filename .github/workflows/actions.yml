@@ -35,7 +35,7 @@ jobs:
         with:
           bundler-cache: true
       - name: linter
-        run: bundle exec rake rubocop
+        run: bundle exec rake standard
 
   # This wrapper is used in the main branch protection rules as a required check.
   # This way, we don’t need to update those rules when we add or remove a version in the test matrix.
