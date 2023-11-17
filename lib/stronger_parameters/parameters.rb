@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "action_pack"
 
 require "action_controller/base"
@@ -148,7 +149,7 @@ module StrongerParameters
 
     def hash_filter_with_stronger_parameters(params, filter)
       stronger_filter = ActiveSupport::HashWithIndifferentAccess.new
-      other_filter    = ActiveSupport::HashWithIndifferentAccess.new
+      other_filter = ActiveSupport::HashWithIndifferentAccess.new
 
       filter.each do |k, v|
         if v.is_a?(Constraint)
@@ -212,7 +213,7 @@ module StrongerParameters
       # should have the same render vs raise behavior in test/dev ... see permitted_parameters_test.rb
       rescue_from(StrongerParameters::InvalidParameter) do |e|
         if request.format.to_s.include?("json")
-          render json: { error: e.message }, status: :bad_request
+          render json: {error: e.message}, status: :bad_request
         else
           render plain: e.message, status: :bad_request
         end

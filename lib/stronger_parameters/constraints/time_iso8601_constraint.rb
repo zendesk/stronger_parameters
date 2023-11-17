@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "stronger_parameters/constraint"
 
 module StrongerParameters

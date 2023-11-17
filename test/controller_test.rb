@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative "test_helper"
 
 SingleCov.not_covered!
@@ -10,7 +11,7 @@ class BooksController < ActionController::Base
 
   rescue_from(ActionController::ParameterMissing) do |e|
     if request.format.to_s.include?("json")
-      render json: { error: "Required parameter missing: #{e.param}" }, status: :bad_request
+      render json: {error: "Required parameter missing: #{e.param}"}, status: :bad_request
     else
       render plain: "Required parameter missing: #{e.param}", status: :bad_request
     end

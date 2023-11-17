@@ -1,16 +1,17 @@
 # frozen_string_literal: true
+
 require "./lib/stronger_parameters/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "stronger_parameters"
-  spec.version       = StrongerParameters::VERSION
-  spec.authors       = ["Mick Staugaard"]
-  spec.email         = ["mick@zendesk.com"]
-  spec.summary       = "Type checking and type casting of parameters for Action Pack"
-  spec.homepage      = "https://github.com/zendesk/stronger_parameters"
-  spec.license       = "Apache License Version 2.0"
+  spec.name = "stronger_parameters"
+  spec.version = StrongerParameters::VERSION
+  spec.authors = ["Mick Staugaard"]
+  spec.email = ["mick@zendesk.com"]
+  spec.summary = "Type checking and type casting of parameters for Action Pack"
+  spec.homepage = "https://github.com/zendesk/stronger_parameters"
+  spec.license = "Apache License Version 2.0"
 
-  spec.files         = Dir.glob("lib/**/*") + %w[README.md]
+  spec.files = Dir.glob("lib/**/*") + %w[README.md]
 
   spec.add_development_dependency "bundler", "<= 3"
   spec.add_development_dependency "rake"

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative "../../test_helper"
 
 SingleCov.covered!
@@ -53,8 +54,8 @@ describe StrongerParameters::HashConstraint do
   describe "merged constraints" do
     describe "hash" do
       subject do
-        ActionController::Parameters.map(id: ActionController::Parameters.integer).
-          merge(ActionController::Parameters.map(name: ActionController::Parameters.string))
+        ActionController::Parameters.map(id: ActionController::Parameters.integer)
+          .merge(ActionController::Parameters.map(name: ActionController::Parameters.string))
       end
 
       permits(id: 1, name: "Mick")
@@ -63,8 +64,8 @@ describe StrongerParameters::HashConstraint do
 
     describe "other" do
       subject do
-        ActionController::Parameters.map(id: ActionController::Parameters.integer).
-          merge(name: ActionController::Parameters.string)
+        ActionController::Parameters.map(id: ActionController::Parameters.integer)
+          .merge(name: ActionController::Parameters.string)
       end
 
       permits(id: 1, name: "Mick")

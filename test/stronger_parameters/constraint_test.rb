@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative "../test_helper"
 
 SingleCov.covered!
@@ -44,8 +45,8 @@ describe StrongerParameters::OrConstraint do
   describe "multi-chain" do
     subject do
       ActionController::Parameters.integer |
-      ActionController::Parameters.string |
-      ActionController::Parameters.boolean
+        ActionController::Parameters.string |
+        ActionController::Parameters.boolean
     end
 
     permits "abc"
@@ -97,8 +98,8 @@ describe StrongerParameters::AndConstraint do
   describe "multi-chain" do
     subject do
       ActionController::Parameters.string &
-      ActionController::Parameters.integer &
-      ActionController::Parameters.lt(5)
+        ActionController::Parameters.integer &
+        ActionController::Parameters.lt(5)
     end
 
     permits "4", as: 4

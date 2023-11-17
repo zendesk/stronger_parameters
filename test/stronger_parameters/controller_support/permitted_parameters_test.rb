@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative "../../test_helper"
 require "stronger_parameters/controller_support/permitted_parameters"
 
@@ -52,10 +53,10 @@ describe WhitelistsController do
     end
 
     it "turns Hash into Parameters.map" do
-      WhitelistsController.permitted_parameters :foo, ticket: { id: ActionController::Parameters.integer }
+      WhitelistsController.permitted_parameters :foo, ticket: {id: ActionController::Parameters.integer}
       constraint = WhitelistsController.permitted_parameters_for(:foo)[:ticket]
       assert_instance_of StrongerParameters::HashConstraint, constraint
-      assert_equal({ "id" => ActionController::Parameters.integer }, constraint.constraints)
+      assert_equal({"id" => ActionController::Parameters.integer}, constraint.constraints)
     end
   end
 
@@ -97,17 +98,17 @@ describe WhitelistsController do
       end
 
       it "inherits from parent to child" do
-        WhitelistsController.permitted_parameters_for(:create)[:first].
-          must_be_instance_of StrongerParameters::StringConstraint
-        child_controller.permitted_parameters_for(:create)[:first].
-          must_be_instance_of StrongerParameters::StringConstraint
+        WhitelistsController.permitted_parameters_for(:create)[:first]
+          .must_be_instance_of StrongerParameters::StringConstraint
+        child_controller.permitted_parameters_for(:create)[:first]
+          .must_be_instance_of StrongerParameters::StringConstraint
         assert_equal true, child_controller.log_unpermitted_parameters
       end
 
       it "does not inherit from child to parent" do
         assert_nil WhitelistsController.permitted_parameters_for(:create)[:last]
-        child_controller.permitted_parameters_for(:create)[:last].
-          must_be_instance_of StrongerParameters::StringConstraint
+        child_controller.permitted_parameters_for(:create)[:last]
+          .must_be_instance_of StrongerParameters::StringConstraint
       end
     end
   end
@@ -123,7 +124,7 @@ describe WhitelistsController do
       WhitelistsController.permitted_parameters(
         :index,
         something: ActionController::Parameters.anything,
-        user: { name: ActionController::Parameters.string }
+        user: {name: ActionController::Parameters.string}
       )
     end
 
