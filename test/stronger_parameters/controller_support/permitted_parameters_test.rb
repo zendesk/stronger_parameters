@@ -165,7 +165,7 @@ describe WhitelistsController do
     end
 
     it "does not remove invalid because they only raise and do not filter" do
-      parameters[:user] = {name: {so: "evil".dup}}
+      parameters[:user] = {name: {so: +"evil"}}
       do_request
       assert_response :success
       @controller.params.to_h["user"]["name"].must_equal("so" => "evil")
@@ -190,7 +190,7 @@ describe WhitelistsController do
 
     describe "when raising on invalid params" do
       def do_request
-        get :index, params: {user: {name: ["123".dup]}}
+        get :index, params: {user: {name: [+"123"]}}
       end
 
       before { ActionController::Parameters.action_on_invalid_parameters = :raise }

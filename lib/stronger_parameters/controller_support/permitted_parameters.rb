@@ -51,7 +51,7 @@ module StrongerParameters
         end
 
         def permitted_parameters_for(action)
-          unless for_action = permit_parameters[action]
+          unless (for_action = permit_parameters[action])
             # NOTE: there is no easy way to test this, so make sure to test with
             # a real rails controller if you make changes.
             message = "Action #{action} for #{self} does not have any permitted parameters"
