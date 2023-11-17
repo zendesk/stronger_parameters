@@ -2,15 +2,18 @@
 require 'bundler/setup'
 require 'bump/tasks'
 
+require 'rake/testtask'
+
+Rake::TestTask.new(:test) do |t|
+  t.pattern = 'test/**/*_test.rb'
+  t.verbose = false
+end
+
 # Pushing to rubygems is handled by a github workflow
 require 'bundler/gem_tasks'
 ENV['gem_push'] = 'false'
 
 task default: [:test, :rubocop]
-
-task :test do
-  sh "forking-test-runner test --merge-coverage --quiet"
-end
 
 desc "Run rubocop"
 task :rubocop do
