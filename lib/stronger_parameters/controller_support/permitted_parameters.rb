@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'stronger_parameters/constraints'
+
+require "stronger_parameters/constraints"
 
 module StrongerParameters
   module ControllerSupport
@@ -50,7 +51,7 @@ module StrongerParameters
         end
 
         def permitted_parameters_for(action)
-          unless for_action = permit_parameters[action]
+          unless (for_action = permit_parameters[action])
             # NOTE: there is no easy way to test this, so make sure to test with
             # a real rails controller if you make changes.
             message = "Action #{action} for #{self} does not have any permitted parameters"
@@ -101,7 +102,7 @@ module StrongerParameters
       def show_unpermitted_keys(unpermitted_keys, log_unpermitted)
         return if unpermitted_keys.empty?
 
-        log_prefix = (log_unpermitted ? 'Found' : 'Removed')
+        log_prefix = (log_unpermitted ? "Found" : "Removed")
         message =
           "#{log_prefix} restricted keys #{unpermitted_keys.inspect} from parameters according to permitted list"
 

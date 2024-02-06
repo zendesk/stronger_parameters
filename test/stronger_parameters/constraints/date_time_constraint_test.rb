@@ -1,9 +1,10 @@
 # frozen_string_literal: true
-require_relative '../../test_helper'
+
+require_relative "../../test_helper"
 
 SingleCov.covered!
 
-describe 'datetime parameter constraints' do
+describe "datetime parameter constraints" do
   subject { ActionController::Parameters.datetime }
 
   permits DateTime.parse("2015-03-31"), as: DateTime.parse("2015-03-31")

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'stronger_parameters/constraint'
+
+require "stronger_parameters/constraint"
 
 module StrongerParameters
   class IntegerConstraint < Constraint
@@ -10,7 +11,7 @@ module StrongerParameters
         return v.to_i
       end
 
-      InvalidValue.new(v, 'must be an integer')
+      InvalidValue.new(v, "must be an integer")
     end
   end
 end

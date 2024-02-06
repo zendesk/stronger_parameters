@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 gem "rails", "~> 5.2.0"
 
-eval_gemfile 'common.rb'
+eval_gemfile "common.rb"

@@ -1,29 +1,30 @@
 # frozen_string_literal: true
+
 ENV["RAILS_ENV"] = "test"
 
-require 'bundler/setup'
+require "bundler/setup"
 
-require 'single_cov'
+require "single_cov"
 SingleCov.setup :minitest
 
-require 'maxitest/global_must'
-require 'maxitest/autorun'
-require 'rails'
-require 'action_controller'
-require 'rails/generators'
+require "maxitest/global_must"
+require "maxitest/autorun"
+require "rails"
+require "action_controller"
+require "rails/generators"
 
 class FakeApplication < Rails::Application; end
 
 Rails.application = FakeApplication
 Rails.configuration.action_controller = ActiveSupport::OrderedOptions.new
-Rails.configuration.secret_key_base = 'secret_key_base'
+Rails.configuration.secret_key_base = "secret_key_base"
 Rails.logger = Logger.new("/dev/null")
 
 ActiveSupport.test_order = :random if ActiveSupport.respond_to?(:test_order=)
 
-require 'action_pack'
-require 'stronger_parameters'
-require 'minitest/rails'
+require "action_pack"
+require "stronger_parameters"
+require "minitest/rails"
 
 # Use ActionController::TestCase for Controllers
 Minitest::Spec::DSL::TYPES.unshift [/Controller$/, ActionController::TestCase]

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'stronger_parameters/constraint'
+
+require "stronger_parameters/constraint"
 
 module StrongerParameters
   class DecimalConstraint < Constraint
@@ -11,7 +12,7 @@ module StrongerParameters
 
     def value(v)
       match = v.to_s
-      if match =~ @regex
+      if match&.match?(@regex)
         BigDecimal(match)
       else
         StrongerParameters::InvalidValue.new(v, "must be a decimal with precision #{@precision} and scale #{@scale}")
