@@ -20,12 +20,12 @@ jobs:
     env:
       BUNDLE_GEMFILE: gemfiles/rails${{ matrix.rails }}.gemfile
     steps:
-    - uses: actions/checkout@v3
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby }}
-        bundler-cache: true
-    - run: bundle exec rake test
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - run: bundle exec rake test
 
   linter:
     runs-on: ubuntu-latest
@@ -35,7 +35,7 @@ jobs:
         with:
           bundler-cache: true
       - name: linter
-        run: bundle exec rake standard
+        run: bundle exec rubocop
 
   # This wrapper is used in the main branch protection rules as a required check.
   # This way, we don’t need to update those rules when we add or remove a version in the test matrix.
