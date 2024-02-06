@@ -1,5 +1,5 @@
 # stronger_parameters
-![CI](https://github.com/zendesk/stronger_parameters/workflows/CI/badge.svg)
+[![CI status](https://github.com/zendesk/stronger_parameters/actions/workflows/actions.yml/badge.svg?branch=master)](https://github.com/zendesk/stronger_parameters/actions/workflows/actions.yml?query=branch%3Amaster)
 
 This is an extension of `strong_parameters` with added type checking and conversion.
 
