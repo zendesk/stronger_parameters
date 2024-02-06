@@ -2,16 +2,8 @@
 # Remove from this list as you refactor files.
 ---
 ignore:
-- lib/stronger_parameters/constraints/decimal_constraint.rb:
-  - Performance/RegexpMatch
-- lib/stronger_parameters/constraints/regexp_constraint.rb:
-  - Performance/RegexpMatch
-- lib/stronger_parameters/constraints/ulid_constraint.rb:
-  - Performance/RegexpMatch
 - lib/stronger_parameters/controller_support/permitted_parameters.rb:
   - Lint/AssignmentInCondition
-- lib/stronger_parameters/parameters.rb:
-  - Style/Alias
 - test/stronger_parameters/constraints/string_constraint_test.rb:
   - Performance/UnfreezeString
 - test/stronger_parameters/controller_support/permitted_parameters_test.rb:

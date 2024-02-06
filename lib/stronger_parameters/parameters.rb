@@ -84,7 +84,7 @@ module StrongerParameters
       def enumeration(*allowed)
         EnumerationConstraint.new(*allowed)
       end
-      alias enum enumeration
+      alias_method :enum, :enumeration
 
       def boolean
         BooleanConstraint.new

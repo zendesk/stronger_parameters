@@ -15,7 +15,7 @@ module StrongerParameters
       v = @string.value(v)
       return v if v.is_a?(InvalidValue)
 
-      if v =~ regexp
+      if v&.match?(regexp)
         v
       else
         InvalidValue.new(v, "must match #{regexp.source}")
