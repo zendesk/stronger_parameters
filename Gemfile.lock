@@ -42,7 +42,7 @@ GIT
 PATH
   remote: .
   specs:
-    stronger_parameters (2.22.0)
+    stronger_parameters (2.23.0)
       actionpack (>= 5.0)
 
 GEM
