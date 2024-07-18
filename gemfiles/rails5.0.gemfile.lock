@@ -1,8 +1,8 @@
 PATH
   remote: ..
   specs:
-    stronger_parameters (2.22.0)
-      actionpack (>= 5.0, < 7.2)
+    stronger_parameters (2.23.0)
+      actionpack (>= 5.0)
 
 GEM
   remote: https://rubygems.org/
@@ -126,7 +126,7 @@ PLATFORMS
 
 DEPENDENCIES
   bump
-  bundler (< 2.5)
+  bundler
   forking_test_runner
   maxitest
   minitest-rails

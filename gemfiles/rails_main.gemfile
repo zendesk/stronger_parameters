@@ -1,0 +1,5 @@
+# frozen_string_literal: true
+
+gem "railties", github: "rails/rails", branch: "main"
+
+eval_gemfile "common.rb"

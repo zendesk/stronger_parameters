@@ -1,0 +1,25 @@
+name: Test against Rails main
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Run every day at 00:00 UTC
+  workflow_dispatch:
+
+jobs:
+  rails_main_tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby:
+          - '3.3'
+    name: ruby${{ matrix.ruby }} rails_main rake test
+    env:
+      BUNDLE_GEMFILE: gemfiles/rails_main.gemfile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - run: bundle exec rake test

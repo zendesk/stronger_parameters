@@ -1,5 +1,8 @@
 # NEXT
 
+# v2.23.0
+- Drop upper limit on ActionPack, test with Rails main.
+
 # v2.22.0
 - rails 7.1 support
 
