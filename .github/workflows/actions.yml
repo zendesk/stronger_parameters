@@ -16,11 +16,12 @@ jobs:
           - {ruby: '2.7', rails: '5.0'}
           - {ruby: '2.7', rails: '5.1'}
           - {ruby: '2.7', rails: '5.2'}
+          - {ruby: '3.3', rails: '_main'}
     name: ruby${{ matrix.ruby }} rails${{ matrix.rails }} rake test
     env:
       BUNDLE_GEMFILE: gemfiles/rails${{ matrix.rails }}.gemfile
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
@@ -30,7 +31,7 @@ jobs:
   linter:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
