@@ -18,7 +18,11 @@ class BooksController < ActionController::Base
   end
 
   def create
-    params.require(:book).permit(id: Parameters.integer)
+    if Rails::VERSION::MAJOR >= 8
+      params.expect(book: {id: Parameters.integer})
+    else
+      params.require(:book).permit(id: Parameters.integer)
+    end
 
     head :ok
   end
