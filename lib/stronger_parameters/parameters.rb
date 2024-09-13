@@ -147,7 +147,7 @@ module StrongerParameters
       end
     end
 
-    def hash_filter_with_stronger_parameters(params, filter)
+    def hash_filter_with_stronger_parameters(params, filter, **kwargs)
       stronger_filter = ActiveSupport::HashWithIndifferentAccess.new
       other_filter = ActiveSupport::HashWithIndifferentAccess.new
 
@@ -159,7 +159,7 @@ module StrongerParameters
         end
       end
 
-      hash_filter_without_stronger_parameters(params, other_filter)
+      hash_filter_without_stronger_parameters(params, other_filter, **kwargs)
 
       stronger_filter.each_key do |key|
         value = fetch(key, nil)
