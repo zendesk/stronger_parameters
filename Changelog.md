@@ -1,5 +1,8 @@
 # NEXT
 
+# v2.23.1
+- Fix an incompatibility with the Rails main branch.
+
 # v2.23.0
 - Drop upper limit on ActionPack, test with Rails main.
 
