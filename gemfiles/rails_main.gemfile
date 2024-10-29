@@ -3,3 +3,5 @@
 gem "railties", github: "rails/rails", branch: "main"
 
 eval_gemfile "common.rb"
+
+gem "minitest-rails", github: "bquorning/minitest-rails", branch: "rails-8-0"
