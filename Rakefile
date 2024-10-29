@@ -15,7 +15,7 @@ end
 
 desc "Format code"
 task :fmt do
-  sh "rubocop --auto-correct"
+  sh "rubocop --autocorrect"
 end
 
 desc "Bundle all gemfiles [CMD=]"

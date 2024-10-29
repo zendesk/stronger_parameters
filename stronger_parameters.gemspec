@@ -15,7 +15,6 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "minitest-rails"
   spec.add_development_dependency "maxitest"
   spec.add_development_dependency "bump"
   spec.add_development_dependency "single_cov"

@@ -46,9 +46,6 @@ GEM
     method_source (1.0.0)
     mini_portile2 (2.8.5)
     minitest (5.20.0)
-    minitest-rails (7.0.1)
-      minitest (~> 5.10)
-      railties (~> 7.0.0)
     nokogiri (1.16.2)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
@@ -130,7 +127,6 @@ DEPENDENCIES
   bundler
   forking_test_runner
   maxitest
-  minitest-rails
   railties (~> 7.0.0)
   rake
   single_cov
