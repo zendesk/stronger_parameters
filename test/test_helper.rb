@@ -24,7 +24,10 @@ ActiveSupport.test_order = :random if ActiveSupport.respond_to?(:test_order=)
 
 require "action_pack"
 require "stronger_parameters"
-require "minitest/rails"
+
+# Add spec DSL to the TestCase class
+# This is all we needed from minitest-rails
+ActiveSupport.on_load(:active_support_test_case) { extend Minitest::Spec::DSL }
 
 # Use ActionController::TestCase for Controllers
 Minitest::Spec::DSL::TYPES.unshift [/Controller$/, ActionController::TestCase]
