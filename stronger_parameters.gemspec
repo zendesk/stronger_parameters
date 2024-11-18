@@ -20,8 +20,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "single_cov"
   spec.add_development_dependency "standard"
   spec.add_development_dependency "forking_test_runner"
-  spec.add_runtime_dependency "actionpack", ">= 5.0"
+  spec.add_runtime_dependency "actionpack", ">= 6.0"
 
-  spec.required_ruby_version = ">= 2.7.0"
+  spec.required_ruby_version = ">= 3.0"
   spec.metadata["rubygems_mfa_required"] = "true"
 end
