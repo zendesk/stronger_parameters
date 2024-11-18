@@ -13,13 +13,6 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir.glob("lib/**/*") + %w[README.md]
 
-  spec.add_development_dependency "bundler"
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency "maxitest"
-  spec.add_development_dependency "bump"
-  spec.add_development_dependency "single_cov"
-  spec.add_development_dependency "standard"
-  spec.add_development_dependency "forking_test_runner"
   spec.add_runtime_dependency "actionpack", ">= 6.0"
 
   spec.required_ruby_version = ">= 3.0"
