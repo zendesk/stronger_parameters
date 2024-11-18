@@ -9,7 +9,7 @@ describe StrongerParameters::HashConstraint do
     options[:as] ||= value
     options[:as] = options[:as].with_indifferent_access
 
-    super(value, options)
+    super
   end
 
   subject do

@@ -19,5 +19,5 @@ describe "datetime_iso8601 parameter constraints" do
   rejects nil
   rejects "2015-03-32"  # Invalid day
   rejects "2015-00-15"  # Invalid month
-  rejects "2015-03-31T14:34:56Zxxx" #
+  rejects "2015-03-31T14:34:56Zxxx"
 end

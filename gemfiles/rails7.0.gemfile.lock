@@ -2,7 +2,7 @@ PATH
   remote: ..
   specs:
     stronger_parameters (2.23.1)
-      actionpack (>= 5.0)
+      actionpack (>= 6.0)
 
 GEM
   remote: https://rubygems.org/
@@ -31,11 +31,11 @@ GEM
     concurrent-ruby (1.2.3)
     crass (1.0.6)
     erubi (1.12.0)
-    forking_test_runner (1.13.0)
+    forking_test_runner (1.14.0)
       parallel_tests (>= 1.3.7)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
-    json (2.7.1)
+    json (2.8.2)
     language_server-protocol (3.17.0.3)
     lint_roller (1.1.0)
     loofah (2.22.0)
@@ -53,13 +53,13 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.2-x86_64-linux)
       racc (~> 1.4)
-    parallel (1.24.0)
-    parallel_tests (4.4.0)
+    parallel (1.26.3)
+    parallel_tests (4.7.2)
       parallel
-    parser (3.3.0.5)
+    parser (3.3.6.0)
       ast (~> 2.4.1)
       racc
-    racc (1.7.3)
+    racc (1.8.1)
     rack (2.2.8)
     rack-test (2.1.0)
       rack (>= 1.3)
@@ -79,42 +79,40 @@ GEM
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
     rake (13.1.0)
-    regexp_parser (2.9.0)
-    rexml (3.2.6)
-    rubocop (1.59.0)
+    regexp_parser (2.9.2)
+    rubocop (1.68.0)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
-      parser (>= 3.2.2.4)
+      parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 1.8, < 3.0)
-      rexml (>= 3.2.5, < 4.0)
-      rubocop-ast (>= 1.30.0, < 2.0)
+      regexp_parser (>= 2.4, < 3.0)
+      rubocop-ast (>= 1.32.2, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.30.0)
-      parser (>= 3.2.1.0)
-    rubocop-performance (1.20.2)
+    rubocop-ast (1.36.1)
+      parser (>= 3.3.1.0)
+    rubocop-performance (1.22.1)
       rubocop (>= 1.48.1, < 2.0)
-      rubocop-ast (>= 1.30.0, < 2.0)
+      rubocop-ast (>= 1.31.1, < 2.0)
     ruby-progressbar (1.13.0)
     single_cov (1.11.0)
-    standard (1.33.0)
+    standard (1.42.0)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.0)
-      rubocop (~> 1.59.0)
+      rubocop (~> 1.68.0)
       standard-custom (~> 1.0.0)
-      standard-performance (~> 1.3)
+      standard-performance (~> 1.5)
     standard-custom (1.0.2)
       lint_roller (~> 1.0)
       rubocop (~> 1.50)
-    standard-performance (1.3.1)
+    standard-performance (1.5.0)
       lint_roller (~> 1.1)
-      rubocop-performance (~> 1.20.2)
+      rubocop-performance (~> 1.22.0)
     thor (1.3.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    unicode-display_width (2.5.0)
+    unicode-display_width (2.6.0)
     zeitwerk (2.6.13)
 
 PLATFORMS
@@ -124,7 +122,6 @@ PLATFORMS
 
 DEPENDENCIES
   bump
-  bundler
   forking_test_runner
   maxitest
   railties (~> 7.0.0)
@@ -134,4 +131,4 @@ DEPENDENCIES
   stronger_parameters!
 
 BUNDLED WITH
-   2.4.22
+   2.5.23
