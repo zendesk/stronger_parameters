@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
-          - '3.3'
+          - '3.4'
     name: ruby${{ matrix.ruby }} rails_main rake test
     env:
       BUNDLE_GEMFILE: gemfiles/rails_main.gemfile

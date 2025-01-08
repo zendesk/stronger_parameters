@@ -2,7 +2,7 @@ PATH
   remote: ..
   specs:
     stronger_parameters (2.23.1)
-      actionpack (>= 6.0)
+      actionpack (>= 6.1)
 
 GEM
   remote: https://rubygems.org/
@@ -58,17 +58,17 @@ GEM
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    maxitest (5.4.0)
-      minitest (>= 5.14.0, < 5.21.0)
+    maxitest (5.8.0)
+      minitest (>= 5.14.0, < 5.26.0)
     mini_portile2 (2.8.5)
-    minitest (5.20.0)
+    minitest (5.25.4)
     mutex_m (0.2.0)
-    nokogiri (1.16.2)
+    nokogiri (1.18.1)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.16.2-arm64-darwin)
+    nokogiri (1.18.1-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.16.2-x86_64-linux)
+    nokogiri (1.18.1-x86_64-linux-gnu)
       racc (~> 1.4)
     parallel (1.26.3)
     parallel_tests (4.7.2)
@@ -163,4 +163,4 @@ DEPENDENCIES
   stronger_parameters!
 
 BUNDLED WITH
-   2.5.23
+   2.6.2
