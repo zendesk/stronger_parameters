@@ -15,6 +15,6 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "actionpack", ">= 6.0"
 
-  spec.required_ruby_version = ">= 3.0"
+  spec.required_ruby_version = ">= 3.1"
   spec.metadata["rubygems_mfa_required"] = "true"
 end
