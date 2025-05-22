@@ -276,14 +276,16 @@ curl -I 'http://localhost/api/users/1.json' -X POST -d '{ "user": { "id": 1 } }'
 ## Development
 
 ### Releasing a new version
+A new version is published to RubyGems.org every time a change to `version.rb` is pushed to the `main` branch.
+In short, follow these steps:
+1. Update `version.rb`,
+2. update version in all `Gemfile.lock` files,
+3. merge this change into `main`, and
+4. look at [the action](https://github.com/zendesk/stronger_parameters/actions/workflows/publish.yml) for output.
 
-```
-git checkout master && git fetch origin && git reset --hard origin/master
-bundle exec rake bump:<patch|minor|major>
-# -> manually edit changelog
-git commit -a --amend --no-edit
-bundle exec rake release
-```
-
-- [github action](.github/workflows/ruby-gem-publication.yml) will release a new version to rubygems.org
-- approve the new version [here](https://github.com/zendesk/stronger_parameters/actions/workflows/ruby-gem-publication.yml)
+To create a pre-release from a non-main branch:
+1. change the version in `version.rb` to something like `1.2.0.pre.1` or `2.0.0.beta.2`,
+2. push this change to your branch,
+3. go to [Actions → “Publish to RubyGems.org” on GitHub](https://github.com/zendesk/stronger_parameters/actions/workflows/publish.yml),
+4. click the “Run workflow” button,
+5. pick your branch from a dropdown.
