@@ -53,15 +53,15 @@ class Minitest::Test
   end
 
   def self.permits(value, as: value)
-    type_casted = as
+    type_cast = as
 
-    it "permits #{value.inspect} as #{type_casted.inspect}" do
+    it "permits #{value.inspect} as #{type_cast.inspect}" do
       permitted = params(value: value).permit(value: subject)
       permitted = permitted.to_h
-      if type_casted.nil?
+      if type_cast.nil?
         permitted[:value].must_be_nil
       else
-        permitted[:value].must_equal type_casted
+        permitted[:value].must_equal type_cast
       end
     end
   end
