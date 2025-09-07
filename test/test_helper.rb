@@ -18,7 +18,7 @@ class FakeApplication < Rails::Application; end
 Rails.application = FakeApplication
 Rails.configuration.action_controller = ActiveSupport::OrderedOptions.new
 Rails.configuration.secret_key_base = "secret_key_base"
-Rails.logger = Logger.new("/dev/null")
+Rails.logger = Logger.new(File::NULL)
 
 ActiveSupport.test_order = :random
 
