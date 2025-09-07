@@ -13,6 +13,9 @@ require "rails"
 require "action_controller"
 require "rails/generators"
 
+require "rails/test_unit/reporter"
+Rails::TestUnitReporter.executable = "mtest"
+
 class FakeApplication < Rails::Application; end
 
 Rails.application = FakeApplication
