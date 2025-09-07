@@ -28,8 +28,8 @@ describe "decimal parameter constraints" do
     permits 1.2
     permits(-1.2)
 
-    rejects "123", as: 123
-    rejects "-123", as: -123
+    rejects "123"
+    rejects "-123"
     rejects 123
     rejects(-123)
 
@@ -39,18 +39,18 @@ describe "decimal parameter constraints" do
     rejects "3."
     rejects true
 
-    rejects "1234", as: 1234
-    rejects "-1234", as: -1234
+    rejects "1234"
+    rejects "-1234"
     rejects 1234
     rejects(-1234)
 
-    rejects "1.234", as: 1.234
-    rejects "-1.234", as: -1.234
+    rejects "1.234"
+    rejects "-1.234"
     rejects 1.234
     rejects(-1.234)
 
-    rejects "123.45", as: 123.45
-    rejects "-123.45", as: 123.45
+    rejects "123.45"
+    rejects "-123.45"
     rejects 123.45
     rejects(-123.45)
   end
@@ -74,14 +74,14 @@ describe "decimal parameter constraints" do
     rejects "3."
     rejects true
 
-    rejects "1.23", as: 1.23
-    rejects "-1.23", as: -1.23
+    rejects "1.23"
+    rejects "-1.23"
     rejects 1.23
     rejects(-1.23)
 
     rejects 123456
-    rejects "123456", as: 123456
+    rejects "123456"
     rejects(-123456)
-    rejects "-123456", as: -123456
+    rejects "-123456"
   end
 end

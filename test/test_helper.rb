@@ -52,8 +52,8 @@ class Minitest::Test
     Rails.logger = old
   end
 
-  def self.permits(value, options = {})
-    type_casted = options.fetch(:as, value)
+  def self.permits(value, as: value)
+    type_casted = as
 
     it "permits #{value.inspect} as #{type_casted.inspect}" do
       permitted = params(value: value).permit(value: subject)
@@ -66,9 +66,7 @@ class Minitest::Test
     end
   end
 
-  def self.rejects(value, options = {})
-    key = options.fetch(:key, :value)
-
+  def self.rejects(value, key: :value)
     it "rejects #{value.inspect}" do
       assert_rejects(key) { params(value: value).permit(value: subject) }
     end
