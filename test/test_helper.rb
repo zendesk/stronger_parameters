@@ -20,7 +20,7 @@ Rails.configuration.action_controller = ActiveSupport::OrderedOptions.new
 Rails.configuration.secret_key_base = "secret_key_base"
 Rails.logger = Logger.new("/dev/null")
 
-ActiveSupport.test_order = :random if ActiveSupport.respond_to?(:test_order=)
+ActiveSupport.test_order = :random
 
 require "action_pack"
 require "stronger_parameters"
