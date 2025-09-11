@@ -52,11 +52,11 @@ describe BooksController do
     it "rejects invalid params" do
       post :create, params: {magazine: {name: "Mjallo!"}}, format: :json
       assert_response :bad_request
-      (JSON.parse(response.body)["error"]).must_equal "Required parameter missing: book"
+      JSON.parse(response.body)["error"].must_equal "Required parameter missing: book"
 
       post :create, params: {book: {id: "Mjallo!"}}, format: :json
       assert_response :bad_request
-      (JSON.parse(response.body)["error"]).must_equal "Invalid parameter: id must be an integer"
+      JSON.parse(response.body)["error"].must_equal "Invalid parameter: id must be an integer"
     end
 
     it "permits valid params" do

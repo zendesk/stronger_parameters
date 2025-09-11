@@ -13,14 +13,17 @@ require "rails"
 require "action_controller"
 require "rails/generators"
 
+require "rails/test_unit/reporter"
+Rails::TestUnitReporter.executable = "mtest"
+
 class FakeApplication < Rails::Application; end
 
 Rails.application = FakeApplication
 Rails.configuration.action_controller = ActiveSupport::OrderedOptions.new
 Rails.configuration.secret_key_base = "secret_key_base"
-Rails.logger = Logger.new("/dev/null")
+Rails.logger = Logger.new(File::NULL)
 
-ActiveSupport.test_order = :random if ActiveSupport.respond_to?(:test_order=)
+ActiveSupport.test_order = :random
 
 require "action_pack"
 require "stronger_parameters"
@@ -52,23 +55,21 @@ class Minitest::Test
     Rails.logger = old
   end
 
-  def self.permits(value, options = {})
-    type_casted = options.fetch(:as, value)
+  def self.permits(value, as: value)
+    type_cast = as
 
-    it "permits #{value.inspect} as #{type_casted.inspect}" do
+    it "permits #{value.inspect} as #{type_cast.inspect}" do
       permitted = params(value: value).permit(value: subject)
       permitted = permitted.to_h
-      if type_casted.nil?
+      if type_cast.nil?
         permitted[:value].must_be_nil
       else
-        permitted[:value].must_equal type_casted
+        permitted[:value].must_equal type_cast
       end
     end
   end
 
-  def self.rejects(value, options = {})
-    key = options.fetch(:key, :value)
-
+  def self.rejects(value, key: :value)
     it "rejects #{value.inspect}" do
       assert_rejects(key) { params(value: value).permit(value: subject) }
     end

@@ -15,5 +15,5 @@ describe "hexadecimal parameter constraints" do
   rejects 123
   rejects false
   rejects [1]
-  rejects a: :b
+  rejects({a: :b})
 end
