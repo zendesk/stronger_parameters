@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir.glob("lib/**/*") + %w[README.md]
 
-  spec.add_runtime_dependency "actionpack", ">= 6.1"
+  spec.add_runtime_dependency "actionpack", ">= 7.2"
 
   spec.required_ruby_version = ">= 3.1"
   spec.metadata["rubygems_mfa_required"] = "true"
