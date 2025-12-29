@@ -50,6 +50,7 @@ GEM
     method_source (1.0.0)
     mini_portile2 (2.8.5)
     minitest (5.25.4)
+    minitest-mock (5.27.0)
     mutex_m (0.3.0)
     nokogiri (1.18.1)
       mini_portile2 (~> 2.8.2)
@@ -131,6 +132,7 @@ DEPENDENCIES
   drb
   forking_test_runner
   maxitest
+  minitest-mock
   mutex_m
   railties (~> 6.1.0)
   rake

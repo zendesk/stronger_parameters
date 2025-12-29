@@ -62,6 +62,7 @@ GEM
       minitest (>= 5.14.0, < 5.26.0)
     mini_portile2 (2.8.5)
     minitest (5.25.4)
+    minitest-mock (5.27.0)
     mutex_m (0.2.0)
     nokogiri (1.18.1)
       mini_portile2 (~> 2.8.2)
@@ -156,6 +157,7 @@ DEPENDENCIES
   bump
   forking_test_runner
   maxitest
+  minitest-mock
   railties (~> 7.1.0)
   rake
   single_cov

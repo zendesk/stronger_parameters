@@ -7,6 +7,7 @@ require "bundler/setup"
 require "single_cov"
 SingleCov.setup :minitest
 
+require "minitest/mock"
 require "maxitest/global_must"
 require "maxitest/autorun"
 require "rails"
