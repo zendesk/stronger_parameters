@@ -5,18 +5,15 @@ on:
   pull_request:
     branches: [main]
 jobs:
-  tests:
+  specs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        ruby: ['3.2', '3.3', '3.4']
-        rails: ['6.1', '7.0', '7.1', '7.2', '8.0', '8.1']
+        ruby: ['3.3', '3.4', '4.0']
+        rails: ['7.2', '8.0', '8.1']
         include:
-          - {ruby: '3.4', rails: '_main'}
-          - {ruby: '3.1', rails: '6.1'}
-          - {ruby: '3.1', rails: '7.0'}
-          - {ruby: '3.1', rails: '7.1'}
+          - {ruby: '4.0', rails: '_main'}
     name: ruby${{ matrix.ruby }} rails${{ matrix.rails }} rake test
     env:
       BUNDLE_GEMFILE: gemfiles/rails${{ matrix.rails }}.gemfile
@@ -38,19 +35,17 @@ jobs:
       - name: linter
         run: bundle exec rubocop
 
-  # This wrapper is used in the main branch protection rules as a required check.
-  # This way, we don’t need to update those rules when we add or remove a version in the test matrix.
-  tests_successful:
-    name: Tests passing?
-    needs: tests
+  specs_successful:
+    name: Specs passing?
+    needs: specs
     if: always()
     runs-on: ubuntu-latest
     steps:
       - run: |
-          if ${{ needs.tests.result == 'success' }}
+          if ${{ needs.specs.result == ‘success’ }}
           then
-            echo "All tests pass"
+            echo "All specs pass"
           else
-            echo "Some tests failed"
+            echo "Some specs failed"
             false
           fi

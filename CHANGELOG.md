@@ -3,6 +3,7 @@
 - Drop Rails 5 support.
 - Drop Ruby 3.0 support.
 - Drop Rails 6.0 support.
+- Update supported Ruby versions to 3.3, 3.4, 4.0 and Rails versions to 7.2, 8.0, 8.1.
 
 # v2.23.1
 - Fix an incompatibility with the Rails main branch.
@@ -101,4 +102,3 @@ ActionController::Parameters.action_on_invalid_parameters = lambda do |result, k
   end
 end
 ```
-
