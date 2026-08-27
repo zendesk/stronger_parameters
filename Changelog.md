@@ -1,8 +1,6 @@
 # NEXT
-- Drop Ruby 2.7 support.
-- Drop Rails 5 support.
-- Drop Ruby 3.0 support.
-- Drop Rails 6.0 support.
+- Drop Ruby 2.7, 3.0, 3.1, 3.2 support.
+- Drop Rails 5, 6.0, 6.1, 7.0 support.
 
 # v2.23.1
 - Fix an incompatibility with the Rails main branch.

@@ -15,12 +15,12 @@ jobs:
       id-token: write
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: false
-          
+
       - name: Install dependencies
         run: bundle install
       - uses: rubygems/release-gem@v1

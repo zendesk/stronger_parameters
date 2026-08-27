@@ -10,18 +10,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ['3.2', '3.3', '3.4']
-        rails: ['6.1', '7.0', '7.1', '7.2', '8.0', '8.1']
+        ruby: ['3.3', '3.4', '4.0']
+        rails: ['7.2', '8.0', '8.1']
         include:
-          - {ruby: '3.4', rails: '_main'}
-          - {ruby: '3.1', rails: '6.1'}
-          - {ruby: '3.1', rails: '7.0'}
-          - {ruby: '3.1', rails: '7.1'}
+          - {ruby: '3.3', rails: '7.1'}
     name: ruby${{ matrix.ruby }} rails${{ matrix.rails }} rake test
     env:
       BUNDLE_GEMFILE: gemfiles/rails${{ matrix.rails }}.gemfile
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
@@ -31,7 +28,7 @@ jobs:
   linter:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true

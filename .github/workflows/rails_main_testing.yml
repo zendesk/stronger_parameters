@@ -4,22 +4,18 @@ on:
   schedule:
     - cron: "0 0 * * *" # Run every day at 00:00 UTC
   workflow_dispatch:
+  pull_request:
 
 jobs:
   rails_main_tests:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        ruby:
-          - '3.4'
-    name: ruby${{ matrix.ruby }} rails_main rake test
+    name: rails_main rake test
     env:
       BUNDLE_GEMFILE: gemfiles/rails_main.gemfile
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby }}
+          ruby-version: "4.0"
           bundler-cache: true
       - run: bundle exec rake test
