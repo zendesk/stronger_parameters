@@ -25,6 +25,10 @@ module StrongerParameters
         Constraint.new
       end
 
+      def present
+        PresentConstraint.new
+      end
+
       def nil
         NilConstraint.new
       end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "stronger_parameters/constraint"
+require "stronger_parameters/constraints/present_constraint"
 require "stronger_parameters/constraints/string_constraint"
 require "stronger_parameters/constraints/float_constraint"
 require "stronger_parameters/constraints/date_constraint"

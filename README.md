@@ -53,6 +53,32 @@ params.permit(
 )
 ```
 
+### Rejecting empty values
+
+Use `Parameters.present` to reject empty values without enforcing a type:
+
+```ruby
+params.permit(
+  value: Parameters.present
+)
+```
+
+This checks `value.present?`, so whitespace-only strings, empty collections, `nil`,
+and `false` are rejected. Accepted values are returned unchanged. Parameters may
+still be omitted; use `Parameters.present.required` to also require a key.
+
+To also enforce a type, combine it with another constraint:
+
+```ruby
+params.permit(
+  name: Parameters.string & Parameters.present,
+  tags: Parameters.array(Parameters.string) & Parameters.present
+)
+```
+
+Use `(Parameters.string & Parameters.present).required` to require a nonempty
+string and its key.
+
 ## Nested Parameters
 
 ```ruby
@@ -259,6 +285,7 @@ curl -I 'http://localhost/api/users/1.json' -X POST -d '{ "user": { "id": 1 } }'
 | Parameters.lte(10)             | value <= 10                                                                                |
 | Parameters.gt(0)               | value > 0                                                                                  |
 | Parameters.gte(0)              | value >= 0                                                                                 |
+| Parameters.present             | value.present?                                                                             |
 | Parameters.integer32           | Parameters.integer & Parameters.lt(2 ** 31) & Parameters.gte(-2 ** 31)                     |
 | Parameters.integer64           | Parameters.integer & Parameters.lt(2 ** 63) & Parameters.gte(-2 ** 63)                     |
 | Parameters.id                  | Parameters.integer & Parameters.lt(2 ** 31) & Parameters.gte(0)                            |
