@@ -102,6 +102,10 @@ module StrongerParameters
         ArrayConstraint.new(item_constraint)
       end
 
+      def size(range)
+        SizeConstraint.new(range)
+      end
+
       def csv(item_constraint)
         CommaSeparatedValuesConstraint.new(item_constraint)
       end
