@@ -13,6 +13,40 @@ describe StrongerParameters::Parameters do
     permits []
   end
 
+  describe ".present" do
+    subject { ActionController::Parameters.present }
+
+    permits "a"
+    rejects ""
+
+    it "allows the parameter to be omitted" do
+      params({}).permit(value: subject).to_h.must_equal({})
+    end
+
+    it "rejects an omitted parameter when required" do
+      assert_rejects(:value) { params({}).permit(value: subject.required) }
+    end
+
+    describe "combined with a string constraint" do
+      subject { ActionController::Parameters.string & ActionController::Parameters.present }
+
+      permits "hello"
+      rejects ""
+      rejects " \t\n"
+      rejects 123
+      rejects nil
+    end
+
+    describe "combined with an array constraint" do
+      subject { ActionController::Parameters.array(ActionController::Parameters.integer) & ActionController::Parameters.present }
+
+      permits ["1"], as: [1]
+      rejects []
+      rejects ["invalid"]
+      rejects nil
+    end
+  end
+
   describe ".nil" do
     subject { ActionController::Parameters.nil }
 
