@@ -122,6 +122,13 @@ describe StrongerParameters::Parameters do
     rejects "X"
   end
 
+  describe ".csv" do
+    subject { ActionController::Parameters.csv(ActionController::Parameters.integer) }
+
+    permits "1, 2", as: [1, 2]
+    rejects "1, X"
+  end
+
   describe ".map" do
     subject { ActionController::Parameters.map(foo: ActionController::Parameters.id) }
 
