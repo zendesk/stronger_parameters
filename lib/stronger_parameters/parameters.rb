@@ -118,20 +118,20 @@ module StrongerParameters
         DateIso8601Constraint.new
       end
 
-      def time
-        TimeConstraint.new
+      def time(format: nil, use_zone: false)
+        TimeConstraint.new(format:, use_zone:)
       end
 
-      def time_iso8601
-        TimeIso8601Constraint.new
+      def time_iso8601(use_zone: false)
+        time(format: :iso8601, use_zone:)
       end
 
-      def datetime
-        DateTimeConstraint.new
+      def datetime(format: nil, use_zone: false)
+        DateTimeConstraint.new(format:, use_zone:)
       end
 
-      def datetime_iso8601
-        DateTimeIso8601Constraint.new # uncovered
+      def datetime_iso8601(use_zone: false)
+        datetime(format: :iso8601, use_zone:)
       end
 
       def file

@@ -171,6 +171,13 @@ describe StrongerParameters::Parameters do
     rejects 1
   end
 
+  describe ".datetime_iso8601" do
+    subject { ActionController::Parameters.datetime_iso8601 }
+
+    permits "2016-01-01T00:00:00Z", as: DateTime.iso8601("2016-01-01T00:00:00Z")
+    rejects 1
+  end
+
   describe ".file" do
     subject { ActionController::Parameters.file }
 

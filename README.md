@@ -1,7 +1,8 @@
 # stronger_parameters
 [![CI status](https://github.com/zendesk/stronger_parameters/actions/workflows/actions.yml/badge.svg?branch=master)](https://github.com/zendesk/stronger_parameters/actions/workflows/actions.yml?query=branch%3Amaster)
 
-This is an extension of `strong_parameters` with added type checking and conversion.
+This is an extension of `strong_parameters` with added type checking and
+conversion.
 
 ## Simple types
 You can specify simple types like this:
@@ -22,15 +23,17 @@ params.permit(
 )
 ```
 
-This will allow an array of id parameters that all are IDs (integer less than 2**31, greater than 0) and convert to Fixnum (`'2' --> 2`).
+This will allow an array of id parameters that all are IDs (integer less than
+2**31, greater than 0) and convert to Fixnum (`'2' --> 2`).
 
 ### Empty array -> nil
-Rails converts empty arrays to nil, so often `Parameters.array | Parameters.nil` is needed.
+Rails converts empty arrays to nil, so often `Parameters.array | Parameters.nil`
+is needed.
 
 ### Allowing nils
 
-It can be convenient to allow nil for all attributes since ActiveRecord converts it to false/0.
-`ActionController::Parameters.allow_nil_for_everything = true`
+It can be convenient to allow nil for all attributes since ActiveRecord converts
+it to false/0. `ActionController::Parameters.allow_nil_for_everything = true`
 
 ### Rejecting nils
 
@@ -63,9 +66,10 @@ params.permit(
 )
 ```
 
-This checks `value.present?`, so whitespace-only strings, empty collections, `nil`,
-and `false` are rejected. Accepted values are returned unchanged. Parameters may
-still be omitted; use `Parameters.present.required` to also require a key.
+This checks `value.present?`, so whitespace-only strings, empty collections,
+`nil`, and `false` are rejected. Accepted values are returned unchanged.
+Parameters may still be omitted; use `Parameters.present.required` to also
+require a key.
 
 To also enforce a type, combine it with another constraint:
 
@@ -141,7 +145,8 @@ This will allow parameters like this:
 
 ## Combining Requirements
 
-If you want to permit a parameter to be one of multiple types, you can use the `|` operator:
+If you want to permit a parameter to be one of multiple types, you can use the
+`|` operator:
 
 ```ruby
 params.require(:ticket).permit(
@@ -206,8 +211,8 @@ ActionController::Parameters.action_on_invalid_parameters = :log
 
 ## Controller support
 
-Include `PermittedParameters` into a controller to force the developer
-to explicitly permit params for every action.
+Include `PermittedParameters` into a controller to force the developer to
+explicitly permit params for every action.
 
 Examples:
 
@@ -238,7 +243,8 @@ end
 
 ### Log only mode for invalid parameters
 
-To only log invalid (not unpermitted) parameters during rollout of stronger_parameters:
+To only log invalid (not unpermitted) parameters during rollout of
+stronger_parameters:
 
 ```ruby
 class MyController < ApplicationController
@@ -300,11 +306,65 @@ curl -I 'http://localhost/api/users/1.json' -X POST -d '{ "user": { "id": 1 } }'
 | Parameters.hex                  | value is a String that matches the hexadecimal format |
 | Parameters.ulid                 | value is a String of length 26 with only Crockford Base32 symbols |
 
+## Time formats and timezone parsing
+
+`Parameters.time` and `Parameters.datetime` accept independent `format:` and
+`use_zone:` options:
+
+```Ruby
+Parameters.time                                         # permissive Time.parse
+Parameters.time(use_zone: true)                          # permissive Time.zone.parse
+Parameters.time(format: :iso8601, use_zone: true)         # Time.zone.iso8601
+Parameters.time(format: :rfc3339, use_zone: true)         # Time.zone.rfc3339
+
+Parameters.datetime                                      # permissive DateTime.parse
+Parameters.datetime(use_zone: true)                      # permissive Time.zone.parse
+Parameters.datetime(format: :iso8601, use_zone: true)     # Time.zone.iso8601
+Parameters.datetime(format: :rfc3339, use_zone: true)     # Time.zone.rfc3339
+```
+
+Supported formats are `nil` (the default), `:iso8601`, and `:rfc3339`. Without
+an explicit format, existing `Time` and `DateTime` inputs pass through their
+respective constraints unchanged, regardless of `use_zone:`. An explicit format
+requires string input, including for the ISO8601 shorthands.
+Note that RFC3339 requires both a time and an explicit timezone offset,
+therefore `use_zone: true` isn't strictly necessary and only controls the output
+timezone. `Parameters.time_iso8601(use_zone: true)` is shorthand for
+`Parameters.time(format: :iso8601, use_zone: true)`, and
+`Parameters.datetime_iso8601(use_zone: true)` is shorthand for
+`Parameters.datetime(format: :iso8601, use_zone: true)`.
+
+Pass `use_zone: true` to either constraint or its ISO8601 shorthand to interpret
+values without an explicit timezone using the current `Time.zone`:
+
+```Ruby
+constraint = Parameters.time_iso8601(use_zone: true)
+
+Time.use_zone('Asia/Singapore') do
+  params = ActionController::Parameters.new(starts_at: '2026-10-22T09:00:00')
+  params.permit(starts_at: constraint)[:starts_at] # => 2026-10-22 09:00:00 +0800
+end
+```
+
+The zone is read when the value is validated, so constraints can be reused
+across `Time.use_zone` blocks. Explicit offsets (including `Z`) identify the
+same instant, returned in the current zone. For ISO8601, enabling zone parsing
+uses `Time.zone.iso8601` directly, including its accepted formats: date-only,
+basic, and ordinal dates are supported; note that ISO week dates are rejected.
+Without zone parsing, `time` with `format: :iso8601` requires a time component,
+while `datetime` also accepts date-only values.
+
+With a zone configured and `use_zone: true`, string inputs to both `time` and
+`datetime` return an `ActiveSupport::TimeWithZone`. With the option
+disabled (the default), or with no `Time.zone` set, parsing uses Ruby's `Time`
+or `DateTime` parser, respectively.
+`Parameters.date_iso8601` returns a calendar date and has no timezone option.
+
 ## Development
 
 ### Releasing a new version
-A new version is published to RubyGems.org every time a change to `version.rb` is pushed to the `main` branch.
-In short, follow these steps:
+A new version is published to RubyGems.org every time a change to `version.rb`
+is pushed to the `main` branch. In short, follow these steps:
 1. Update `version.rb`,
 2. update version in all `Gemfile.lock` files,
 3. merge this change into `main`, and
