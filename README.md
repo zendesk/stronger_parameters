@@ -271,6 +271,8 @@ curl -I 'http://localhost/api/users/1.json' -X POST -d '{ "user": { "id": 1 } }'
 | Syntax                         | (Simplified) Definition                                                                    |
 |--------------------------------|--------------------------------------------------------------------------------------------|
 | Parameters.string              | value.is_a?(String)                                                                        |
+| Parameters.size(1..10)         | Array with a size covered by the given range; combine with Parameters.array(type)          |
+| Parameters.csv(type)           | Comma separated string converted to an array using the item constraint                     |
 | Parameters.integer             | value.is_a?(Fixnum) or '-1'                                                                |
 | Parameters.float               | value.is_a?(Float) or '-1.2'                                                               |
 | Parameters.date                | value.is_a?(Date) or '2014-05-13' or '13.05.2014'                                          |
