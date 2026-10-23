@@ -1,19 +1,34 @@
 # frozen_string_literal: true
 
 require_relative "../../test_helper"
+require_relative "../../support/date_time_format_tests"
 
 SingleCov.covered!
 
 describe "datetime parameter constraints" do
-  subject { ActionController::Parameters.datetime }
+  extend DateTimeFormatTests
 
-  permits DateTime.parse("2015-03-31"), as: DateTime.parse("2015-03-31")
-  permits "2015-03-31", as: DateTime.parse("2015-03-31")
-  permits "2015-03-31T14:34:56Z", as: DateTime.parse("2015-03-31T14:34:56Z")
+  it "rejects unsupported formats when constructing the constraint" do
+    error = -> { ActionController::Parameters.datetime(format: :httpdate) }.must_raise ArgumentError
+    error.message.must_equal "Unsupported datetime format: :httpdate"
+  end
 
-  rejects []
-  rejects 123
-  rejects nil
-  rejects "2015-03-32"  # Invalid day
-  rejects "2015-00-15"  # Invalid month
+  [nil, :iso8601, :rfc3339].each do |format|
+    describe "format #{format.inspect}" do
+      subject { ActionController::Parameters.datetime(format:) }
+
+      validates_format_matrix(:datetime, format:)
+
+      it "passes through existing DateTime values unchanged" do
+        value = DateTime.iso8601("2018-04-12T08:53:18.123456+05:45")
+        result = params(value:).permit(value: subject)[:value]
+        assert_same value, result
+      end
+
+      it "reports the selected format for invalid values" do
+        expected = format ? "must be an #{format} datetime" : "must be a datetime"
+        subject.value("invalid").message.must_equal expected
+      end
+    end
+  end
 end

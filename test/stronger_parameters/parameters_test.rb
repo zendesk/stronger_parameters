@@ -5,6 +5,19 @@ require_relative "../test_helper"
 SingleCov.covered! uncovered: 3 # Covered in test/controller_test.rb
 
 describe StrongerParameters::Parameters do
+  def self.delegates_to(method, **options)
+    it "delegates to #{method} with #{options.inspect}" do
+      expected = Object.new
+      factory = ->(**actual_options) do
+        actual_options.must_equal options
+        expected
+      end
+      ActionController::Parameters.stub(method, factory) do
+        assert_same expected, subject
+      end
+    end
+  end
+
   describe ".anything" do
     subject { ActionController::Parameters.anything }
 
@@ -162,6 +175,13 @@ describe StrongerParameters::Parameters do
 
     permits "2016-01-01", as: Date.iso8601("2016-01-01")
     rejects 1
+
+    delegates_to :date, format: :iso8601
+
+    it "passes through existing Date values unchanged" do
+      value = Date.new(2018, 4, 12)
+      assert_same value, params(value:).permit(value: subject)[:value]
+    end
   end
 
   describe ".time" do
@@ -176,6 +196,13 @@ describe StrongerParameters::Parameters do
 
     permits "2016-01-01T00:00:00Z", as: Time.iso8601("2016-01-01T00:00:00Z")
     rejects 1
+
+    delegates_to :time, format: :iso8601
+
+    it "passes through existing Time values unchanged" do
+      value = Time.iso8601("2018-04-12T08:53:18+05:45")
+      assert_same value, params(value:).permit(value: subject)[:value]
+    end
   end
 
   describe ".datetime" do
@@ -183,6 +210,20 @@ describe StrongerParameters::Parameters do
 
     permits "2016-01-01 00:00:00 +0000", as: Time.parse("2016-01-01 00:00:00 +0000")
     rejects 1
+  end
+
+  describe ".datetime_iso8601" do
+    subject { ActionController::Parameters.datetime_iso8601 }
+
+    permits "2016-01-01T00:00:00Z", as: DateTime.iso8601("2016-01-01T00:00:00Z")
+    rejects 1
+
+    delegates_to :datetime, format: :iso8601
+
+    it "passes through existing DateTime values unchanged" do
+      value = DateTime.iso8601("2018-04-12T08:53:18+05:45")
+      assert_same value, params(value:).permit(value: subject)[:value]
+    end
   end
 
   describe ".file" do
