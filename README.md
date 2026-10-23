@@ -302,6 +302,36 @@ curl -I 'http://localhost/api/users/1.json' -X POST -d '{ "user": { "id": 1 } }'
 | Parameters.hex                  | value is a String that matches the hexadecimal format |
 | Parameters.ulid                 | value is a String of length 26 with only Crockford Base32 symbols |
 
+## Date, time, and datetime formats
+
+`Parameters.date`, `Parameters.time`, and `Parameters.datetime` accept an optional
+`format:` keyword:
+
+```ruby
+Parameters.date(format: :iso8601)
+Parameters.date(format: :rfc3339)
+Parameters.time(format: :iso8601)
+Parameters.time(format: :rfc3339)
+Parameters.datetime(format: :iso8601)
+Parameters.datetime(format: :rfc3339)
+```
+
+Supported formats are `nil` (the default), `:iso8601`, and `:rfc3339`. With no
+format specified, parsing remains permissive. An explicit format selects Ruby's
+corresponding parser; RFC3339 requires both a time and an explicit timezone
+offset. Unsupported formats raise `ArgumentError` when constructing a constraint.
+
+Existing `Date`, `Time`, and `DateTime` values pass through their respective
+constraints unchanged, regardless of the selected format. These options control
+string parsing. Each `*_iso8601` shorthand delegates to its corresponding
+constraint with `format: :iso8601`, including passing through existing typed
+values.
+
+`Parameters.date(format: :rfc3339)` requires a full timestamp with an offset and
+returns its calendar date, without converting it to another timezone. A date-only
+string such as `"2018-04-12"` is accepted by `format: :iso8601`, but rejected by
+`format: :rfc3339`.
+
 ## Development
 
 ### Releasing a new version

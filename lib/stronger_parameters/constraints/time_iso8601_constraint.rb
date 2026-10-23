@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 
-require "stronger_parameters/constraint"
+require "stronger_parameters/constraints/time_constraint"
 
 module StrongerParameters
-  class TimeIso8601Constraint < Constraint
-    def value(v)
-      Time.iso8601 v
-    rescue ArgumentError, TypeError
-      StrongerParameters::InvalidValue.new(v, "must be an iso8601 time")
-    end
+  class TimeIso8601Constraint < TimeConstraint
+    def initialize = super(format: :iso8601)
   end
 end

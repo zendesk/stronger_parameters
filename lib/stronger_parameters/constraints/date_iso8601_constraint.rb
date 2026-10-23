@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 
-require "stronger_parameters/constraint"
+require "stronger_parameters/constraints/date_constraint"
 
 module StrongerParameters
-  class DateIso8601Constraint < Constraint
-    def value(v)
-      Date.iso8601 v
-    rescue ArgumentError, TypeError
-      StrongerParameters::InvalidValue.new(v, "must be an iso8601 date")
-    end
+  class DateIso8601Constraint < DateConstraint
+    def initialize = super(format: :iso8601)
   end
 end

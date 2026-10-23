@@ -118,28 +118,28 @@ module StrongerParameters
         NilStringConstraint.new
       end
 
-      def date
-        DateConstraint.new
+      def date(format: nil)
+        DateConstraint.new(format:)
       end
 
       def date_iso8601
-        DateIso8601Constraint.new
+        date(format: :iso8601)
       end
 
-      def time
-        TimeConstraint.new
+      def time(format: nil)
+        TimeConstraint.new(format:)
       end
 
       def time_iso8601
-        TimeIso8601Constraint.new
+        time(format: :iso8601)
       end
 
-      def datetime
-        DateTimeConstraint.new
+      def datetime(format: nil)
+        DateTimeConstraint.new(format:)
       end
 
       def datetime_iso8601
-        DateTimeIso8601Constraint.new # uncovered
+        datetime(format: :iso8601)
       end
 
       def file
