@@ -13,6 +13,8 @@ module StrongerParameters
   module Parameters
     extend ActiveSupport::Concern
 
+    ABSENT = BasicObject.new
+
     included do
       alias_method :hash_filter_without_stronger_parameters, :hash_filter
       alias_method :hash_filter, :hash_filter_with_stronger_parameters
@@ -173,22 +175,18 @@ module StrongerParameters
 
       hash_filter_without_stronger_parameters(params, other_filter, **kwargs)
 
-      stronger_filter.each_key do |key|
-        value = fetch(key, nil)
+      stronger_filter.each do |key, constraint|
+        value = fetch(key, ABSENT)
 
-        if value.nil? && self.class.allow_nil_for_everything
-          params[key] = nil if key?(key)
-          next
-        end
-
-        constraint = stronger_filter[key]
-
-        if key?(key)
-          result = constraint.value(value)
-        elsif constraint.required?
-          result = InvalidValue.new(nil, "must be present")
+        result = if value.equal?(ABSENT)
+          next if self.class.allow_nil_for_everything || !constraint.required?
+          InvalidValue.new(value = nil, "must be present")
         else
-          next # uncovered
+          if value.nil? && self.class.allow_nil_for_everything
+            params[key] = nil
+            next
+          end
+          constraint.value(value)
         end
 
         if result.is_a?(InvalidValue)
@@ -207,10 +205,23 @@ module StrongerParameters
             raise ArgumentError, "Unsupported value in action_on_invalid_parameters: #{action}"
           end
 
-          params[key] = value
-        else
-          params[key] = result
+          result = value
         end
+
+        params[key] = result
+        # Rails marks only the parent permitted; custom nested results need their own permissions.
+        permit_constraint_value(params[key])
+      end
+    end
+
+    private
+
+    def permit_constraint_value(value)
+      case value
+      when ActionController::Parameters
+        value.permit! unless value.permitted?
+      when Array
+        value.each { |item| permit_constraint_value(item) }
       end
     end
   end

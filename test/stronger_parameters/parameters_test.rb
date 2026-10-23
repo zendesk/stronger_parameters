@@ -284,6 +284,51 @@ describe StrongerParameters::Parameters do
     rejects(-2**63 - 1)
   end
 
+  describe "nested constraint results" do
+    it "permits nested parameters accepted by a constraint" do
+      permitted = params(value: {items: [{name: "Ada"}]}).permit(value: ActionController::Parameters.present)
+      permitted.to_h.must_equal "value" => {"items" => [{"name" => "Ada"}]}
+      permitted[:value].permitted?.must_equal true
+      permitted[:value][:items].first.permitted?.must_equal true
+    end
+
+    it "permits parameter hashes inside nested arrays" do
+      value = [[{name: "Ada"}], {name: "Grace"}, "text", 1, nil]
+      permitted = params(value:).permit(value: ActionController::Parameters.anything)
+      permitted.to_h.must_equal "value" => [[{"name" => "Ada"}], {"name" => "Grace"}, "text", 1, nil]
+    end
+
+    it "permits raw hashes returned by a constraint" do
+      constraint = ActionController::Parameters.anything
+      constraint.stub(:value, {items: [{name: "Ada"}]}) do
+        permitted = params(value: "input").permit(value: constraint)
+        permitted.to_h.must_equal "value" => {"items" => [{"name" => "Ada"}]}
+      end
+    end
+
+    it "does not traverse already-permitted constraint results again" do
+      value = params(items: [{name: "Ada"}]).permit!
+      source = params(value:)
+      filtered = params({})
+
+      value.stub(:permit!, -> { flunk "must not traverse already-permitted results" }) do
+        source.send(:hash_filter, filtered, {value: ActionController::Parameters.anything})
+      end
+      assert_same value, filtered[:value]
+    end
+
+    [:log, ->(*) {}].each do |action|
+      it "permits invalid nested values retained with action #{action.inspect}" do
+        old = ActionController::Parameters.action_on_invalid_parameters
+        ActionController::Parameters.action_on_invalid_parameters = action
+        permitted = params(value: {items: [{name: "Ada"}]}).permit(value: ActionController::Parameters.integer)
+        permitted.to_h.must_equal "value" => {"items" => [{"name" => "Ada"}]}
+      ensure
+        ActionController::Parameters.action_on_invalid_parameters = old
+      end
+    end
+  end
+
   describe ".action_on_invalid_parameters" do
     around do |test|
       old = ActionController::Parameters.action_on_invalid_parameters
