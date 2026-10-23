@@ -207,10 +207,23 @@ module StrongerParameters
             raise ArgumentError, "Unsupported value in action_on_invalid_parameters: #{action}"
           end
 
-          params[key] = value
-        else
-          params[key] = result
+          result = value
         end
+
+        params[key] = result
+        # Rails marks only the parent permitted; custom nested results need their own permissions.
+        permit_constraint_value(params[key])
+      end
+    end
+
+    private
+
+    def permit_constraint_value(value)
+      case value
+      when ActionController::Parameters
+        value.permit! unless value.permitted?
+      when Array
+        value.each { |item| permit_constraint_value(item) }
       end
     end
   end
