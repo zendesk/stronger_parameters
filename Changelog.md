@@ -1,7 +1,16 @@
 # NEXT
-- Add `Parameters.present` to reject blank values using `present?`.
-- Drop Ruby 2.7, 3.0, 3.1, 3.2 support.
-- Drop Rails 5, 6.0, 6.1, 7.0 support.
+
+# v2.24.0
+- Add `Parameters.present` to reject blank values using `present?`. ([#153](https://github.com/zendesk/stronger_parameters/pull/153))
+- Add `Parameters.csv` to parse comma separated values using an item constraint. ([#154](https://github.com/zendesk/stronger_parameters/pull/154))
+- Add `Parameters.size` to validate array length against a range. ([#154](https://github.com/zendesk/stronger_parameters/pull/154))
+- Add `format: :iso8601` and `format: :rfc3339` options to date, time, and datetime constraints. ([#156](https://github.com/zendesk/stronger_parameters/pull/156))
+- Allow existing typed values in the `*_iso8601` constraints. ([#156](https://github.com/zendesk/stronger_parameters/pull/156))
+- Fix permissions on nested constraint results for compatibility with Rails main. ([#157](https://github.com/zendesk/stronger_parameters/pull/157))
+- Optimize constraint iteration and absent parameter handling. ([#157](https://github.com/zendesk/stronger_parameters/pull/157))
+- Add support for Ruby 3.4 and 4.0, and Rails 7.2, 8.0, and 8.1. ([#138](https://github.com/zendesk/stronger_parameters/pull/138), [#147](https://github.com/zendesk/stronger_parameters/pull/147), [#149](https://github.com/zendesk/stronger_parameters/pull/149))
+- Drop Ruby 2.7, 3.0, 3.1, 3.2 support. ([#136](https://github.com/zendesk/stronger_parameters/pull/136), [#138](https://github.com/zendesk/stronger_parameters/pull/138), [#149](https://github.com/zendesk/stronger_parameters/pull/149))
+- Drop Rails 5, 6.0, 6.1, 7.0 support. ([#136](https://github.com/zendesk/stronger_parameters/pull/136), [#138](https://github.com/zendesk/stronger_parameters/pull/138), [#149](https://github.com/zendesk/stronger_parameters/pull/149))
 
 # v2.23.1
 - Fix an incompatibility with the Rails main branch.
@@ -100,4 +109,3 @@ ActionController::Parameters.action_on_invalid_parameters = lambda do |result, k
   end
 end
 ```
-

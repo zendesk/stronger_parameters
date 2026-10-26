@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    stronger_parameters (2.23.1)
+    stronger_parameters (2.24.0)
       actionpack (>= 7.1)
 
 GEM
