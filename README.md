@@ -13,6 +13,16 @@ params.permit(
 )
 ```
 
+### Sentinel values
+
+For `bigid` you can provide a sentinel value of e.g. `-1` to allow a value outside the normal range:
+
+```ruby
+params.permit(
+  id: Parameters.bigid(sentinel: -1)
+)
+```
+
 ## Arrays
 You can specify arrays like this:
 
