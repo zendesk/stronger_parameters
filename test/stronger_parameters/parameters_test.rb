@@ -263,6 +263,14 @@ describe StrongerParameters::Parameters do
     rejects(-1)
     rejects "a"
     rejects 2**63
+
+    describe "with a sentinel" do
+      subject { ActionController::Parameters.bigid(sentinel: -1) }
+
+      [-1, 0, 1, (2**63) - 1].each { |value| permits value }
+      {"-1" => -1, "0" => 0, "1" => 1}.each { |string, value| permits string, as: value }
+      [-2, "-2", 2**63, "a", 1.5, nil].each { |value| rejects value }
+    end
   end
 
   describe ".id" do

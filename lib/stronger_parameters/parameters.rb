@@ -79,8 +79,10 @@ module StrongerParameters
         integer & lt(2**32) & gte(0)
       end
 
-      def bigid
-        integer & lt(2**63) & gte(0)
+      def bigid(sentinel: nil)
+        base = integer & lt(2**63) & gte(0)
+        return base unless sentinel
+        base | integer & enum(sentinel)
       end
 
       def ubigid
