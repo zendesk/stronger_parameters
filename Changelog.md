@@ -1,5 +1,9 @@
 # NEXT
 
+# v2.25.0
+- Add a `sentinel:` option to `Parameters.bigid` to allow a sentinel value outside the normal range. ([#159](https://github.com/zendesk/stronger_parameters/pull/159))
+- Set explicit GitHub Actions token permissions for CI and gem publication workflows. ([#160](https://github.com/zendesk/stronger_parameters/pull/160))
+
 # v2.24.0
 - Add `Parameters.present` to reject blank values using `present?`. ([#153](https://github.com/zendesk/stronger_parameters/pull/153))
 - Add `Parameters.csv` to parse comma separated values using an item constraint. ([#154](https://github.com/zendesk/stronger_parameters/pull/154))
