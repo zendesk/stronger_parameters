@@ -223,6 +223,32 @@ describe WhitelistsController do
         do_request
         assert_response :success
       end
+
+      it "isolates overlapping log-only validations from strict validation" do
+        pause = StrongerParameters::Constraint.new
+        pause.define_singleton_method(:value) do |value|
+          Fiber.yield
+          value
+        end
+        WhitelistsController.log_invalid_parameters!
+        WhitelistsController.permitted_parameters :index, user: {name: pause & ActionController::Parameters.string}
+
+        requests = Array.new(2) do
+          Fiber.new do
+            controller = WhitelistsController.new
+            controller.params = {action: "index", user: {name: []}}
+            controller.send(:permit_parameters)
+          end
+        end
+        requests.each(&:resume) # Both log-only validations are now inside the nested constraint.
+
+        strict = ActionController::Parameters.new(name: {unexpected: true})
+        assert_raises(StrongerParameters::InvalidParameter) { strict.permit(name: ActionController::Parameters.string) }
+        refute_predicate strict[:name], :permitted?
+
+        requests.each(&:resume) # Finish in entry order, so their scopes overlap rather than nest.
+        assert_equal :raise, ActionController::Parameters.action_on_invalid_parameters
+      end
     end
 
     describe "when raising on unpermitted params" do
@@ -234,7 +260,10 @@ describe WhitelistsController do
 
       it "raises with log_invalid_parameters on unpermitted" do
         WhitelistsController.log_invalid_parameters!
+        ActionController::Parameters.action_on_invalid_parameters = :raise
         assert_raises(ActionController::UnpermittedParameters) { do_request }
+        strict = ActionController::Parameters.new(id: "invalid")
+        assert_raises(StrongerParameters::InvalidParameter) { strict.permit(id: ActionController::Parameters.integer) }
       end
     end
 

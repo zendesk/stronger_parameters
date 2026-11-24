@@ -407,6 +407,25 @@ describe StrongerParameters::Parameters do
       log.must_include "value must be an integer, but was: \"a\""
     end
 
+    it "uses the configured callback again after a scoped logging override" do
+      calls = []
+      ActionController::Parameters.action_on_invalid_parameters = ->(_, key) { calls << key }
+      StrongerParameters::Parameters.with_invalid_parameter_action(:log) do
+        params(first: "invalid").permit(first: ActionController::Parameters.integer)
+      end
+      params(second: "invalid").permit(second: ActionController::Parameters.integer)
+      assert_equal ["second"], calls
+    end
+
+    it "keeps an outer scoped override when an inner scope passes nil" do
+      ActionController::Parameters.action_on_invalid_parameters = :raise
+      StrongerParameters::Parameters.with_invalid_parameter_action(:log) do
+        StrongerParameters::Parameters.with_invalid_parameter_action(nil) do
+          params(value: "a").permit(value: ActionController::Parameters.integer)
+        end
+      end
+    end
+
     it "raises on default" do
       assert_raises StrongerParameters::InvalidParameter do
         params(value: "a").permit(value: ActionController::Parameters.integer32)

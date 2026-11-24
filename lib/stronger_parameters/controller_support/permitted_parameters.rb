@@ -84,7 +84,9 @@ module StrongerParameters
 
         # TODO: invalid values should also be logged, but atm only invalid keys are
         log_unpermitted = self.class.log_unpermitted_parameters
-        permitted_params = without_invalid_parameter_exceptions(log_unpermitted) { params.permit(permitted) }
+        permitted_params = StrongerParameters::Parameters.with_invalid_parameter_action(log_unpermitted ? :log : nil) do
+          params.permit(permitted)
+        end
         unpermitted_keys = flat_keys(params) - flat_keys(permitted_params)
 
         show_unpermitted_keys(unpermitted_keys, log_unpermitted)
@@ -112,20 +114,6 @@ module StrongerParameters
         response.headers[header] = message if response && header
 
         Rails.logger.info("  #{message}")
-      end
-
-      def without_invalid_parameter_exceptions(log)
-        if log
-          begin
-            old = ActionController::Parameters.action_on_invalid_parameters
-            ActionController::Parameters.action_on_invalid_parameters = :log
-            yield
-          ensure
-            ActionController::Parameters.action_on_invalid_parameters = old
-          end
-        else
-          yield
-        end
       end
 
       def flat_keys(hash)
