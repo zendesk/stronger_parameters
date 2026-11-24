@@ -95,7 +95,7 @@ module StrongerParameters
         params.permit!
         request.params.replace(permitted_params)
 
-        logged_params = request.send(:parameter_filter).filter(permitted_params) # Removing passwords, etc
+        logged_params = request.send(:parameter_filter).filter(permitted_params.to_h) # Removing passwords, etc
         Rails.logger.info("  Filtered Parameters: #{logged_params.inspect}")
       end
 
