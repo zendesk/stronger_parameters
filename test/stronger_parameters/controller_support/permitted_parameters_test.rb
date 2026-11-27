@@ -150,6 +150,24 @@ describe WhitelistsController do
       )
     end
 
+    it "redacts nested passwords from the filtered parameters INFO log" do
+      string = ActionController::Parameters.string
+      WhitelistsController.permitted_parameters :index, password: string, user: {password: string}
+      @request.set_header("action_dispatch.parameter_filter", [:password])
+
+      log = capture_log do
+        get :index, params: {password: "outer-sentinel", user: {password: "inner-sentinel"}}
+      end
+      assert_response :success
+      assert_equal "inner-sentinel", @controller.params[:user][:password]
+
+      entry = log.lines.find { |line| line.match?(/INFO.*Filtered Parameters:/) }
+      assert entry, "expected a Filtered Parameters INFO entry"
+      assert_includes entry, "[FILTERED]"
+      refute_includes entry, "outer-sentinel"
+      refute_includes entry, "inner-sentinel"
+    end
+
     it "can skip" do
       WhitelistsController.instance_variable_set(:@permit_parameters, nil)
       WhitelistsController.permitted_parameters :index, :skip
