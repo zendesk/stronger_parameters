@@ -1,5 +1,6 @@
 # NEXT
 - Remove sensitive data from logs for nested parameters
+- Store `action_on_invalid_parameters` override per fiber, not process-wide.
 
 # v2.25.0
 - Add a `sentinel:` option to `Parameters.bigid` to allow a sentinel value outside the normal range. ([#159](https://github.com/zendesk/stronger_parameters/pull/159))

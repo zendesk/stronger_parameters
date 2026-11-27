@@ -15,6 +15,21 @@ module StrongerParameters
 
     ABSENT = BasicObject.new
 
+    POLICY_KEY = :stronger_parameters_action_on_invalid_parameters
+    private_constant :POLICY_KEY
+
+    def self.with_invalid_parameter_action(action)
+      return yield if action.nil?
+
+      begin
+        previous = Thread.current[POLICY_KEY]
+        Thread.current[POLICY_KEY] = action
+        yield
+      ensure
+        Thread.current[POLICY_KEY] = previous
+      end
+    end
+
     included do
       alias_method :hash_filter_without_stronger_parameters, :hash_filter
       alias_method :hash_filter, :hash_filter_with_stronger_parameters
@@ -195,7 +210,7 @@ module StrongerParameters
           name = "invalid_parameter.action_controller"
           ActiveSupport::Notifications.instrument(name, key: key, value: value, message: result.message)
 
-          action = self.class.action_on_invalid_parameters
+          action = Thread.current[POLICY_KEY] || self.class.action_on_invalid_parameters
           case action
           when :raise, nil
             raise StrongerParameters::InvalidParameter.new(result, key)
